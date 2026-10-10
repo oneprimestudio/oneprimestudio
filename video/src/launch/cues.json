@@ -1,0 +1,67 @@
+{
+  "fps": 60,
+  "bpm": 120,
+  "duration": 23.5,
+  "bounce": [
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "words": [
+    "Ideas,",
+    "designed,",
+    "built,",
+    "launched."
+  ],
+  "hop": 2.25,
+  "land": 3.0,
+  "fill": 3.05,
+  "introducing": 3.5,
+  "introOut": 4.2,
+  "shrink": 4.35,
+  "pillDraw": 4.6,
+  "switchOn": 5.0,
+  "name": 5.08,
+  "tag": 5.6,
+  "punch": 6.5,
+  "orb": 7.0,
+  "orbWords": [
+    7.45,
+    7.8,
+    8.15
+  ],
+  "orbOut": 8.5,
+  "plus": 9.05,
+  "click": 9.5,
+  "items": [
+    10.0,
+    10.45,
+    10.9,
+    11.35,
+    11.8,
+    12.25
+  ],
+  "cardOut": 13.0,
+  "cal": 13.55,
+  "roll": 13.9,
+  "rollLand": 14.8,
+  "calOut": 15.75,
+  "cta": 16.05,
+  "pill": 16.55,
+  "banner": 17.0,
+  "sparkle": 17.35,
+  "ball2": 18.0,
+  "ball2Bounce": [
+    18.5,
+    18.85
+  ],
+  "fill2": 19.05,
+  "write": 19.45,
+  "icon": 20.35,
+  "unfill": 20.85,
+  "tagline": 21.2,
+  "dm": 21.65,
+  "collapse": 22.55,
+  "end": 23.2
+}

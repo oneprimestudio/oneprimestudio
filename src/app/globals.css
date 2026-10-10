@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Colours are referenced, not inlined, so a subtree can re-map them: the hero's lights switch
+ * inverts its whole palette by setting data-lights="off" (see [data-lights] below).
+ */
+@theme {
+    --color-ink: #08064e;
+    --color-accent: #2f6bff;
+    --color-paper: #ffffff;
+    --color-mist: #8a89a3;
+    /* the reference recording's canvas */
+    --color-sand: #efede9;
+    --color-graphite: #3b3a56;
+    /* 4.8:1 on sand — passes WCAG AA for the small mono labels */
+    --color-stone: #66657d;
+    /* the near-white ground of the sections that slide over the hero */
+    --color-chalk: #f7f6f2;
+    /* the hero's ground: the cosmos photograph's own background, flattened to this exact colour */
+    --color-bloom: #f9f9f7;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --font-sans: var(--font-neue-montreal), "Helvetica Neue", Arial, sans-serif;
+    --font-mono: var(--font-gt-mono), ui-monospace, monospace;
+    --ease-prime: cubic-bezier(0.87, 0, 0.13, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Lights off: the same tokens, inverted — every utility inside follows. */
+[data-lights="off"] {
+    --color-sand: #04032e;
+    --color-ink: #efede9;
+    --color-graphite: #c8c7d8;
+    --color-stone: #8d8ca6;
+    color-scheme: dark;
+}
+
+:root {
+    --gutter: 20px;
+    /* the navbar's bar: a see-through row across the top */
+    --nav-h: 60px;
+}
+
+@media (min-width: 768px) {
+    :root {
+        --gutter: 32px;
+        --nav-h: 72px;
+    }
+}
+
+html {
+    background: #08064e;
+    color: #000000;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: #08064e;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background: #08064e;
+    color: #ffffff;
+}
+
+
+/* Animated in by GSAP; hidden until then so nothing flashes before hydration */
+
+[data-intro] {
+    visibility: hidden;
+}
+
+
+/* SplitText line masks: room for descenders under the tight leading */
+
+.split-line-mask {
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+}
+
+
+/* Keyboard focus is always visible, never a browser default ring */
+
+:focus-visible {
+    /* the outline follows each control's own radius — the switch stays a pill */
+    outline: 1.5px solid var(--color-accent);
+    outline-offset: 4px;
+}
+
+
+/* The hero's column grid only shows where the cursor is: a lamp of --lamp px at (--mx, --my) */
+
+.hero-grid {
+    -webkit-mask-image: radial-gradient(circle var(--lamp, 0px) at var(--mx, 50%) var(--my, 50%), #000 0%, rgb(0 0 0 / 0.4) 45%, transparent 100%);
+    mask-image: radial-gradient(circle var(--lamp, 0px) at var(--mx, 50%) var(--my, 50%), #000 0%, rgb(0 0 0 / 0.4) 45%, transparent 100%);
+}
+
+
+/* A dithered photograph develops into the real one under the cursor: a hole of --lamp px at (--lx, --ly) */
+
+.dither-lamp {
+    -webkit-mask-image: radial-gradient(circle var(--lamp, 0px) at var(--lx, 50%) var(--ly, 50%), transparent 0%, transparent 58%, #000 100%);
+    mask-image: radial-gradient(circle var(--lamp, 0px) at var(--lx, 50%) var(--ly, 50%), transparent 0%, transparent 58%, #000 100%);
+}
+
+
+/* The principles' progress ring fills over one beat, then hands over to the next */
+
+@keyframes ring-fill {
+    from {
+        stroke-dashoffset: 1;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+
+/* The crosshair replaces the native cursor on the hero */
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .hero-cursor,
+    .hero-cursor * {
+        cursor: none;
+    }
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0.15;
+    }
+}
+
+.blink {
+    animation: blink 1.6s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-intro] {
+        visibility: visible;
+    }
+    .blink {
+        animation: none;
+    }
+}
+
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
 }

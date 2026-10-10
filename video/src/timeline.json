@@ -1,0 +1,896 @@
+{
+ "fps": 60,
+ "bpm": 120,
+ "beat": 0.5,
+ "bar": 2.0,
+ "duration": 64.5,
+ "frames": 3870,
+ "cues": {
+  "hook1": {
+   "start": 0.4889,
+   "speechStart": 0.6,
+   "speechEnd": 1.7805,
+   "fileDuration": 1.872,
+   "text": "Most software works.",
+   "words": [
+    {
+     "w": "Most",
+     "t": 0.6,
+     "e": 0.7944
+    },
+    {
+     "w": "software",
+     "t": 0.7944,
+     "e": 1.2389
+    },
+    {
+     "w": "works",
+     "t": 1.2389,
+     "e": 1.7805
+    }
+   ]
+  },
+  "hook2": {
+   "start": 2.1528,
+   "speechStart": 2.25,
+   "speechEnd": 3.3195,
+   "fileDuration": 1.872,
+   "text": "Nobody wants to use it.",
+   "words": [
+    {
+     "w": "Nobody",
+     "t": 2.25,
+     "e": 2.5
+    },
+    {
+     "w": "wants",
+     "t": 2.5,
+     "e": 2.7083
+    },
+    {
+     "w": "to",
+     "t": 2.7083,
+     "e": 2.8055
+    },
+    {
+     "w": "use",
+     "t": 2.8195,
+     "e": 3.1389
+    },
+    {
+     "w": "it",
+     "t": 3.1389,
+     "e": 3.3195
+    }
+   ]
+  },
+  "prob1": {
+   "start": 3.8652,
+   "speechStart": 4.0,
+   "speechEnd": 5.9363,
+   "fileDuration": 2.424,
+   "text": "Fourteen clicks, to do one thing.",
+   "words": [
+    {
+     "w": "Fourteen",
+     "t": 4.0,
+     "e": 4.4412
+    },
+    {
+     "w": "clicks",
+     "t": 4.4412,
+     "e": 4.9192
+    },
+    {
+     "w": "to",
+     "t": 5.0049,
+     "e": 5.0907
+    },
+    {
+     "w": "do",
+     "t": 5.0907,
+     "e": 5.2378
+    },
+    {
+     "w": "one",
+     "t": 5.25,
+     "e": 5.5319
+    },
+    {
+     "w": "thing",
+     "t": 5.5441,
+     "e": 5.9363
+    }
+   ]
+  },
+  "prob2": {
+   "start": 6.152,
+   "speechStart": 6.25,
+   "speechEnd": 7.8064,
+   "fileDuration": 2.016,
+   "text": "Dashboards nobody reads.",
+   "words": [
+    {
+     "w": "Dashboards",
+     "t": 6.25,
+     "e": 6.777
+    },
+    {
+     "w": "nobody",
+     "t": 6.777,
+     "e": 7.2059
+    },
+    {
+     "w": "reads",
+     "t": 7.2181,
+     "e": 7.8064
+    }
+   ]
+  },
+  "prob3": {
+   "start": 8.027,
+   "speechStart": 8.125,
+   "speechEnd": 10.2083,
+   "fileDuration": 2.544,
+   "text": "Websites that look like everyone else's.",
+   "words": [
+    {
+     "w": "Websites",
+     "t": 8.125,
+     "e": 8.6275
+    },
+    {
+     "w": "that",
+     "t": 8.6397,
+     "e": 8.75
+    },
+    {
+     "w": "look",
+     "t": 8.7622,
+     "e": 8.9093
+    },
+    {
+     "w": "like",
+     "t": 8.9093,
+     "e": 9.1299
+    },
+    {
+     "w": "everyone",
+     "t": 9.2892,
+     "e": 9.6323
+    },
+    {
+     "w": "else's",
+     "t": 9.6323,
+     "e": 10.2083
+    }
+   ]
+  },
+  "prob4": {
+   "start": 10.402,
+   "speechStart": 10.5,
+   "speechEnd": 13.0122,
+   "fileDuration": 2.952,
+   "text": "Systems your team quietly works around.",
+   "words": [
+    {
+     "w": "Systems",
+     "t": 10.5,
+     "e": 10.9167
+    },
+    {
+     "w": "your",
+     "t": 10.9167,
+     "e": 11.027
+    },
+    {
+     "w": "team",
+     "t": 11.027,
+     "e": 11.4926
+    },
+    {
+     "w": "quietly",
+     "t": 11.7867,
+     "e": 12.2524
+    },
+    {
+     "w": "works",
+     "t": 12.2525,
+     "e": 12.5221
+    },
+    {
+     "w": "around",
+     "t": 12.5343,
+     "e": 13.0122
+    }
+   ]
+  },
+  "switch": {
+   "start": 15.2819,
+   "speechStart": 15.3883,
+   "speechEnd": 16.625,
+   "fileDuration": 1.872,
+   "text": "So we flipped the switch.",
+   "words": [
+    {
+     "w": "So",
+     "t": 15.3883,
+     "e": 15.4947
+    },
+    {
+     "w": "we",
+     "t": 15.4947,
+     "e": 15.601
+    },
+    {
+     "w": "flipped",
+     "t": 15.6011,
+     "e": 15.9069
+    },
+    {
+     "w": "the",
+     "t": 15.9069,
+     "e": 15.9867
+    },
+    {
+     "w": "switch",
+     "t": 16.0,
+     "e": 16.625
+    }
+   ]
+  },
+  "intro": {
+   "start": 17.4065,
+   "speechStart": 17.5,
+   "speechEnd": 22.0094,
+   "fileDuration": 4.944,
+   "text": "One Prime Studio. A design and development studio, built on one belief.",
+   "words": [
+    {
+     "w": "One",
+     "t": 17.5,
+     "e": 17.6752
+    },
+    {
+     "w": "Prime",
+     "t": 17.6753,
+     "e": 17.9089
+    },
+    {
+     "w": "Studio",
+     "t": 17.9205,
+     "e": 18.4112
+    },
+    {
+     "w": "A",
+     "t": 18.7734,
+     "e": 18.8201
+    },
+    {
+     "w": "design",
+     "t": 18.8318,
+     "e": 19.3692
+    },
+    {
+     "w": "and",
+     "t": 19.3808,
+     "e": 19.4743
+    },
+    {
+     "w": "development",
+     "t": 19.4743,
+     "e": 19.9299
+    },
+    {
+     "w": "studio",
+     "t": 19.9299,
+     "e": 20.479
+    },
+    {
+     "w": "built",
+     "t": 20.7593,
+     "e": 21.0163
+    },
+    {
+     "w": "on",
+     "t": 21.028,
+     "e": 21.2266
+    },
+    {
+     "w": "one",
+     "t": 21.2266,
+     "e": 21.4603
+    },
+    {
+     "w": "belief",
+     "t": 21.4603,
+     "e": 22.0094
+    }
+   ]
+  },
+  "belief": {
+   "start": 23.8983,
+   "speechStart": 24.0,
+   "speechEnd": 25.657,
+   "fileDuration": 2.16,
+   "text": "Average, is not an option.",
+   "words": [
+    {
+     "w": "Average",
+     "t": 24.0,
+     "e": 24.6105
+    },
+    {
+     "w": "is",
+     "t": 24.7703,
+     "e": 24.8575
+    },
+    {
+     "w": "not",
+     "t": 24.8575,
+     "e": 25.032
+    },
+    {
+     "w": "an",
+     "t": 25.0465,
+     "e": 25.1046
+    },
+    {
+     "w": "option",
+     "t": 25.1192,
+     "e": 25.657
+    }
+   ]
+  },
+  "services": {
+   "start": 26.4138,
+   "speechStart": 26.5,
+   "speechEnd": 33.903,
+   "fileDuration": 7.824,
+   "text": "Websites. Apps. CRMs and ERPs. SaaS products. Shopify stores. Brand identity.",
+   "words": [
+    {
+     "w": "Websites",
+     "t": 26.5,
+     "e": 27.1142
+    },
+    {
+     "w": "Apps",
+     "t": 27.459,
+     "e": 28.1164
+    },
+    {
+     "w": "CRMs",
+     "t": 28.472,
+     "e": 29.1293
+    },
+    {
+     "w": "and",
+     "t": 29.3448,
+     "e": 29.5819
+    },
+    {
+     "w": "ERPs",
+     "t": 29.7004,
+     "e": 30.4332
+    },
+    {
+     "w": "SaaS",
+     "t": 30.7888,
+     "e": 30.9935
+    },
+    {
+     "w": "products",
+     "t": 31.0043,
+     "e": 31.5107
+    },
+    {
+     "w": "Shopify",
+     "t": 31.8664,
+     "e": 32.3405
+    },
+    {
+     "w": "stores",
+     "t": 32.3513,
+     "e": 32.8685
+    },
+    {
+     "w": "Brand",
+     "t": 33.2134,
+     "e": 33.3858
+    },
+    {
+     "w": "identity",
+     "t": 33.3965,
+     "e": 33.903
+    }
+   ]
+  },
+  "zero": {
+   "start": 34.3049,
+   "speechStart": 34.375,
+   "speechEnd": 39.2232,
+   "fileDuration": 5.256,
+   "text": "We take ideas from zero, to their most refined, most premium form.",
+   "words": [
+    {
+     "w": "We",
+     "t": 34.375,
+     "e": 34.4685
+    },
+    {
+     "w": "take",
+     "t": 34.4685,
+     "e": 34.6787
+    },
+    {
+     "w": "ideas",
+     "t": 34.6788,
+     "e": 35.368
+    },
+    {
+     "w": "from",
+     "t": 35.368,
+     "e": 35.5433
+    },
+    {
+     "w": "zero",
+     "t": 35.5433,
+     "e": 36.104
+    },
+    {
+     "w": "to",
+     "t": 36.2909,
+     "e": 36.3844
+    },
+    {
+     "w": "their",
+     "t": 36.396,
+     "e": 36.5129
+    },
+    {
+     "w": "most",
+     "t": 36.5245,
+     "e": 36.8633
+    },
+    {
+     "w": "refined",
+     "t": 36.8633,
+     "e": 37.4708
+    },
+    {
+     "w": "most",
+     "t": 37.9615,
+     "e": 38.2068
+    },
+    {
+     "w": "premium",
+     "t": 38.2068,
+     "e": 38.7675
+    },
+    {
+     "w": "form",
+     "t": 38.7675,
+     "e": 39.2232
+    }
+   ]
+  },
+  "why1": {
+   "start": 39.9029,
+   "speechStart": 40.0,
+   "speechEnd": 41.8811,
+   "fileDuration": 2.328,
+   "text": "Every solution starts with a purpose.",
+   "words": [
+    {
+     "w": "Every",
+     "t": 40.0,
+     "e": 40.1942
+    },
+    {
+     "w": "solution",
+     "t": 40.1942,
+     "e": 40.7282
+    },
+    {
+     "w": "starts",
+     "t": 40.7403,
+     "e": 41.1165
+    },
+    {
+     "w": "with",
+     "t": 41.1165,
+     "e": 41.2015
+    },
+    {
+     "w": "a",
+     "t": 41.2136,
+     "e": 41.25
+    },
+    {
+     "w": "purpose",
+     "t": 41.25,
+     "e": 41.8811
+    }
+   ]
+  },
+  "why2": {
+   "start": 42.1408,
+   "speechStart": 42.25,
+   "speechEnd": 44.1796,
+   "fileDuration": 2.4,
+   "text": "The small things make the big difference.",
+   "words": [
+    {
+     "w": "The",
+     "t": 42.25,
+     "e": 42.2985
+    },
+    {
+     "w": "small",
+     "t": 42.2985,
+     "e": 42.5898
+    },
+    {
+     "w": "things",
+     "t": 42.5898,
+     "e": 42.9054
+    },
+    {
+     "w": "make",
+     "t": 42.9054,
+     "e": 43.1966
+    },
+    {
+     "w": "the",
+     "t": 43.2087,
+     "e": 43.3301
+    },
+    {
+     "w": "big",
+     "t": 43.3422,
+     "e": 43.5728
+    },
+    {
+     "w": "difference",
+     "t": 43.585,
+     "e": 44.1796
+    }
+   ]
+  },
+  "why3": {
+   "start": 44.4029,
+   "speechStart": 44.5,
+   "speechEnd": 45.9078,
+   "fileDuration": 1.872,
+   "text": "Built to grow with your business.",
+   "words": [
+    {
+     "w": "Built",
+     "t": 44.5,
+     "e": 44.6699
+    },
+    {
+     "w": "to",
+     "t": 44.682,
+     "e": 44.7791
+    },
+    {
+     "w": "grow",
+     "t": 44.7791,
+     "e": 45.1068
+    },
+    {
+     "w": "with",
+     "t": 45.1189,
+     "e": 45.2403
+    },
+    {
+     "w": "your",
+     "t": 45.2403,
+     "e": 45.3131
+    },
+    {
+     "w": "business",
+     "t": 45.3253,
+     "e": 45.9078
+    }
+   ]
+  },
+  "why4": {
+   "start": 46.1529,
+   "speechStart": 46.25,
+   "speechEnd": 47.4879,
+   "fileDuration": 1.68,
+   "text": "And we stay for the journey.",
+   "words": [
+    {
+     "w": "And",
+     "t": 46.25,
+     "e": 46.335
+    },
+    {
+     "w": "we",
+     "t": 46.335,
+     "e": 46.4442
+    },
+    {
+     "w": "stay",
+     "t": 46.4442,
+     "e": 46.8932
+    },
+    {
+     "w": "for",
+     "t": 46.9053,
+     "e": 46.9903
+    },
+    {
+     "w": "the",
+     "t": 47.0024,
+     "e": 47.0753
+    },
+    {
+     "w": "journey",
+     "t": 47.0753,
+     "e": 47.4879
+    }
+   ]
+  },
+  "solve": {
+   "start": 48.3665,
+   "speechStart": 48.5,
+   "speechEnd": 53.2451,
+   "fileDuration": 5.232,
+   "text": "Fourteen clicks, became one. Complex, made clear. For everyone.",
+   "words": [
+    {
+     "w": "Fourteen",
+     "t": 48.5,
+     "e": 48.9005
+    },
+    {
+     "w": "clicks",
+     "t": 48.9005,
+     "e": 49.4223
+    },
+    {
+     "w": "became",
+     "t": 49.6044,
+     "e": 50.017
+    },
+    {
+     "w": "one",
+     "t": 50.0291,
+     "e": 50.3204
+    },
+    {
+     "w": "Complex",
+     "t": 50.7209,
+     "e": 51.4248
+    },
+    {
+     "w": "made",
+     "t": 51.6068,
+     "e": 51.8131
+    },
+    {
+     "w": "clear",
+     "t": 51.8131,
+     "e": 52.25
+    },
+    {
+     "w": "For",
+     "t": 52.6869,
+     "e": 52.8083
+    },
+    {
+     "w": "everyone",
+     "t": 52.8204,
+     "e": 53.2451
+    }
+   ]
+  },
+  "ask": {
+   "start": 53.933,
+   "speechStart": 54.0,
+   "speechEnd": 59.2344,
+   "fileDuration": 5.64,
+   "text": "Have an idea? A new business? A system to be built? A brand that needs a new identity?",
+   "words": [
+    {
+     "w": "Have",
+     "t": 54.0,
+     "e": 54.1674
+    },
+    {
+     "w": "an",
+     "t": 54.1786,
+     "e": 54.2679
+    },
+    {
+     "w": "idea",
+     "t": 54.279,
+     "e": 54.759
+    },
+    {
+     "w": "A",
+     "t": 55.0714,
+     "e": 55.116
+    },
+    {
+     "w": "new",
+     "t": 55.1273,
+     "e": 55.317
+    },
+    {
+     "w": "business",
+     "t": 55.317,
+     "e": 55.8303
+    },
+    {
+     "w": "A",
+     "t": 56.154,
+     "e": 56.2098
+    },
+    {
+     "w": "system",
+     "t": 56.221,
+     "e": 56.6339
+    },
+    {
+     "w": "to",
+     "t": 56.6339,
+     "e": 56.712
+    },
+    {
+     "w": "be",
+     "t": 56.7232,
+     "e": 56.846
+    },
+    {
+     "w": "built",
+     "t": 56.8572,
+     "e": 57.2478
+    },
+    {
+     "w": "A",
+     "t": 57.5938,
+     "e": 57.6942
+    },
+    {
+     "w": "brand",
+     "t": 57.7054,
+     "e": 58.0848
+    },
+    {
+     "w": "that",
+     "t": 58.096,
+     "e": 58.2188
+    },
+    {
+     "w": "needs",
+     "t": 58.2299,
+     "e": 58.4308
+    },
+    {
+     "w": "a",
+     "t": 58.4308,
+     "e": 58.4643
+    },
+    {
+     "w": "new",
+     "t": 58.4755,
+     "e": 58.7098
+    },
+    {
+     "w": "identity",
+     "t": 58.721,
+     "e": 59.2344
+    }
+   ]
+  },
+  "cta": {
+   "start": 59.6848,
+   "speechStart": 59.7935,
+   "speechEnd": 60.9484,
+   "fileDuration": 1.872,
+   "text": "Let's build something prime.",
+   "words": [
+    {
+     "w": "Let's",
+     "t": 59.7935,
+     "e": 59.9294
+    },
+    {
+     "w": "build",
+     "t": 59.943,
+     "e": 60.1467
+    },
+    {
+     "w": "something",
+     "t": 60.1603,
+     "e": 60.4864
+    },
+    {
+     "w": "prime",
+     "t": 60.5,
+     "e": 60.9484
+    }
+   ]
+  }
+ },
+ "scenes": [
+  {
+   "id": "hook",
+   "start": 0.0,
+   "end": 3.7,
+   "in": null
+  },
+  {
+   "id": "problem",
+   "start": 3.7,
+   "end": 13.7622,
+   "in": "dither"
+  },
+  {
+   "id": "switch",
+   "start": 13.7622,
+   "end": 17.25,
+   "in": "dither"
+  },
+  {
+   "id": "intro",
+   "start": 17.25,
+   "end": 24.0,
+   "in": "dither"
+  },
+  {
+   "id": "belief",
+   "start": 24.0,
+   "end": 26.2,
+   "in": "cut"
+  },
+  {
+   "id": "services",
+   "start": 26.2,
+   "end": 34.175,
+   "in": "dither"
+  },
+  {
+   "id": "zero",
+   "start": 34.175,
+   "end": 39.7,
+   "in": "dither"
+  },
+  {
+   "id": "why",
+   "start": 39.7,
+   "end": 48.2,
+   "in": "dither"
+  },
+  {
+   "id": "solve",
+   "start": 48.2,
+   "end": 53.7,
+   "in": "dither"
+  },
+  {
+   "id": "ask",
+   "start": 53.7,
+   "end": 60.5,
+   "in": "dither"
+  },
+  {
+   "id": "cta",
+   "start": 60.5,
+   "end": 64.5,
+   "in": "cut"
+  }
+ ],
+ "hits": {
+  "switch": 16.0,
+  "belief": 24.0,
+  "one": 50.0291,
+  "prime": 60.5
+ }
+}

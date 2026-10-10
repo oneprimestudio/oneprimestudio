@@ -1,0 +1,814 @@
+{
+ "hook1": {
+  "id": "hook1",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "intimate",
+  "text": "Most software works.",
+  "duration": 1.872,
+  "words": [
+   {
+    "w": "Most",
+    "t": 0.111125,
+    "d": 0.194416
+   },
+   {
+    "w": "software",
+    "t": 0.305541,
+    "d": 0.444458
+   },
+   {
+    "w": "works",
+    "t": 0.75,
+    "d": 0.541666
+   }
+  ]
+ },
+ "hook2": {
+  "id": "hook2",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "intimate",
+  "text": "Nobody wants to use it.",
+  "duration": 1.872,
+  "words": [
+   {
+    "w": "Nobody",
+    "t": 0.097208,
+    "d": 0.25
+   },
+   {
+    "w": "wants",
+    "t": 0.347208,
+    "d": 0.208333
+   },
+   {
+    "w": "to",
+    "t": 0.555541,
+    "d": 0.097208
+   },
+   {
+    "w": "use",
+    "t": 0.666666,
+    "d": 0.319458
+   },
+   {
+    "w": "it",
+    "t": 0.986125,
+    "d": 0.180541
+   }
+  ]
+ },
+ "prob1": {
+  "id": "prob1",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "flat",
+  "text": "Fourteen clicks, to do one thing.",
+  "duration": 2.424,
+  "words": [
+   {
+    "w": "Fourteen",
+    "t": 0.134791,
+    "d": 0.441166
+   },
+   {
+    "w": "clicks",
+    "t": 0.576,
+    "d": 0.477958
+   },
+   {
+    "w": "to",
+    "t": 1.139708,
+    "d": 0.085791
+   },
+   {
+    "w": "do",
+    "t": 1.2255,
+    "d": 0.147041
+   },
+   {
+    "w": "one",
+    "t": 1.384791,
+    "d": 0.281875
+   },
+   {
+    "w": "thing",
+    "t": 1.678916,
+    "d": 0.392166
+   }
+  ]
+ },
+ "prob2": {
+  "id": "prob2",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "flat",
+  "text": "Dashboards nobody reads.",
+  "duration": 2.016,
+  "words": [
+   {
+    "w": "Dashboards",
+    "t": 0.098041,
+    "d": 0.526958
+   },
+   {
+    "w": "nobody",
+    "t": 0.625,
+    "d": 0.428916
+   },
+   {
+    "w": "reads",
+    "t": 1.066166,
+    "d": 0.58825
+   }
+  ]
+ },
+ "prob3": {
+  "id": "prob3",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "flat",
+  "text": "Websites that look like everyone else's.",
+  "duration": 2.544,
+  "words": [
+   {
+    "w": "Websites",
+    "t": 0.098041,
+    "d": 0.502458
+   },
+   {
+    "w": "that",
+    "t": 0.61275,
+    "d": 0.110291
+   },
+   {
+    "w": "look",
+    "t": 0.735291,
+    "d": 0.147041
+   },
+   {
+    "w": "like",
+    "t": 0.882333,
+    "d": 0.220583
+   },
+   {
+    "w": "everyone",
+    "t": 1.26225,
+    "d": 0.343125
+   },
+   {
+    "w": "else's",
+    "t": 1.605375,
+    "d": 0.576
+   }
+  ]
+ },
+ "prob4": {
+  "id": "prob4",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "flat",
+  "text": "Systems your team quietly works around.",
+  "duration": 2.952,
+  "words": [
+   {
+    "w": "Systems",
+    "t": 0.098041,
+    "d": 0.416666
+   },
+   {
+    "w": "your",
+    "t": 0.514708,
+    "d": 0.110291
+   },
+   {
+    "w": "team",
+    "t": 0.625,
+    "d": 0.465666
+   },
+   {
+    "w": "quietly",
+    "t": 1.384791,
+    "d": 0.465666
+   },
+   {
+    "w": "works",
+    "t": 1.8505,
+    "d": 0.269625
+   },
+   {
+    "w": "around",
+    "t": 2.132333,
+    "d": 0.477958
+   }
+  ]
+ },
+ "switch": {
+  "id": "switch",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "turn",
+  "text": "So we flipped the switch.",
+  "duration": 1.872,
+  "words": [
+   {
+    "w": "So",
+    "t": 0.106375,
+    "d": 0.106375
+   },
+   {
+    "w": "we",
+    "t": 0.21275,
+    "d": 0.106375
+   },
+   {
+    "w": "flipped",
+    "t": 0.319166,
+    "d": 0.305833
+   },
+   {
+    "w": "the",
+    "t": 0.625,
+    "d": 0.079791
+   },
+   {
+    "w": "switch",
+    "t": 0.718083,
+    "d": 0.625
+   }
+  ]
+ },
+ "intro": {
+  "id": "intro",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "assured",
+  "text": "One Prime Studio. A design and development studio, built on one belief.",
+  "duration": 4.944,
+  "words": [
+   {
+    "w": "One",
+    "t": 0.093458,
+    "d": 0.17525
+   },
+   {
+    "w": "Prime",
+    "t": 0.268708,
+    "d": 0.233625
+   },
+   {
+    "w": "Studio",
+    "t": 0.514,
+    "d": 0.490666
+   },
+   {
+    "w": "A",
+    "t": 1.366833,
+    "d": 0.046708
+   },
+   {
+    "w": "design",
+    "t": 1.42525,
+    "d": 0.537375
+   },
+   {
+    "w": "and",
+    "t": 1.974291,
+    "d": 0.093458
+   },
+   {
+    "w": "development",
+    "t": 2.06775,
+    "d": 0.455625
+   },
+   {
+    "w": "studio",
+    "t": 2.523375,
+    "d": 0.549083
+   },
+   {
+    "w": "built",
+    "t": 3.352791,
+    "d": 0.257
+   },
+   {
+    "w": "on",
+    "t": 3.6215,
+    "d": 0.198583
+   },
+   {
+    "w": "one",
+    "t": 3.820083,
+    "d": 0.233625
+   },
+   {
+    "w": "belief",
+    "t": 4.05375,
+    "d": 0.549083
+   }
+  ]
+ },
+ "belief": {
+  "id": "belief",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "weight",
+  "text": "Average, is not an option.",
+  "duration": 2.16,
+  "words": [
+   {
+    "w": "Average",
+    "t": 0.10175,
+    "d": 0.610458
+   },
+   {
+    "w": "is",
+    "t": 0.872083,
+    "d": 0.087208
+   },
+   {
+    "w": "not",
+    "t": 0.959291,
+    "d": 0.174416
+   },
+   {
+    "w": "an",
+    "t": 1.14825,
+    "d": 0.058125
+   },
+   {
+    "w": "option",
+    "t": 1.220916,
+    "d": 0.537791
+   }
+  ]
+ },
+ "services": {
+  "id": "services",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "brisk",
+  "text": "Websites. Apps. CRMs and ERPs. SaaS products. Shopify stores. Brand identity.",
+  "duration": 7.824,
+  "words": [
+   {
+    "w": "Websites",
+    "t": 0.086208,
+    "d": 0.614208
+   },
+   {
+    "w": "Apps",
+    "t": 1.04525,
+    "d": 0.657333
+   },
+   {
+    "w": "CRMs",
+    "t": 2.058208,
+    "d": 0.657333
+   },
+   {
+    "w": "and",
+    "t": 2.931041,
+    "d": 0.237083
+   },
+   {
+    "w": "ERPs",
+    "t": 3.286625,
+    "d": 0.73275
+   },
+   {
+    "w": "SaaS",
+    "t": 4.375,
+    "d": 0.20475
+   },
+   {
+    "w": "products",
+    "t": 4.5905,
+    "d": 0.506458
+   },
+   {
+    "w": "Shopify",
+    "t": 5.452583,
+    "d": 0.474125
+   },
+   {
+    "w": "stores",
+    "t": 5.9375,
+    "d": 0.51725
+   },
+   {
+    "w": "Brand",
+    "t": 6.799583,
+    "d": 0.172416
+   },
+   {
+    "w": "identity",
+    "t": 6.98275,
+    "d": 0.506458
+   }
+  ]
+ },
+ "zero": {
+  "id": "zero",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "assured",
+  "text": "We take ideas from zero, to their most refined, most premium form.",
+  "duration": 5.256,
+  "words": [
+   {
+    "w": "We",
+    "t": 0.070083,
+    "d": 0.093458
+   },
+   {
+    "w": "take",
+    "t": 0.163541,
+    "d": 0.210291
+   },
+   {
+    "w": "ideas",
+    "t": 0.373833,
+    "d": 0.68925
+   },
+   {
+    "w": "from",
+    "t": 1.063083,
+    "d": 0.17525
+   },
+   {
+    "w": "zero",
+    "t": 1.238333,
+    "d": 0.56075
+   },
+   {
+    "w": "to",
+    "t": 1.986,
+    "d": 0.093458
+   },
+   {
+    "w": "their",
+    "t": 2.091125,
+    "d": 0.116833
+   },
+   {
+    "w": "most",
+    "t": 2.219625,
+    "d": 0.338791
+   },
+   {
+    "w": "refined",
+    "t": 2.558416,
+    "d": 0.607458
+   },
+   {
+    "w": "most",
+    "t": 3.656541,
+    "d": 0.245333
+   },
+   {
+    "w": "premium",
+    "t": 3.901875,
+    "d": 0.56075
+   },
+   {
+    "w": "form",
+    "t": 4.462625,
+    "d": 0.455625
+   }
+  ]
+ },
+ "why1": {
+  "id": "why1",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "warm",
+  "text": "Every solution starts with a purpose.",
+  "duration": 2.328,
+  "words": [
+   {
+    "w": "Every",
+    "t": 0.097083,
+    "d": 0.194166
+   },
+   {
+    "w": "solution",
+    "t": 0.29125,
+    "d": 0.534
+   },
+   {
+    "w": "starts",
+    "t": 0.837375,
+    "d": 0.376208
+   },
+   {
+    "w": "with",
+    "t": 1.213583,
+    "d": 0.084958
+   },
+   {
+    "w": "a",
+    "t": 1.310666,
+    "d": 0.0364159
+   },
+   {
+    "w": "purpose",
+    "t": 1.347083,
+    "d": 0.631083
+   }
+  ]
+ },
+ "why2": {
+  "id": "why2",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "warm",
+  "text": "The small things make the big difference.",
+  "duration": 2.4,
+  "words": [
+   {
+    "w": "The",
+    "t": 0.109208,
+    "d": 0.0485409
+   },
+   {
+    "w": "small",
+    "t": 0.15775,
+    "d": 0.29125
+   },
+   {
+    "w": "things",
+    "t": 0.449041,
+    "d": 0.315541
+   },
+   {
+    "w": "make",
+    "t": 0.764583,
+    "d": 0.29125
+   },
+   {
+    "w": "the",
+    "t": 1.067958,
+    "d": 0.121375
+   },
+   {
+    "w": "big",
+    "t": 1.201458,
+    "d": 0.230583
+   },
+   {
+    "w": "difference",
+    "t": 1.444166,
+    "d": 0.594666
+   }
+  ]
+ },
+ "why3": {
+  "id": "why3",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "warm",
+  "text": "Built to grow with your business.",
+  "duration": 1.872,
+  "words": [
+   {
+    "w": "Built",
+    "t": 0.097083,
+    "d": 0.169916
+   },
+   {
+    "w": "to",
+    "t": 0.279125,
+    "d": 0.097083
+   },
+   {
+    "w": "grow",
+    "t": 0.376208,
+    "d": 0.327666
+   },
+   {
+    "w": "with",
+    "t": 0.716,
+    "d": 0.121375
+   },
+   {
+    "w": "your",
+    "t": 0.837375,
+    "d": 0.072833
+   },
+   {
+    "w": "business",
+    "t": 0.922333,
+    "d": 0.582541
+   }
+  ]
+ },
+ "why4": {
+  "id": "why4",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "warm",
+  "text": "And we stay for the journey.",
+  "duration": 1.68,
+  "words": [
+   {
+    "w": "And",
+    "t": 0.097083,
+    "d": 0.084958
+   },
+   {
+    "w": "we",
+    "t": 0.182041,
+    "d": 0.109208
+   },
+   {
+    "w": "stay",
+    "t": 0.29125,
+    "d": 0.449041
+   },
+   {
+    "w": "for",
+    "t": 0.752416,
+    "d": 0.084958
+   },
+   {
+    "w": "the",
+    "t": 0.8495,
+    "d": 0.072833
+   },
+   {
+    "w": "journey",
+    "t": 0.922333,
+    "d": 0.412625
+   }
+  ]
+ },
+ "solve": {
+  "id": "solve",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "warm",
+  "text": "Fourteen clicks, became one. Complex, made clear. For everyone.",
+  "duration": 5.232,
+  "words": [
+   {
+    "w": "Fourteen",
+    "t": 0.1335,
+    "d": 0.4005
+   },
+   {
+    "w": "clicks",
+    "t": 0.534,
+    "d": 0.521833
+   },
+   {
+    "w": "became",
+    "t": 1.237875,
+    "d": 0.412625
+   },
+   {
+    "w": "one",
+    "t": 1.662625,
+    "d": 0.29125
+   },
+   {
+    "w": "Complex",
+    "t": 2.354375,
+    "d": 0.703875
+   },
+   {
+    "w": "made",
+    "t": 3.240291,
+    "d": 0.206291
+   },
+   {
+    "w": "clear",
+    "t": 3.446583,
+    "d": 0.436875
+   },
+   {
+    "w": "For",
+    "t": 4.320375,
+    "d": 0.121375
+   },
+   {
+    "w": "everyone",
+    "t": 4.453875,
+    "d": 0.42475
+   }
+  ]
+ },
+ "ask": {
+  "id": "ask",
+  "voice": "en-US-AvaMultilingualNeural",
+  "style": "bright",
+  "text": "Have an idea? A new business? A system to be built? A brand that needs a new identity?",
+  "duration": 5.64,
+  "words": [
+   {
+    "w": "Have",
+    "t": 0.066958,
+    "d": 0.167416
+   },
+   {
+    "w": "an",
+    "t": 0.245541,
+    "d": 0.089291
+   },
+   {
+    "w": "idea",
+    "t": 0.346,
+    "d": 0.479916
+   },
+   {
+    "w": "A",
+    "t": 1.138375,
+    "d": 0.044625
+   },
+   {
+    "w": "new",
+    "t": 1.194208,
+    "d": 0.189708
+   },
+   {
+    "w": "business",
+    "t": 1.383916,
+    "d": 0.513375
+   },
+   {
+    "w": "A",
+    "t": 2.221,
+    "d": 0.055791
+   },
+   {
+    "w": "system",
+    "t": 2.287958,
+    "d": 0.412916
+   },
+   {
+    "w": "to",
+    "t": 2.700875,
+    "d": 0.078125
+   },
+   {
+    "w": "be",
+    "t": 2.790166,
+    "d": 0.12275
+   },
+   {
+    "w": "built",
+    "t": 2.924125,
+    "d": 0.390625
+   },
+   {
+    "w": "A",
+    "t": 3.660708,
+    "d": 0.100458
+   },
+   {
+    "w": "brand",
+    "t": 3.772333,
+    "d": 0.379458
+   },
+   {
+    "w": "that",
+    "t": 4.162958,
+    "d": 0.12275
+   },
+   {
+    "w": "needs",
+    "t": 4.296875,
+    "d": 0.200875
+   },
+   {
+    "w": "a",
+    "t": 4.49775,
+    "d": 0.0335
+   },
+   {
+    "w": "new",
+    "t": 4.542416,
+    "d": 0.234375
+   },
+   {
+    "w": "identity",
+    "t": 4.787958,
+    "d": 0.513375
+   }
+  ]
+ },
+ "cta": {
+  "id": "cta",
+  "voice": "en-US-AndrewMultilingualNeural",
+  "style": "close",
+  "text": "Let's build something prime.",
+  "duration": 1.872,
+  "words": [
+   {
+    "w": "Let's",
+    "t": 0.108708,
+    "d": 0.135875
+   },
+   {
+    "w": "build",
+    "t": 0.258166,
+    "d": 0.203791
+   },
+   {
+    "w": "something",
+    "t": 0.475541,
+    "d": 0.326083
+   },
+   {
+    "w": "prime",
+    "t": 0.815208,
+    "d": 0.448375
+   }
+  ]
+ }
+}
