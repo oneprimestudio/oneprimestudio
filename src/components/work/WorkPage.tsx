@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
-import DitherReveal from "@/components/DitherReveal";
-import { CardMedia, label, pad } from "@/components/work/parts";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CardMedia, label, pad, Swap } from "@/components/work/parts";
 import {
   ensureSmoother,
   gsap,
@@ -12,33 +11,39 @@ import {
   MENU_EASE,
   prefersReducedMotion,
   PRIME,
+  ScrollSmoother,
+  ScrollTrigger,
   useGSAP,
 } from "@/lib/gsap";
 import { gooHeadings } from "@/lib/goo";
-import { PillButton, PillLink } from "@/components/Pill";
-import { BRANDS, KINDS, WORK, type Kind, type Work } from "@/lib/work";
+import { setNavPlain } from "@/lib/navPlain";
+import { PillLink } from "@/components/Pill";
+import WorkWheel, { type WheelPos } from "@/components/work/WorkWheel";
+import { BRANDS, WORK, type Work } from "@/lib/work";
 
 /*
- * The work, after orchard.framer.website/works: the index of everything, each project opening into its
- * own case page (/projects/[slug], CasePage).
+ * The work, laid out after obys.agency's index: one screen, held still while the scroll runs the pictures
+ * through it.
  *
- * Set like the globe section: white, small type, words kept to the corners and the pictures given room.
- *
- *   head      a label and a small paragraph at the left, the count opposite; far below, two quiet rows of
- *             pills — Service (filters the work) and View (grid or list)
- *   featured  4:5 cards with a small caption, opening through a rising mask; or the projects as rows with
- *             a preview that follows the cursor and re-dithers to each one
- *   clients   the brands we've built with, in small rows: names rolling on hover, each with its live site
+ *   index   (wide screens) the screen pins. Down its middle turns a wheel (WorkWheel, three.js): the
+ *           projects' 4:5 cards bent onto a drum; a bracket frame stays fixed at the centre and whichever
+ *           card faces you in it is the active project — in full colour, square to you, while the ones
+ *           before and after curve away over the top and under the foot, smaller and grey. Around the frame, kept to the edges: the names as an index at
+ *           the left (the active one in ink; click one to travel there), what it is just left of the frame,
+ *           what we did just right of it, the count at the far right. Corners: who we are, the totals, the
+ *           view switch, and the way into the active case. The scroll snaps project to project.
+ *   grid    the same work as roomy 4:5 cards, opening through a rising mask (phones always see this)
+ *   clients the brands we've built with, in small rows: names rolling on hover, each with its live site
  *
  * The footer that follows every page carries the call to start a project, so this page doesn't repeat it.
  */
 
+const N = WORK.length;
+const STEP_VH = 65; // scroll, in % of the screen, that carries one project into the frame
 
 /**
- * A card: the picture at 4:5 with nothing laid over it, and a small caption under it — number, name and
- * kind on one line, the one-liner under the name. It arrives through a mask (the frame opens upward from
- * its foot while the picture settles from a slight zoom, then the caption lines rise — see the grid's
- * reveal). On hover the picture eases in and the arrow steps out.
+ * A grid card: the picture at 4:5 with nothing laid over it, and a small caption under it — number, name
+ * and kind on one line, the one-liner under the name. It arrives through a mask (see the grid's reveal).
  */
 function Card({ work, n }: { work: Work; n: number }) {
   return (
@@ -51,7 +56,7 @@ function Card({ work, n }: { work: Work; n: number }) {
             </div>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-[2rem_1fr_auto] gap-x-3 leading-[1.45]">
+        <div className="mt-5 grid grid-cols-[2rem_1fr_auto] gap-x-3 leading-[1.45]">
           <span className="overflow-hidden">
             <span data-cap className={`${label} block pt-[3px] text-stone`}>
               {pad(n)}
@@ -81,15 +86,41 @@ function Card({ work, n }: { work: Work; n: number }) {
   );
 }
 
+/** the Obys switch: plain words, comma-separated, the chosen one underlined */
+function ViewSwitch({ view, onChange }: { view: "index" | "grid"; onChange: (v: "index" | "grid") => void }) {
+  return (
+    <p className="flex items-baseline gap-1 text-[13px] tracking-[-0.005em]">
+      {(["index", "grid"] as const).map((v, i) => (
+        <button
+          key={v}
+          type="button"
+          aria-pressed={view === v}
+          onClick={() => onChange(v)}
+          className={`bg-[linear-gradient(currentColor,currentColor)] bg-[position:0_100%] bg-no-repeat pb-0.5 transition-[background-size,color] duration-700 ease-prime ${
+            view === v ? "bg-[length:100%_1px] text-ink" : "bg-[length:0%_1px] text-stone hover:bg-[length:100%_1px] hover:text-ink"
+          }`}
+        >
+          {v === "index" ? "Index" : "Grid"}
+          {i === 0 && <span className="text-stone">,</span>}
+        </button>
+      ))}
+    </p>
+  );
+}
+
 export default function WorkPage() {
   const root = useRef<HTMLElement>(null);
-  const [shown, setShown] = useState(0);
-  const [replay, setReplay] = useState(0);
+  const stage = useRef<HTMLElement>(null);
   const grid = useRef<HTMLDivElement>(null);
-  const [kind, setKind] = useState<Kind | "All">("All");
-  const [view, setView] = useState<"grid" | "list">("grid");
-  const touched = useRef(false); // has the visitor filtered or switched views yet
-  const items = kind === "All" ? WORK : WORK.filter((w) => w.kind === kind);
+  const pinRef = useRef<ScrollTrigger | null>(null);
+  const wheel = useRef<WheelPos>({ at: 0, hover: 0 });
+  const [view, setView] = useState<"index" | "grid">("index");
+  const [wide, setWide] = useState(false); // the wheel is drawn only where the index is shown
+  const [active, setActive] = useState(0);
+  // no WebGL: the cards will do
+  const noWheel = useCallback(() => setView("grid"), []);
+  const touched = useRef(false); // has the visitor switched views yet
+  const work = WORK[active];
 
   useGSAP(
     () => {
@@ -110,17 +141,7 @@ export default function WorkPage() {
           autoAlpha: 0,
           duration: 1,
           ease: MENU_EASE,
-          scrollTrigger: { trigger: node, start: "top 92%", once: true },
-        }),
-      );
-      // hairlines draw out from the left
-      el.querySelectorAll<HTMLElement>("[data-rule]").forEach((node) =>
-        gsap.from(node, {
-          scaleX: 0,
-          transformOrigin: "0% 50%",
-          duration: 1.4,
-          ease: PRIME,
-          scrollTrigger: { trigger: node, start: "top 94%", once: true },
+          scrollTrigger: { trigger: node, start: "top 92%", toggleActions: "play none none none" },
         }),
       );
       // the clients' names rise out of their masks, one row after another
@@ -133,200 +154,308 @@ export default function WorkPage() {
           scrollTrigger: { trigger: row, start: "top 92%", toggleActions: "play none none none" },
         }),
       );
-      const mm = gsap.matchMedia();
-      mm.add("(min-width: 768px)", () => {
-        // the preview follows the cursor over the index, a little behind it
-        const index = el.querySelector<HTMLElement>("[data-index]");
-        const preview = el.querySelector<HTMLElement>("[data-preview]");
-        if (!index || !preview) return;
-        // to the right of the cursor, so the row's own title stays readable
-        gsap.set(preview, { autoAlpha: 0, scale: 0.92, xPercent: 12, yPercent: -50 });
-        const xTo = gsap.quickTo(preview, "x", { duration: 0.6, ease: "power3.out" });
-        const yTo = gsap.quickTo(preview, "y", { duration: 0.6, ease: "power3.out" });
-        const onMove = (e: PointerEvent) => {
-          const r = index.getBoundingClientRect();
-          xTo(e.clientX - r.left);
-          yTo(e.clientY - r.top);
-        };
-        const onEnter = (e: PointerEvent) => {
-          const r = index.getBoundingClientRect();
-          gsap.set(preview, { x: e.clientX - r.left, y: e.clientY - r.top });
-          gsap.to(preview, { autoAlpha: 1, scale: 1, duration: 0.6, ease: PRIME, overwrite: "auto" });
-        };
-        const onLeave = () => gsap.to(preview, { autoAlpha: 0, scale: 0.92, duration: 0.45, ease: PRIME, overwrite: "auto" });
-        const list = index.querySelector<HTMLElement>("[data-list]")!;
-        list.addEventListener("pointermove", onMove);
-        list.addEventListener("pointerenter", onEnter);
-        list.addEventListener("pointerleave", onLeave);
-        return () => {
-          list.removeEventListener("pointermove", onMove);
-          list.removeEventListener("pointerenter", onEnter);
-          list.removeEventListener("pointerleave", onLeave);
-        };
-      });
-      cleanups.push(() => mm.revert());
       return done;
     },
     { scope: root },
   );
 
-  // the featured cards (or rows) come in through their masks: on the first visit as they scroll into view,
-  // and again straight away whenever the filter or the view changes
+  // ---- the index: the screen pins and the scroll runs the column through the frame ----
+  useGSAP(
+    () => {
+      const el = stage.current;
+      if (!el || view !== "index" || prefersReducedMotion()) return;
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        setWide(true);
+        let last = -1;
+        // where the wheel stands: the project in front, as a fraction
+        const place = (p: number) => {
+          const at = p * (N - 1);
+          wheel.current.at = at;
+          const i = Math.round(at);
+          if (i !== last) {
+            last = i;
+            setActive(i);
+          }
+        };
+        const pin = ScrollTrigger.create({
+          trigger: el,
+          start: "top top",
+          end: () => `+=${(N - 1) * STEP_VH}%`,
+          pin: true,
+          // the navbar's section triggers exist before this pin: its spacer has to be laid out first
+          refreshPriority: 1,
+          invalidateOnRefresh: true,
+          onRefresh: (self) => {
+            place(self.progress);
+            setNavPlain(self.isActive);
+          },
+          onUpdate: (self) => place(self.progress),
+          // while the screen is held, nothing passes under the navbar: it can drop its sheet
+          onToggle: (self) => setNavPlain(self.isActive),
+          // it comes to rest with a project in the frame, never between two
+          snap: { snapTo: 1 / (N - 1), duration: { min: 0.35, max: 0.9 }, delay: 0.08, ease: "power2.inOut" },
+        });
+        pinRef.current = pin;
+        setNavPlain(pin.isActive);
+        place(pin.progress);
+
+        // the corners, the index and the frame close in once
+        const intro = gsap.timeline({ defaults: { ease: PRIME } });
+        intro
+          .from(el.querySelectorAll("[data-bracket]"), { scale: 1.5, autoAlpha: 0, duration: 1.2, stagger: 0.05 }, 0.1)
+          .from(el.querySelectorAll("[data-name]"), { yPercent: 110, duration: 1, stagger: 0.04 }, 0.3)
+          .from(el.querySelectorAll("[data-corner]"), { y: 16, autoAlpha: 0, duration: 1, ease: MENU_EASE, stagger: 0.06 }, 0.4);
+        return () => {
+          pinRef.current = null;
+          setNavPlain(false);
+          setWide(false);
+        };
+      });
+      return () => mm.revert();
+    },
+    { scope: stage, dependencies: [view], revertOnUpdate: true },
+  );
+
+  // on each new project the frame breathes in and the words around it roll over
+  useEffect(() => {
+    const el = stage.current;
+    if (!el || prefersReducedMotion()) return;
+    gsap.fromTo(el.querySelectorAll("[data-swap]"), { yPercent: 105 }, { yPercent: 0, duration: 0.8, ease: PRIME, stagger: 0.03 });
+    gsap.fromTo(el.querySelectorAll("[data-breathe]"), { scale: 1.08 }, { scale: 1, duration: 0.9, ease: PRIME, overwrite: true });
+  }, [active]);
+
+  // the grid's cards come in through their masks: as they scroll into view, or at once after a switch
   useGSAP(
     () => {
       const el = grid.current;
       if (!el || prefersReducedMotion()) return;
       const at = (trigger: Element) =>
         touched.current ? {} : { scrollTrigger: { trigger, start: "top 92%", toggleActions: "play none none none" } };
-      if (view === "grid") {
-        el.querySelectorAll<HTMLElement>("[data-card]").forEach((card, i) => {
-          gsap
-            .timeline({ delay: (i % 3) * 0.1, ...at(card) })
-            .fromTo(
-              card.querySelector("[data-mask]"),
-              { clipPath: "inset(100% 0% 0% 0%)" },
-              { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: PRIME },
-              0,
-            )
-            .from(card.querySelector("[data-media]"), { scale: 1.3, yPercent: 10, duration: 1.6, ease: PRIME }, 0)
-            .from(card.querySelectorAll("[data-cap]"), { yPercent: 110, duration: 1, ease: PRIME, stagger: 0.07 }, 0.4);
-        });
-      } else {
-        const rows = el.querySelectorAll("[data-row]");
-        if (rows.length)
-          gsap.from(rows, { yPercent: 40, autoAlpha: 0, duration: 1.1, ease: PRIME, stagger: 0.07, ...at(rows[0]) });
-      }
+      el.querySelectorAll<HTMLElement>("[data-card]").forEach((card, i) => {
+        gsap
+          .timeline({ delay: (i % 3) * 0.1, ...at(card) })
+          .fromTo(
+            card.querySelector("[data-mask]"),
+            { clipPath: "inset(100% 0% 0% 0%)" },
+            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: PRIME },
+            0,
+          )
+          .from(card.querySelector("[data-media]"), { scale: 1.3, yPercent: 10, duration: 1.6, ease: PRIME }, 0)
+          .from(card.querySelectorAll("[data-cap]"), { yPercent: 110, duration: 1, ease: PRIME, stagger: 0.07 }, 0.4);
+      });
     },
-    { scope: grid, dependencies: [kind, view], revertOnUpdate: true },
+    { scope: grid, dependencies: [view], revertOnUpdate: true },
   );
 
-  const choose = (k: Kind | "All") => {
+  const switchView = (v: "index" | "grid") => {
+    if (v === view) return;
     touched.current = true;
-    setKind(k);
-  };
-  const switchView = (v: "grid" | "list") => {
-    touched.current = true;
+    ScrollSmoother.get()?.scrollTo(0, false);
+    window.scrollTo(0, 0);
     setView(v);
+    requestAnimationFrame(() => ScrollTrigger.refresh());
   };
 
-  // hovering a row: the preview shows that project, assembling out of the dots again
-  const show = (i: number) => {
-    if (i === shown && replay > 0) return;
-    setShown(i);
-    setReplay((r) => r + 1);
+  // travel to a project: the scroll position that puts it in the frame
+  const go = (i: number) => {
+    const pin = pinRef.current;
+    if (!pin) return;
+    const y = pin.start + (i / (N - 1)) * (pin.end - pin.start);
+    const smoother = ScrollSmoother.get();
+    if (smoother) smoother.scrollTo(y, true);
+    else window.scrollTo({ top: y, behavior: "smooth" });
   };
+
+  const intro = (
+    <>
+      <h1 data-hover-scramble className={`${label} text-stone`}>
+        [ Work ] — Index
+      </h1>
+      <p className="mt-4 text-[15px] leading-[1.45] tracking-[-0.005em] text-graphite md:text-[16px]">
+        Software, websites, apps and identities — for businesses across Telangana, and for ourselves. Each one
+        designed and built end to end, in one place.
+      </p>
+    </>
+  );
+  const totals = (
+    <>
+      ({pad(N)}) Projects · ({pad(BRANDS.length)}) Clients
+      <br />
+      Hyderabad · 2026
+    </>
+  );
 
   return (
     <main ref={root} className="relative bg-white text-ink">
-      {/* ---- head: the corners, as the globe's — a label and a small paragraph, the count opposite ---- */}
-      <section data-nav-message="The work" className="px-[var(--gutter)] pt-[calc(var(--nav-top)+var(--nav-h)+28px)]">
-        <div className="grid gap-y-8 md:grid-cols-12 md:gap-x-6">
-          <div data-reveal className="max-w-[34ch] md:col-span-4">
-            <h1 data-hover-scramble className={`${label} text-stone`}>
-              [ Work ] — Index
-            </h1>
-            <p className="mt-4 text-[15px] leading-[1.45] tracking-[-0.005em] text-graphite md:text-[16px]">
-              Software, websites, apps and identities — for businesses across Telangana, and for ourselves. Each one
-              designed and built end to end, in one place.
+      {/* ---- the index: one held screen (wide screens only — phones get the grid). Always mounted, only
+           hidden: a pinned section sits inside GSAP's spacer, and React can't take it out from there ---- */}
+      <section
+        ref={stage}
+        data-nav-message="The work"
+        aria-hidden={view !== "index"}
+        className={`relative hidden h-[100svh] min-h-[640px] overflow-hidden [--w:min(24vw,46svh)] ${view === "index" ? "md:block motion-reduce:md:hidden" : ""}`}
+      >
+        {/* the wheel, and over it the ways in: the card in the frame opens its case; above or below it,
+            the card before or after turns to the front */}
+        {/* cut at the navbar's foot, so no card turns up behind it */}
+        <div className="pointer-events-none absolute inset-0 [clip-path:inset(calc(var(--nav-top)+var(--nav-h)+12px)_0_0_0)]">
+          {view === "index" && wide && <WorkWheel pos={wheel} onFail={noWheel} />}
+        </div>
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-hidden
+          onClick={() => go(Math.max(0, active - 1))}
+          className="absolute left-[calc(50%-var(--w)/2)] top-0 h-[calc(50%-var(--w)*0.625)] w-[var(--w)] cursor-n-resize"
+        />
+        <Link
+          href={`/projects/${work.slug}`}
+          tabIndex={-1}
+          aria-hidden
+          onPointerEnter={() => (wheel.current.hover = 1)}
+          onPointerLeave={() => (wheel.current.hover = 0)}
+          className="absolute left-[calc(50%-var(--w)/2)] top-[calc(50%-var(--w)*0.625)] h-[calc(var(--w)*1.25)] w-[var(--w)]"
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-hidden
+          onClick={() => go(Math.min(N - 1, active + 1))}
+          className="absolute bottom-0 left-[calc(50%-var(--w)/2)] h-[calc(50%-var(--w)*0.625)] w-[var(--w)] cursor-s-resize"
+        />
+
+        {/* the frame, fixed at the centre, a little wider than the picture it holds */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[calc(var(--w)*1.25+48px)] w-[calc(var(--w)+48px)] -translate-x-1/2 -translate-y-1/2"
+        >
+          {/* each bracket breathes on its outer span and arrives on its inner one, so neither move cuts the other */}
+          {[
+            ["left-0 top-0", "border-l-2 border-t-2"],
+            ["right-0 top-0", "border-r-2 border-t-2"],
+            ["bottom-0 left-0", "border-b-2 border-l-2"],
+            ["bottom-0 right-0", "border-b-2 border-r-2"],
+          ].map(([at, edges]) => (
+            <span key={at} data-breathe className={`absolute h-10 w-10 ${at}`}>
+              <span data-bracket className={`absolute inset-0 border-ink ${edges}`} />
+            </span>
+          ))}
+        </div>
+
+        {/* the index of names, at the left, held to the middle of the screen */}
+        <ol className="absolute left-[var(--gutter)] top-1/2 w-[min(18vw,240px)] -translate-y-1/2">
+          {WORK.map((w, i) => (
+            <li key={w.slug} className="overflow-hidden">
+              <button
+                type="button"
+                data-name
+                onClick={() => go(i)}
+                aria-current={i === active ? "true" : undefined}
+                className={`group/name flex w-full items-baseline gap-3 py-[3px] text-left text-[13px] leading-[1.35] tracking-[-0.005em] transition-colors duration-500 ease-prime ${
+                  i === active ? "text-ink" : "text-ink/30 hover:text-ink/70"
+                }`}
+              >
+                <span className="w-5 shrink-0 font-mono text-[10px] tracking-[0.08em]">{pad(i + 1)}</span>
+                <span className="truncate transition-transform duration-700 ease-prime group-hover/name:translate-x-1">
+                  {w.title}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+
+        {/* what it is, just left of the frame; what we did, just right of it; the count at the far right */}
+        <div className="pointer-events-none absolute right-[calc(50%+var(--w)/2+64px)] top-1/2 w-[min(14vw,200px)] -translate-y-1/2 text-right text-[13px] leading-[1.35]">
+          <Swap id={`k${active}`} className={`${label} text-stone`}>
+            {work.kind}
+          </Swap>
+          <Swap id={`t${active}`} className="mt-1.5 text-ink">
+            {work.tag}
+          </Swap>
+        </div>
+        <div className="pointer-events-none absolute left-[calc(50%+var(--w)/2+64px)] top-1/2 w-[min(16vw,230px)] -translate-y-1/2 text-[13px] leading-[1.35]">
+          <Swap id={`y${active}`} className={`${label} text-stone`}>
+            {work.year} · {work.place ?? work.client}
+          </Swap>
+          <Swap id={`s${active}`} className="mt-1.5 text-ink">
+            {work.scope.join(", ")}
+          </Swap>
+        </div>
+        <div className="pointer-events-none absolute right-[var(--gutter)] top-1/2 -translate-y-1/2 text-right font-mono text-[11px] tracking-[0.08em] tabular-nums">
+          <Swap id={`n${active}`} className="text-ink">
+            {pad(active + 1)}
+          </Swap>
+          <span className="block text-stone">/{pad(N)}</span>
+        </div>
+
+        {/* the corners */}
+        <div
+          data-corner
+          className="absolute left-[var(--gutter)] top-[calc(var(--nav-top)+var(--nav-h)+28px)] max-w-[34ch]"
+        >
+          {intro}
+        </div>
+        <p
+          data-corner
+          className={`${label} absolute right-[var(--gutter)] top-[calc(var(--nav-top)+var(--nav-h)+28px)] text-right text-stone`}
+        >
+          {totals}
+        </p>
+        <div data-corner className="absolute bottom-[var(--gutter)] left-[var(--gutter)]">
+          <ViewSwitch view={view} onChange={switchView} />
+        </div>
+        <div data-corner className="absolute bottom-[var(--gutter)] right-[var(--gutter)] text-right">
+          <Link
+            href={`/projects/${work.slug}`}
+            className="group inline-flex items-baseline gap-3 text-[13px] tracking-[-0.005em]"
+          >
+            <Swap id={`o${active}`} className="text-stone">
+              {work.title}
+            </Swap>
+            <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:100%_1px] bg-[position:0_100%] bg-no-repeat pb-0.5 transition-[background-size] duration-700 ease-prime group-hover:bg-[length:0%_1px]">
+              View case
+            </span>
+            <span aria-hidden className="transition-transform duration-700 ease-prime group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+              ↗
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ---- the grid: the head in its corners, then the cards with room around them ---- */}
+      {/* a still page has nothing to scroll through: it always gets the cards */}
+      <div className={view === "index" ? "md:hidden motion-reduce:md:block" : ""}>
+        <section data-nav-message="The work" className="px-[var(--gutter)] pt-[calc(var(--nav-top)+var(--nav-h)+28px)]">
+          <div className="grid gap-y-8 md:grid-cols-12 md:gap-x-6">
+            <div data-reveal className="max-w-[34ch] md:col-span-4">
+              {intro}
+            </div>
+            <p data-reveal className={`${label} text-stone md:col-span-4 md:col-start-9 md:text-right`}>
+              {totals}
             </p>
           </div>
-          <p data-reveal className={`${label} text-stone md:col-span-4 md:col-start-9 md:text-right`}>
-            ({pad(WORK.length)}) Projects · ({pad(BRANDS.length)}) Clients
-            <br />
-            Hyderabad · 2026
-          </p>
-        </div>
-
-        {/* the controls: what kind of work, and how to see it */}
-        <div data-reveal className="mt-[22vh] grid gap-y-5 md:mt-[28vh] md:grid-cols-12 md:gap-x-6">
-          <div className="grid grid-cols-[5rem_1fr] items-start md:col-span-7">
-            <p className={`${label} pt-[7px] text-stone`}>Service</p>
-            <div className="flex flex-wrap gap-1.5">
-              {(["All", ...KINDS] as const).map((k) => (
-                <PillButton
-                  key={k}
-                  active={kind === k}
-                  pressed={kind === k}
-                  count={k === "All" ? WORK.length : WORK.filter((w) => w.kind === k).length}
-                  onClick={() => choose(k)}
-                >
-                  {k}
-                </PillButton>
-              ))}
-            </div>
+          <div data-reveal className="mt-[18vh] hidden md:block motion-reduce:md:hidden">
+            <ViewSwitch view={view} onChange={switchView} />
           </div>
-          <div className="grid grid-cols-[5rem_1fr] items-start md:col-span-3 md:col-start-10">
-            <p className={`${label} pt-[7px] text-stone`}>View</p>
-            <div className="flex flex-wrap gap-1.5">
-              {(["grid", "list"] as const).map((v) => (
-                <PillButton key={v} active={view === v} pressed={view === v} onClick={() => switchView(v)}>
-                  {v === "grid" ? "Grid" : "List"}
-                </PillButton>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ---- the work: cards with room around them, or the index as rows ---- */}
-      <section data-index data-nav-message="Featured" className="relative px-[var(--gutter)] pb-[30vh] pt-[10vh]">
-        <div ref={grid}>
-          {view === "grid" && (
+        <section data-nav-message="Featured" className="px-[var(--gutter)] pb-[30vh] pt-[14vh] md:pt-[8vh]">
+          <div ref={grid}>
             <ul className="grid gap-y-20 sm:grid-cols-2 sm:gap-x-6 md:gap-y-28 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-40 lg:[&>li:nth-child(3n+2)]:mt-[18vh]">
-              {items.map((w) => (
-                <Card key={w.slug} work={w} n={WORK.indexOf(w) + 1} />
+              {WORK.map((w, i) => (
+                <Card key={w.slug} work={w} n={i + 1} />
               ))}
             </ul>
-          )}
-
-          {/* the list stays mounted (the preview's listeners hold on to it) and is only hidden */}
-          <ol data-list className={`group/list ${view === "list" ? "" : "hidden"}`}>
-            {items.map((w) => {
-              const i = WORK.indexOf(w);
-              return (
-                <li key={w.slug}>
-                  <a
-                    data-row
-                    href={`/projects/${w.slug}`}
-                    onPointerEnter={() => show(i)}
-                    className="group/row grid grid-cols-[2.75rem_1fr_auto] items-baseline gap-x-4 border-t border-ink/10 py-5 transition-colors duration-500 ease-prime group-hover/list:text-ink/30 hover:!text-ink md:grid-cols-[3.5rem_1fr_12rem_5rem_1.5rem] md:py-6"
-                  >
-                    <span className={`${label} text-stone`}>{pad(i + 1)}</span>
-                    <span className="text-[17px] font-medium tracking-[-0.02em] transition-transform duration-700 ease-prime group-hover/row:translate-x-2 md:text-[20px]">
-                      {w.title}
-                    </span>
-                    <span className={`${label} hidden text-stone md:block`}>{w.tag}</span>
-                    <span className={`${label} hidden text-stone md:block`}>{w.kind}</span>
-                    <span aria-hidden className="text-[14px] transition-transform duration-700 ease-prime group-hover/row:-translate-y-0.5 group-hover/row:translate-x-0.5">
-                      ↗
-                    </span>
-                  </a>
-                </li>
-              );
-            })}
-            <li aria-hidden className="border-t border-ink/10" />
-          </ol>
-        </div>
-
-        {/* the list's preview: wide screens with a pointer only; it rides over the rows, under the cursor */}
-        <div
-          data-preview
-          aria-hidden
-          className="pointer-events-none invisible absolute left-0 top-0 z-10 hidden w-[min(18vw,260px)] md:block"
-        >
-          <DitherReveal className="aspect-[4/5] bg-ink" color="#ffffff" duration={0.7} replay={replay}>
-            {WORK.map((w, i) => (
-              <div key={w.slug} className="absolute inset-0" style={{ opacity: i === shown ? 1 : 0, background: w.canvas }}>
-                <CardMedia work={w} />
-              </div>
-            ))}
-          </DitherReveal>
-          <p className={`${label} mt-2 text-stone`}>{WORK[shown].line}</p>
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>
 
       {/* ---- the brands we've built with: small, in rows ---- */}
-      <section data-nav-message="Clients" className="px-[var(--gutter)] pb-[28vh]">
+      <section
+        data-nav-message="Clients"
+        className={`px-[var(--gutter)] pb-[28vh] ${view === "index" ? "md:pt-[24vh]" : ""}`}
+      >
         <div className="grid gap-y-10 md:grid-cols-12 md:gap-x-6">
           <div data-reveal className="max-w-[30ch] md:col-span-4">
             <h2 data-hover-scramble className={`${label} text-stone`}>

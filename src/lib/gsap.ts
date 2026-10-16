@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin, CustomEase);
+gsap.ticker.lagSmoothing(0); if (typeof window !== "undefined") Object.assign(window, { gsap, ScrollTrigger, ScrollSmoother }); // TEMP-VERIFY
 // a phone's address bar showing or hiding is not a resize worth recalculating every trigger for
 ScrollTrigger.config({ ignoreMobileResize: true });
 
@@ -31,6 +32,11 @@ export const CARD_EASE = CustomEase.create("card", "M0,0 C0.3,0 0.32,0.26 0.48,0
  * their own tween instead of reversing one, so going home never plays the slow start backwards.
  */
 export const HOVER_EASE = CustomEase.create("hover", "M0,0 C0.12,0 0.16,0.34 0.26,0.6 0.38,0.9 0.56,1 1,1");
+/**
+ * Mask curve — for a frame opening from its own centre point. Nearly symmetric (0.33, 0, 0.1, 1), so the
+ * four edges growing outward read as an opening rather than a wipe from one side.
+ */
+export const MASK_EASE = CustomEase.create("mask", "0.33,0,0.1,1");
 export const MENU_OPEN = 1;
 export const MENU_CLOSE = 0.85;
 

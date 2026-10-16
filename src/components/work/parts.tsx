@@ -2,12 +2,11 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import Logo from "@/components/Logo";
 import type { Shot, Work } from "@/lib/work";
 
 /*
  * The pieces the work is shown with, shared by the /projects index and each case page (/projects/[slug]):
- * the type tokens, a project's 4:5 card picture, its cover, and one of its shots in a frame.
+ * the type tokens, a project's 4:5 card, its 16:9 cover, and one of its shots in a frame.
  */
 
 export const label = "font-mono text-[10px] uppercase tracking-[0.14em] md:text-[11px]";
@@ -24,128 +23,35 @@ export function Bullet({ children, className = "" }: { children: ReactNode; clas
   );
 }
 
-const C = "/images/work/clients";
-/** the captures of a project's live site, by the prefix their files share */
-const CAPTURED: Record<string, string> = { jeeva: "jeeva", maera: "maera", netha: "netha", site: "own" };
-
-/** a project whose own screens are still to come: its canvas, a phone's outline and a plain note */
-function Pending({ work, big = false }: { work: Work; big?: boolean }) {
+/** text that rolls in from below whenever what it shows changes: `id` keys it; the page plays `data-swap` */
+export function Swap({ id, className = "", children }: { id: string; className?: string; children: ReactNode }) {
   return (
-    <div className="absolute inset-0 grid place-items-center">
-      <div
-        className={`relative flex aspect-[9/19] flex-col items-center justify-center rounded-[28px] border border-white/25 text-center text-white ${
-          big ? "h-[78%]" : "h-[70%]"
-        }`}
-      >
-        <span aria-hidden className="absolute top-3 h-1.5 w-10 rounded-full bg-white/25" />
-        <span className="text-[clamp(1.25rem,2vw,2rem)] font-medium leading-none tracking-[-0.04em]">{work.title}</span>
-        <span className={`${label} mt-3 text-white/60`}>Screens soon</span>
-      </div>
-    </div>
+    <span className={`block overflow-hidden ${className}`}>
+      <span key={id} data-swap className="block">
+        {children}
+      </span>
+    </span>
   );
 }
 
 export const cardSizes = "(min-width: 1024px) 31vw, (min-width: 768px) 46vw, 92vw";
+/** a project's 4:5 card and 16:9 cover: composed presentations of the live work (a phone, a browser window) */
+export const cardSrc = (work: Work) => `/images/work/cards/${work.slug}.webp`;
+export const coverSrc = (work: Work) => `/images/work/covers/${work.slug}.webp`;
 
-/** what a grid card shows for each project, composed for 4:5 */
-export function CardMedia({ work }: { work: Work }) {
-  if (work.pending) return <Pending work={work} />;
-  const prefix = CAPTURED[work.slug];
-  if (prefix)
-    return (
-      <Image
-        src={`${C}/${prefix}-card.webp`}
-        alt={`${work.title}, on a phone`}
-        fill
-        sizes={cardSizes}
-        className="object-cover object-top"
-      />
-    );
-  switch (work.slug) {
-    case "identity":
-      return <Image src="/images/work/slide-logo.jpg" alt="The One Prime mark, from the studio's launch posts" fill sizes={cardSizes} className="object-cover" />;
-    default:
-      return (
-        <video
-          src="/videos/oneprime-logo-intro-540.mp4"
-          poster="/images/work/film-04.jpg"
-          aria-label="The One Prime logo film"
-          muted
-          loop
-          playsInline
-          autoPlay
-          preload="metadata"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      );
-  }
+/** what a card shows for each project, composed for 4:5 */
+export function CardMedia({ work, sizes = cardSizes }: { work: Work; sizes?: string }) {
+  return <Image src={cardSrc(work)} alt={`${work.title}: ${work.tag}`} fill sizes={sizes} className="object-cover" />;
 }
 
-/**
- * A case page's cover: the project at full width (4:5 on a phone, 16:9 from md) — the live site's first
- * screen where there is one. The page settles its `data-cover-media` layer from a slight zoom.
- */
-export function Cover({ work }: { work: Work }) {
-  if (work.pending) return <Pending work={work} big />;
-  const prefix = CAPTURED[work.slug];
-  if (prefix)
-    return (
-      <>
-        <Image
-          src={`${C}/${prefix}-cover.webp`}
-          alt={`${work.title}: the first screen`}
-          fill
-          priority
-          sizes="100vw"
-          className="hidden object-cover object-top md:block"
-        />
-        <Image
-          src={`${C}/${prefix}-card.webp`}
-          alt={`${work.title}: the first screen, on a phone`}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-top md:hidden"
-        />
-      </>
-    );
-  switch (work.slug) {
-    case "identity":
-      return (
-        <>
-          {/* the launch post as a field of colour only: blurred past reading, so its own wordmark can't echo */}
-          <Image src="/images/work/slide-logo.jpg" alt="" fill priority sizes="100vw" className="scale-110 object-cover opacity-35 blur-[18px]" />
-          <div className="absolute inset-0 grid place-items-center text-chalk">
-            <Logo markOnly className="text-[clamp(6rem,18vw,18rem)]" />
-          </div>
-        </>
-      );
-    default:
-      // the film in the middle, two of its frames either side
-      return (
-        <div className="absolute inset-0 flex items-center justify-center gap-[3%]">
-          <div className="relative hidden aspect-[9/16] h-[72%] overflow-hidden rounded-[10px] opacity-50 md:block">
-            <Image src="/images/work/film-01.jpg" alt="" fill sizes="20vw" className="object-cover" />
-          </div>
-          <div className="relative aspect-[9/16] h-[84%] overflow-hidden rounded-[10px] ring-1 ring-white/10">
-            <video
-              src="/videos/oneprime-logo-intro-540.mp4"
-              poster="/images/work/film-04.jpg"
-              aria-label="The One Prime logo film"
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="metadata"
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="relative hidden aspect-[9/16] h-[72%] overflow-hidden rounded-[10px] opacity-50 md:block">
-            <Image src="/images/work/film-03.jpg" alt="" fill sizes="20vw" className="object-cover" />
-          </div>
-        </div>
-      );
-  }
+/** a project's cover: 16:9 from md, its 4:5 card on a phone */
+export function Cover({ work, sizes = "100vw", priority = false }: { work: Work; sizes?: string; priority?: boolean }) {
+  return (
+    <>
+      <Image src={coverSrc(work)} alt={`${work.title}: ${work.tag}`} fill priority={priority} sizes={sizes} className="hidden object-cover md:block" />
+      <Image src={cardSrc(work)} alt={`${work.title}: ${work.tag}`} fill priority={priority} sizes="100vw" className="object-cover md:hidden" />
+    </>
+  );
 }
 
 const RATIO: Record<Shot["ratio"], string> = { "16/10": "aspect-[16/10]", "4/5": "aspect-[4/5]", "900/580": "aspect-[900/580]" };

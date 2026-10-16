@@ -14,6 +14,7 @@ import {
   ScrollTrigger,
   useGSAP,
 } from "@/lib/gsap";
+import { onNavPlain } from "@/lib/navPlain";
 import { EMAIL, SOCIALS } from "@/lib/studio";
 import BracketClock from "../BracketClock";
 import Logo from "../Logo";
@@ -41,7 +42,8 @@ const CHALK = "#f7f6f2";
  * move the page — the pill itself grows downward and turns to dark ink over the dimmed page:
  * a mono "Menu" label, the sections at display size rising out of their masks, the socials and the
  * studio's details in two quiet columns, and one call to action across the foot. Escape, a click outside
- * or any link closes it again.
+ * or any link closes it again. On the work's pages (/projects and each case) the closed bar is plain type
+ * across the full width between the gutters, and takes its sheet and narrows to the panel as it opens.
  */
 export default function Navbar() {
   const pathname = usePathname();
@@ -55,6 +57,14 @@ export default function Navbar() {
   const say = useRef<(text: string) => void>(() => {});
   const [open, setOpen] = useState(false);
   const active = pageOf(pathname);
+  // the work's pages set everything to the page's grid: there, closed, the bar spans gutter to gutter (mark
+  // at the left edge, toggle at the right) and narrows into the centred panel as it opens. While the page
+  // holds a screen still (its pinned stage, which keeps everything clear of the bar) it is plain type, with
+  // no sheet; once the page scrolls on under it, the sheet comes back
+  const wide = active === "/projects";
+  const [held, setHeld] = useState(false);
+  useEffect(() => onNavPlain(setHeld), []);
+  const plain = wide && held && !open;
 
   // navigating closes the menu (state reset on change, during render — no effect needed)
   const [shownPath, setShownPath] = useState(pathname);
@@ -206,12 +216,25 @@ export default function Navbar() {
       <nav
         ref={pillRef}
         aria-label="Primary"
-        className="pointer-events-auto relative w-full max-w-[560px] overflow-hidden  bg-bloom/95 text-ink shadow-[0_14px_36px_-22px_rgba(8,6,78,0.4)] ring-1 ring-ink/10"
+        className={`pointer-events-auto relative w-full overflow-hidden text-ink ring-ink/10 transition-[max-width,background-color,box-shadow] ease-prime motion-reduce:transition-none ${
+          wide && !open ? "max-w-[calc(100vw-2*var(--gutter))] duration-[850ms]" : "max-w-[560px] duration-[1000ms]"
+        } ${
+          plain
+            ? // plain: just the type along the top of the page's grid
+              "bg-transparent ring-0"
+            : "bg-bloom/95 shadow-[0_14px_36px_-22px_rgba(8,6,78,0.4)] ring-1"
+        }`}
       >
         {/* open, the whole pill turns to dark frosted ink — a layer that fades in, so it stays on the GPU */}
         <span data-dark aria-hidden className="pointer-events-none absolute inset-0 bg-ink/[0.95] opacity-0" />
 
-        <div data-bar-row className="relative grid h-[var(--nav-h)] grid-cols-[1fr_auto_1fr] items-center pl-4 pr-1.5">
+        {/* plain, the mark and the toggle's bars sit exactly on the gutters */}
+        <div
+          data-bar-row
+          className={`relative grid h-[var(--nav-h)] grid-cols-[1fr_auto_1fr] items-center transition-[padding] duration-[850ms] ease-prime ${
+            plain ? "pl-0 pr-0" : "pl-4 pr-1.5"
+          }`}
+        >
           <a
             data-collapse="start"
             href="/"
@@ -235,7 +258,7 @@ export default function Navbar() {
             aria-expanded={open}
             aria-controls="site-menu"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="grid h-10 w-10 cursor-pointer place-items-center justify-self-end rounded-md transition-colors duration-500 ease-prime hover:bg-current/10"
+            className={`grid h-10 w-10 cursor-pointer place-items-center justify-self-end rounded-md transition-[background-color,margin] duration-500 ease-prime hover:bg-current/10 ${plain ? "-mr-[11px]" : ""}`}
           >
             <span className="relative block h-[9px] w-[18px]">
               <span data-bar className="absolute left-0 top-0 h-px w-full bg-current" />

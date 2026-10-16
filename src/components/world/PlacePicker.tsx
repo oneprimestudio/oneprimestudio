@@ -146,7 +146,7 @@ export default function PlacePicker({
       <div
         // visible at once on open (a box mid-way through a visibility transition can't take focus), and
         // only hidden once the clip has closed
-        className={`absolute bottom-full left-0 right-0 mb-3 bg-white text-ink shadow-[0_40px_80px_-40px_rgba(8,6,78,0.45)] ring-1 ring-ink/10 duration-700 ease-prime ${
+        className={`absolute bottom-full left-0 right-0 mb-3 p-5 bg-white text-ink shadow-[0_40px_80px_-40px_rgba(8,6,78,0.45)] ring-1 ring-ink/10 duration-700 ease-prime ${
           open
             ? "visible transition-[clip-path] [clip-path:inset(0_0_0_0)]"
             : "invisible transition-[clip-path,visibility] [clip-path:inset(100%_0_0_0)]"
@@ -246,7 +246,7 @@ export default function PlacePicker({
         </span>
         <span
           aria-hidden
-          className={`grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink text-white transition-transform duration-700 ease-prime group-hover:rotate-90 ${
+          className={`grid h-5 w-5 shrink-0 place-items-center rounded-full bg-ink text-white transition-transform duration-700 ease-prime group-hover:rotate-90 ${
             open ? "rotate-45 group-hover:rotate-45" : ""
           }`}
         >
@@ -255,7 +255,6 @@ export default function PlacePicker({
           </svg>
         </span>
         {/* the hairline, and the ink that draws over it on hover */}
-        <span aria-hidden className="absolute inset-x-0 bottom-0 h-px bg-ink/25" />
         <span
           aria-hidden
           className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-ink transition-transform duration-700 ease-prime group-hover:scale-x-100 group-focus-visible:scale-x-100"
