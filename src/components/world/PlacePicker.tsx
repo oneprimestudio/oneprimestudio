@@ -6,8 +6,11 @@ import { PLACES, guessPlace, offsetMinutes, type Place } from "@/lib/geo/places"
 /*
  * "Where are you from?" — a searchable list in place of the native select. Closed, it is one line of type
  * on a hairline with an ink button; open, a white sheet rises from the field (clip-path on the prime
- * curve) with a search box and every city, its UTC offset in mono at the right. The row under the cursor
- * or the arrow keys turns ink, the chosen one carries the blue square.
+ * curve) with a search box and a compact list: one line a place, its UTC offset (or, for an area, how far
+ * and which way from the centre) in mono at the right, no scrollbar — the list's edges fade instead. The
+ * row under the cursor or the arrow keys turns ink, the chosen one carries the blue square.
+ *
+ * The same picker asks the second question once Hyderabad is chosen: which part of it (`places`, `title`…).
  *
  * Keyboard: the search box is an ARIA combobox — ↑↓ move, ↵ chooses, Esc closes and hands focus back.
  */
@@ -23,7 +26,41 @@ const utc = (m: number) => {
   return `UTC${m < 0 ? "−" : "+"}${Math.floor(a / 60)}${a % 60 ? `:${String(a % 60).padStart(2, "0")}` : ""}`;
 };
 
-export default function PlacePicker({ value, onChange }: { value: Place | null; onChange: (p: Place | null) => void }) {
+// module-level, so the defaults keep their identity between renders (they key the list's memo)
+const byName = (p: Place) => p.name;
+const byCity = (p: Place) => p.city;
+
+export default function PlacePicker({
+  value,
+  onChange,
+  places = PLACES,
+  title = "Where are you from?",
+  noun = "Cities",
+  empty = "Choose your country",
+  hint = "Search or scroll the list",
+  search = "Search a country or city",
+  primary = byName,
+  secondary = byCity,
+  meta,
+  guess = true,
+  openOnMount = false,
+}: {
+  value: Place | null;
+  onChange: (p: Place | null) => void;
+  places?: Place[];
+  title?: string;
+  noun?: string;
+  empty?: string;
+  hint?: string;
+  search?: string;
+  primary?: (p: Place) => string;
+  secondary?: (p: Place) => string;
+  /** the mono column at the right of a row; a UTC offset unless given */
+  meta?: (p: Place) => string;
+  guess?: boolean;
+  /** open the sheet as soon as the picker appears (the follow-up question) */
+  openOnMount?: boolean;
+}) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -36,17 +73,17 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
 
   const shown = useMemo(() => {
     const q = fold(query.trim());
-    return q ? PLACES.filter((p) => fold(`${p.name} ${p.city}`).includes(q)) : PLACES;
-  }, [query]);
+    return q ? places.filter((p) => fold(`${primary(p)} ${secondary(p)}`).includes(q)) : places;
+  }, [query, places, primary, secondary]);
   // offsets follow daylight saving, so they're read when the sheet opens, on the visitor's clock
-  const offsets = useMemo(
-    () => (open ? new Map(PLACES.map((p) => [p.id, utc(offsetMinutes(p.tz))])) : null),
-    [open],
+  const metas = useMemo(
+    () => (open ? new Map(places.map((p) => [p.id, meta ? meta(p) : utc(offsetMinutes(p.tz))])) : null),
+    [open, places, meta],
   );
 
   const show = () => {
     setQuery("");
-    setActive(Math.max(0, PLACES.findIndex((p) => p.id === value?.id)));
+    setActive(Math.max(0, places.findIndex((p) => p.id === value?.id)));
     setOpen(true);
   };
   const hide = (refocus = false) => {
@@ -58,6 +95,15 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
     setMissed(false);
     hide(true);
   };
+
+  // the follow-up question opens itself, a beat after it appears (once the globe has started its swing)
+  useEffect(() => {
+    if (!openOnMount) return;
+    const t = window.setTimeout(show, 500);
+    return () => window.clearTimeout(t);
+    // only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // open: the search box takes focus (without scrolling the page); a press anywhere else closes it
   useEffect(() => {
@@ -100,14 +146,14 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
       <div
         // visible at once on open (a box mid-way through a visibility transition can't take focus), and
         // only hidden once the clip has closed
-        className={`absolute bottom-full left-0 right-0 mb-4 bg-white text-ink shadow-[0_40px_80px_-40px_rgba(8,6,78,0.45)] ring-1 ring-ink/10 duration-700 ease-prime ${
+        className={`absolute bottom-full left-0 right-0 mb-3 bg-white text-ink shadow-[0_40px_80px_-40px_rgba(8,6,78,0.45)] ring-1 ring-ink/10 duration-700 ease-prime ${
           open
             ? "visible transition-[clip-path] [clip-path:inset(0_0_0_0)]"
             : "invisible transition-[clip-path,visibility] [clip-path:inset(100%_0_0_0)]"
         }`}
       >
-        <div className="flex items-center gap-3 border-b border-ink/10 px-5">
-          <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5 shrink-0 text-stone" fill="none" stroke="currentColor" strokeWidth={1.5}>
+        <div className="flex items-center gap-2.5 border-b border-ink/10 px-4">
+          <svg aria-hidden viewBox="0 0 16 16" className="h-3 w-3 shrink-0 text-stone" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <circle cx="7" cy="7" r="5" />
             <path d="M11 11l3.5 3.5" />
           </svg>
@@ -118,25 +164,26 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
             aria-controls={`${id}-list`}
             aria-autocomplete="list"
             aria-activedescendant={shown[active] ? `${id}-${shown[active].id}` : undefined}
-            aria-label="Search a country or city"
+            aria-label={search}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setActive(0);
             }}
             onKeyDown={onKey}
-            placeholder="Search a country or city"
+            placeholder={search}
             tabIndex={open ? 0 : -1}
-            className="w-full bg-transparent py-4 text-[16px] tracking-[-0.01em] text-ink outline-none placeholder:text-mist"
+            className="w-full bg-transparent py-3 text-[15px] tracking-[-0.01em] text-ink outline-none placeholder:text-mist"
           />
         </div>
+        {/* no scrollbar: the list fades out at its edges instead, which says there is more */}
         <ul
           ref={list}
           id={`${id}-list`}
           role="listbox"
-          aria-label="Places"
+          aria-label={noun}
           data-own-scroll
-          className="relative max-h-[min(42vh,340px)] overflow-y-auto overscroll-contain py-2"
+          className="relative max-h-[min(36vh,288px)] overflow-y-auto overscroll-contain py-1 [mask-image:linear-gradient(to_bottom,transparent,#000_14px,#000_calc(100%-22px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {shown.map((p, i) => {
             const on = i === active;
@@ -150,26 +197,26 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
                 onPointerMove={() => setActive(i)}
                 onPointerDown={(e) => e.preventDefault()}
                 onClick={() => pick(p)}
-                className={`grid cursor-pointer grid-cols-[6px_1fr_auto] items-center gap-3 px-5 py-2.5 transition-colors duration-200 ${
+                className={`grid cursor-pointer grid-cols-[5px_1fr_auto] items-center gap-2.5 px-4 py-[7px] transition-colors duration-200 ${
                   on ? "bg-ink text-white" : "text-ink"
                 }`}
               >
                 <span
                   aria-hidden
-                  className={`h-1.5 w-1.5 ${chosen ? "bg-accent" : on ? "bg-white" : "bg-transparent"}`}
+                  className={`h-[5px] w-[5px] ${chosen ? "bg-accent" : on ? "bg-white" : "bg-transparent"}`}
                 />
-                <span className="truncate text-[15px] font-medium tracking-[-0.02em]">
-                  {p.name} <span className={`font-normal ${on ? "text-white/60" : "text-stone"}`}>{p.city}</span>
+                <span className="truncate text-[14px] font-medium leading-[1.2] tracking-[-0.015em]">
+                  {primary(p)} <span className={`font-normal ${on ? "text-white/60" : "text-stone"}`}>{secondary(p)}</span>
                 </span>
-                <span className={`font-mono text-[10px] tabular-nums tracking-[0.06em] ${on ? "text-white/70" : "text-stone"}`}>
-                  {offsets?.get(p.id)}
+                <span className={`font-mono text-[9.5px] tabular-nums tracking-[0.06em] ${on ? "text-white/70" : "text-stone"}`}>
+                  {metas?.get(p.id)}
                 </span>
               </li>
             );
           })}
-          {!shown.length && <li className="px-5 py-4 text-[15px] text-stone">No match — try the country&rsquo;s name.</li>}
+          {!shown.length && <li className="px-4 py-3 text-[14px] text-stone">No match — try another spelling.</li>}
         </ul>
-        <p className={`${label} flex justify-between border-t border-ink/10 px-5 py-3 text-stone`}>
+        <p className={`${label} flex justify-between border-t border-ink/10 px-4 py-2 text-stone`}>
           <span>↑↓ Move · ↵ Choose</span>
           <span>Esc</span>
         </p>
@@ -177,8 +224,10 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
 
       {/* the field */}
       <p className={`${label} flex justify-between text-stone`}>
-        <span id={`${id}-label`}>Where are you from?</span>
-        <span className="tabular-nums">{String(PLACES.length).padStart(3, "0")} Cities</span>
+        <span id={`${id}-label`}>{title}</span>
+        <span className="tabular-nums">
+          {String(places.length).padStart(3, "0")} {noun}
+        </span>
       </p>
       <button
         ref={button}
@@ -187,13 +236,13 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
         aria-expanded={open}
         aria-labelledby={`${id}-label ${id}-value`}
         onClick={() => (open ? hide() : show())}
-        className="group relative mt-3 flex w-full items-end justify-between gap-4 pb-3 text-left outline-none"
+        className="group relative mt-2.5 flex w-full items-end justify-between gap-4 pb-2.5 text-left outline-none"
       >
         <span id={`${id}-value`} className="min-w-0">
           <span className="block truncate text-[clamp(1.25rem,1.6vw,1.625rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
-            {value ? value.name : "Choose your country"}
+            {value ? primary(value) : empty}
           </span>
-          <span className={`${label} mt-1.5 block text-stone`}>{value ? value.city : "Search or scroll the list"}</span>
+          <span className={`${label} mt-1.5 block text-stone`}>{value ? secondary(value) : hint}</span>
         </span>
         <span
           aria-hidden
@@ -212,24 +261,30 @@ export default function PlacePicker({ value, onChange }: { value: Place | null; 
           className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-ink transition-transform duration-700 ease-prime group-hover:scale-x-100 group-focus-visible:scale-x-100"
         />
       </button>
-      <p className={`${label} mt-3 flex justify-between gap-4`}>
-        <button
-          type="button"
-          onClick={() => {
-            const guess = guessPlace();
-            setMissed(!guess);
-            if (guess) onChange(guess);
-          }}
-          className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-ink"
-        >
-          {missed ? "Couldn’t tell — pick from the list" : "Guess from my time zone"}
-        </button>
-        {value && (
-          <button type="button" onClick={() => onChange(null)} className="text-stone transition-colors hover:text-ink">
-            Clear ×
-          </button>
-        )}
-      </p>
+      {(guess || value) && (
+        <p className={`${label} mt-2.5 flex justify-between gap-4`}>
+          {guess ? (
+            <button
+              type="button"
+              onClick={() => {
+                const g = guessPlace();
+                setMissed(!g);
+                if (g) onChange(g);
+              }}
+              className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-ink"
+            >
+              {missed ? "Couldn’t tell — pick from the list" : "Guess from my time zone"}
+            </button>
+          ) : (
+            <span />
+          )}
+          {value && (
+            <button type="button" onClick={() => onChange(null)} className="text-stone transition-colors hover:text-ink">
+              Clear ×
+            </button>
+          )}
+        </p>
+      )}
     </div>
   );
 }

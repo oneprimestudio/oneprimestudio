@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import DitherReveal from "@/components/DitherReveal";
-import { Bullet, CardMedia, display, label, pad } from "@/components/work/parts";
+import { CardMedia, label, pad } from "@/components/work/parts";
 import {
   ensureSmoother,
   gsap,
@@ -16,74 +15,70 @@ import {
   useGSAP,
 } from "@/lib/gsap";
 import { gooHeadings } from "@/lib/goo";
-import { PillButton, PillLink, PillTag } from "@/components/Pill";
+import { PillButton, PillLink } from "@/components/Pill";
 import { BRANDS, KINDS, WORK, type Kind, type Work } from "@/lib/work";
 
 /*
  * The work, after orchard.framer.website/works: the index of everything, each project opening into its
  * own case page (/projects/[slug], CasePage).
  *
- *   head      the name set huge and tight, then two quiet rows of pills — Service (filters the work) and
- *             View (grid or list)
- *   featured  4:5 cards, small to medium, that open through a rising mask; or, as a list, the projects
- *             as rows with a preview that follows the cursor and re-dithers to each one
- *   clients   the brands we've built with, names rolling on hover
+ * Set like the globe section: white, small type, words kept to the corners and the pictures given room.
+ *
+ *   head      a label and a small paragraph at the left, the count opposite; far below, two quiet rows of
+ *             pills — Service (filters the work) and View (grid or list)
+ *   featured  4:5 cards with a small caption, opening through a rising mask; or the projects as rows with
+ *             a preview that follows the cursor and re-dithers to each one
+ *   clients   the brands we've built with, in small rows: names rolling on hover, each with its live site
  *
  * The footer that follows every page carries the call to start a project, so this page doesn't repeat it.
  */
 
 
 /**
- * A featured card: 4:5, small to medium. It arrives through a mask — the frame opens upward from its
- * foot while the picture settles from a slight zoom, then its caption lines rise (all on the prime curve,
- * see the grid's reveal). On hover the picture eases in and a "View case" pill rises into the corner.
+ * A card: the picture at 4:5 with nothing laid over it, and a small caption under it — number, name and
+ * kind on one line, the one-liner under the name. It arrives through a mask (the frame opens upward from
+ * its foot while the picture settles from a slight zoom, then the caption lines rise — see the grid's
+ * reveal). On hover the picture eases in and the arrow steps out.
  */
-function Card({ work }: { work: Work }) {
+function Card({ work, n }: { work: Work; n: number }) {
   return (
     <li data-card className="group">
       <Link href={`/projects/${work.slug}`} className="block outline-none">
         <div data-mask className="relative aspect-[4/5] overflow-hidden" style={{ background: work.canvas }}>
           <div data-media className="absolute inset-0">
-            <div className="absolute inset-0 transition-transform duration-[1200ms] ease-prime group-hover:scale-[1.06] group-focus-visible:scale-[1.06]">
+            <div className="absolute inset-0 transition-transform duration-[1200ms] ease-prime group-hover:scale-[1.04] group-focus-visible:scale-[1.04]">
               <CardMedia work={work} />
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between">
-            <PillTag tone="glass">{work.kind}</PillTag>
-            <span className="font-mono text-[10px] tabular-nums tracking-[0.14em] text-white/70">{work.year}</span>
-          </div>
-          <span className="absolute bottom-3 left-3 translate-y-[calc(100%+14px)] transition-transform duration-700 ease-prime group-hover:translate-y-0 group-focus-visible:translate-y-0">
-            <PillTag tone="glass" className="!bg-white !text-ink">
-              View case <span aria-hidden className="ml-1">↗</span>
-            </PillTag>
+        </div>
+        <div className="mt-4 grid grid-cols-[2rem_1fr_auto] gap-x-3 leading-[1.45]">
+          <span className="overflow-hidden">
+            <span data-cap className={`${label} block pt-[3px] text-stone`}>
+              {pad(n)}
+            </span>
           </span>
-        </div>
-        <div className="mt-3 overflow-hidden">
-          <p data-cap className="truncate text-[14px] leading-[1.4] tracking-[0.01em]">
-            <span className="text-ink">{work.title}</span>
-            <span className="text-stone"> • {work.client === "In-house" ? "One Prime Studio" : work.tag}</span>
-          </p>
-        </div>
-        <div className="overflow-hidden">
-          <p data-cap className="truncate text-[14px] leading-[1.4] tracking-[0.01em] text-stone">{work.line}</p>
+          <span className="overflow-hidden">
+            <span data-cap className="block text-[14px] font-medium tracking-[-0.01em] md:text-[15px]">
+              {work.title}
+            </span>
+          </span>
+          <span className="overflow-hidden">
+            <span data-cap className={`${label} flex items-center gap-1.5 pt-[3px] text-stone`}>
+              {work.kind}
+              <span aria-hidden className="transition-transform duration-700 ease-prime group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                ↗
+              </span>
+            </span>
+          </span>
+          <span className="col-span-2 col-start-2 overflow-hidden">
+            <span data-cap className="block line-clamp-2 text-[14px] text-stone md:text-[15px]">
+              {work.line}
+            </span>
+          </span>
         </div>
       </Link>
     </li>
   );
-}
-
-/** what the index's preview shows for each project */
-function Preview({ work }: { work: Work }) {
-  switch (work.slug) {
-    case "maera":
-      return <Image src="/images/work/maera-dash.jpg" alt="" fill sizes="340px" className="object-cover" />;
-    case "identity":
-      return <Image src="/images/work/slide-logo.jpg" alt="" fill sizes="340px" className="object-cover" />;
-    case "site":
-      return <Image src="/images/hero-bloom-4k.webp" alt="" fill sizes="340px" className="bg-black object-cover object-[50%_30%] invert" />;
-    default:
-      return <Image src="/images/work/film-04.jpg" alt="" fill sizes="340px" className="object-cover" />;
-  }
 }
 
 export default function WorkPage() {
@@ -186,7 +181,7 @@ export default function WorkPage() {
       if (view === "grid") {
         el.querySelectorAll<HTMLElement>("[data-card]").forEach((card, i) => {
           gsap
-            .timeline({ delay: (i % 4) * 0.09, ...at(card) })
+            .timeline({ delay: (i % 3) * 0.1, ...at(card) })
             .fromTo(
               card.querySelector("[data-mask]"),
               { clipPath: "inset(100% 0% 0% 0%)" },
@@ -222,35 +217,30 @@ export default function WorkPage() {
   };
 
   return (
-    <main ref={root} className="relative bg-bloom text-ink">
-      {/* ---- head: the page's name, set huge and tight, after the reference ---- */}
-      <section
-        data-nav-message="The work"
-        className="px-[var(--gutter)] pt-[calc(var(--nav-top)+var(--nav-h)+48px)]"
-      >
-        <div className="grid grid-cols-2 md:grid-cols-12 md:gap-x-6">
-          <p data-hover-scramble className={`${label} text-stone md:col-span-3`}>
-            [ Work ] — Index
-          </p>
-          <p className={`${label} justify-self-end text-right text-stone md:col-span-4 md:col-start-9`}>
-            ({pad(WORK.length)}) Projects · 2026
+    <main ref={root} className="relative bg-white text-ink">
+      {/* ---- head: the corners, as the globe's — a label and a small paragraph, the count opposite ---- */}
+      <section data-nav-message="The work" className="px-[var(--gutter)] pt-[calc(var(--nav-top)+var(--nav-h)+28px)]">
+        <div className="grid gap-y-8 md:grid-cols-12 md:gap-x-6">
+          <div data-reveal className="max-w-[34ch] md:col-span-4">
+            <h1 data-hover-scramble className={`${label} text-stone`}>
+              [ Work ] — Index
+            </h1>
+            <p className="mt-4 text-[15px] leading-[1.45] tracking-[-0.005em] text-graphite md:text-[16px]">
+              Software, websites, apps and identities — for businesses across Telangana, and for ourselves. Each one
+              designed and built end to end, in one place.
+            </p>
+          </div>
+          <p data-reveal className={`${label} text-stone md:col-span-4 md:col-start-9 md:text-right`}>
+            ({pad(WORK.length)}) Projects · ({pad(BRANDS.length)}) Clients
+            <br />
+            Hyderabad · 2026
           </p>
         </div>
 
-        <h1
-          data-goo
-          data-lag="0.05"
-          className="mt-[14vh] text-[clamp(4.5rem,13.5vw,13rem)] font-medium leading-[0.8] tracking-[-0.075em] md:mt-[18vh]"
-        >
-          Projects<sup className="ml-[0.06em] align-top font-mono text-[0.1em] font-normal leading-none tracking-normal text-stone">
-            ({pad(WORK.length)})
-          </sup>
-        </h1>
-
-        {/* the controls: what kind of work, and how to see it — each a row of pills */}
-        <div className="mt-[10vh] grid gap-y-6 text-[14px] md:mt-[14vh] md:grid-cols-12 md:gap-x-6">
-          <div className="grid grid-cols-[5.5rem_1fr] items-start md:col-span-7">
-            <p className="pt-[5px] text-stone">Service</p>
+        {/* the controls: what kind of work, and how to see it */}
+        <div data-reveal className="mt-[22vh] grid gap-y-5 md:mt-[28vh] md:grid-cols-12 md:gap-x-6">
+          <div className="grid grid-cols-[5rem_1fr] items-start md:col-span-7">
+            <p className={`${label} pt-[7px] text-stone`}>Service</p>
             <div className="flex flex-wrap gap-1.5">
               {(["All", ...KINDS] as const).map((k) => (
                 <PillButton
@@ -265,8 +255,8 @@ export default function WorkPage() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-[5.5rem_1fr] items-start md:col-span-4 md:col-start-9">
-            <p className="pt-[5px] text-stone">View</p>
+          <div className="grid grid-cols-[5rem_1fr] items-start md:col-span-3 md:col-start-10">
+            <p className={`${label} pt-[7px] text-stone`}>View</p>
             <div className="flex flex-wrap gap-1.5">
               {(["grid", "list"] as const).map((v) => (
                 <PillButton key={v} active={view === v} pressed={view === v} onClick={() => switchView(v)}>
@@ -278,13 +268,13 @@ export default function WorkPage() {
         </div>
       </section>
 
-      {/* ---- the work: featured cards, or the index as rows ---- */}
-      <section data-index data-nav-message="Featured" className="relative px-[var(--gutter)] pb-[22vh] pt-[6vh]">
+      {/* ---- the work: cards with room around them, or the index as rows ---- */}
+      <section data-index data-nav-message="Featured" className="relative px-[var(--gutter)] pb-[30vh] pt-[10vh]">
         <div ref={grid}>
           {view === "grid" && (
-            <ul className="grid grid-cols-2 gap-x-2 gap-y-10 md:grid-cols-3 md:gap-x-3 md:gap-y-14 lg:grid-cols-4">
+            <ul className="grid gap-y-20 sm:grid-cols-2 sm:gap-x-6 md:gap-y-28 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-40 lg:[&>li:nth-child(3n+2)]:mt-[18vh]">
               {items.map((w) => (
-                <Card key={w.slug} work={w} />
+                <Card key={w.slug} work={w} n={WORK.indexOf(w) + 1} />
               ))}
             </ul>
           )}
@@ -299,15 +289,15 @@ export default function WorkPage() {
                     data-row
                     href={`/projects/${w.slug}`}
                     onPointerEnter={() => show(i)}
-                    className="group/row grid grid-cols-[2.75rem_1fr_auto] items-baseline gap-x-4 border-t border-ink/10 py-6 transition-colors duration-500 ease-prime group-hover/list:text-ink/30 hover:!text-ink md:grid-cols-[3.5rem_1fr_11rem_4rem_1.5rem] md:py-8"
+                    className="group/row grid grid-cols-[2.75rem_1fr_auto] items-baseline gap-x-4 border-t border-ink/10 py-5 transition-colors duration-500 ease-prime group-hover/list:text-ink/30 hover:!text-ink md:grid-cols-[3.5rem_1fr_12rem_5rem_1.5rem] md:py-6"
                   >
                     <span className={`${label} text-stone`}>{pad(i + 1)}</span>
-                    <span className={`${display} text-[clamp(1.75rem,3.6vw,3.75rem)] leading-[1] transition-transform duration-700 ease-prime group-hover/row:translate-x-3`}>
+                    <span className="text-[17px] font-medium tracking-[-0.02em] transition-transform duration-700 ease-prime group-hover/row:translate-x-2 md:text-[20px]">
                       {w.title}
                     </span>
                     <span className={`${label} hidden text-stone md:block`}>{w.tag}</span>
-                    <span className={`${label} hidden text-stone md:block`}>{w.year}</span>
-                    <span aria-hidden className="text-[18px] transition-transform duration-700 ease-prime group-hover/row:-translate-y-1 group-hover/row:translate-x-1">
+                    <span className={`${label} hidden text-stone md:block`}>{w.kind}</span>
+                    <span aria-hidden className="text-[14px] transition-transform duration-700 ease-prime group-hover/row:-translate-y-0.5 group-hover/row:translate-x-0.5">
                       ↗
                     </span>
                   </a>
@@ -322,49 +312,48 @@ export default function WorkPage() {
         <div
           data-preview
           aria-hidden
-          className="pointer-events-none invisible absolute left-0 top-0 z-10 hidden w-[min(24vw,340px)] md:block"
+          className="pointer-events-none invisible absolute left-0 top-0 z-10 hidden w-[min(18vw,260px)] md:block"
         >
-          <DitherReveal className="aspect-[4/3] bg-ink" color="#f9f9f7" duration={0.7} replay={replay}>
+          <DitherReveal className="aspect-[4/5] bg-ink" color="#ffffff" duration={0.7} replay={replay}>
             {WORK.map((w, i) => (
               <div key={w.slug} className="absolute inset-0" style={{ opacity: i === shown ? 1 : 0, background: w.canvas }}>
-                <Preview work={w} />
+                <CardMedia work={w} />
               </div>
             ))}
           </DitherReveal>
-          <p className={`${label} mt-2 text-ink`}>{WORK[shown].line}</p>
+          <p className={`${label} mt-2 text-stone`}>{WORK[shown].line}</p>
         </div>
       </section>
 
-      {/* ---- the brands we've worked with ---- */}
-      <section data-nav-message="Clients" className="px-[var(--gutter)] pb-[22vh]">
-        <span data-rule aria-hidden className="block h-px bg-ink/15" />
-        <div className="mt-8 grid gap-y-10 md:grid-cols-12 md:gap-x-6">
-          <div className="md:col-span-3">
-            <Bullet>Clients</Bullet>
-          </div>
-          <div className="md:col-span-9">
-            <h2 data-goo className={`${display} text-[clamp(2.25rem,5vw,5.5rem)] leading-[0.95]`}>
-              Brands we&rsquo;ve
-              <br />
-              built with.
+      {/* ---- the brands we've built with: small, in rows ---- */}
+      <section data-nav-message="Clients" className="px-[var(--gutter)] pb-[28vh]">
+        <div className="grid gap-y-10 md:grid-cols-12 md:gap-x-6">
+          <div data-reveal className="max-w-[30ch] md:col-span-4">
+            <h2 data-hover-scramble className={`${label} text-stone`}>
+              [ Clients ] — {pad(BRANDS.length)}
             </h2>
+            <p className="mt-4 text-[15px] leading-[1.45] text-graphite md:text-[16px]">
+              Brands we&rsquo;ve built with — a hospital, a studio and academy, and handloom weavers.
+            </p>
+          </div>
 
-            <ul className="group/brands mt-[8vh]">
+          <div className="md:col-span-7 md:col-start-6">
+            <ul className="group/brands">
               {BRANDS.map((b, i) => (
                 <li
                   key={b.name}
                   data-brand
-                  className="group/brand grid grid-cols-[2.75rem_1fr] items-center gap-x-4 gap-y-3 border-t border-ink/10 py-5 transition-colors duration-500 ease-prime last:border-b group-hover/brands:text-ink/30 hover:!text-ink md:grid-cols-[3.5rem_1fr_auto] md:py-7"
+                  className="group/brand grid grid-cols-[2.75rem_1fr] items-center gap-x-4 gap-y-2 border-t border-ink/10 py-5 transition-colors duration-500 ease-prime last:border-b group-hover/brands:text-ink/30 hover:!text-ink md:grid-cols-[3rem_1fr_auto] md:py-6"
                 >
                   <span className="overflow-hidden">
                     <span data-brand-line className={`${label} block text-stone`}>
-                      ({pad(i + 1)})
+                      {pad(i + 1)}
                     </span>
                   </span>
                   {/* the name rolls: it rises away and its copy comes up from below, on the prime curve */}
-                  <span className="relative block overflow-hidden">
+                  <Link href={`/projects/${b.slug}`} className="relative block overflow-hidden outline-none">
                     <span data-brand-line className="block">
-                      <span className={`${display} relative block overflow-hidden text-[clamp(1.5rem,3.4vw,3.25rem)] leading-[1.1]`}>
+                      <span className="relative block overflow-hidden text-[17px] font-medium leading-[1.25] tracking-[-0.02em] md:text-[20px]">
                         <span className="block transition-transform duration-700 ease-prime group-hover/brand:-translate-y-full">
                           {b.name}
                         </span>
@@ -373,11 +362,21 @@ export default function WorkPage() {
                         </span>
                       </span>
                     </span>
-                  </span>
-                  <span className="col-start-2 flex gap-1.5 overflow-hidden md:col-start-3">
-                    <span data-brand-line className="flex gap-1.5">
-                      <PillTag>{b.field}</PillTag>
-                      {b.app && <PillTag tone="accent">App</PillTag>}
+                  </Link>
+                  <span className="col-start-2 flex overflow-hidden md:col-start-3">
+                    <span data-brand-line className="flex items-center gap-4">
+                      <span className={`${label} text-stone`}>
+                        {b.field}
+                        {b.app && " · App"}
+                      </span>
+                      <a
+                        href={b.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`${label} inline-flex items-center gap-1 text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-ink`}
+                      >
+                        Site <span aria-hidden>↗</span>
+                      </a>
                     </span>
                   </span>
                 </li>
@@ -385,7 +384,7 @@ export default function WorkPage() {
             </ul>
 
             <div data-reveal className="mt-10 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-[14px] text-stone">Your brand next?</p>
+              <p className={`${label} text-stone`}>Your brand next?</p>
               <PillLink
                 href="#contact"
                 icon={
@@ -400,7 +399,6 @@ export default function WorkPage() {
           </div>
         </div>
       </section>
-
     </main>
   );
 }

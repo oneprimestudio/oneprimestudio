@@ -17,8 +17,7 @@ import {
   SplitText,
   useGSAP,
 } from "@/lib/gsap";
-import { WORK, type Work } from "@/lib/work";
-import Logo from "../Logo";
+import { workBySlug, type Work } from "@/lib/work";
 
 /*
  * Selected work, as an index and a stage — the index after Obys, the type and air after the About page.
@@ -36,9 +35,19 @@ type Project = Work & { shot: ReactNode };
 
 const shadow = "shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)]";
 
+// four of the work, by slug: the hospital, the studio's CRM, the silk store and this site
 const PROJECTS: Project[] = [
   {
-    ...WORK[0],
+    ...workBySlug("jeeva")!,
+    // the live site's first screen, on a phone, held in the card like a print
+    shot: (
+      <div data-lift className={`absolute left-1/2 top-[8%] aspect-[4/5] h-[58%] -translate-x-1/2 overflow-hidden rounded-[6px] ${shadow}`}>
+        <Image src="/images/work/clients/jeeva-card.webp" alt="Jeeva Multispeciality Hospital's site, on a phone" fill sizes="(min-width: 768px) 16vw, 40vw" className="object-cover object-top" />
+      </div>
+    ),
+  },
+  {
+    ...workBySlug("maera")!,
     shot: (
       <>
         <div data-spread className="absolute left-[7%] top-[9%] w-[46%] opacity-60">
@@ -65,15 +74,16 @@ const PROJECTS: Project[] = [
     ),
   },
   {
-    ...WORK[1],
+    ...workBySlug("netha")!,
+    // the live site's first screen, on a phone, held in the card like a print
     shot: (
-      <div data-lift className="absolute inset-x-0 top-[36%] flex -translate-y-1/2 justify-center text-chalk">
-        <Logo markOnly className="text-[clamp(4.5rem,9vw,8.5rem)]" />
+      <div data-lift className={`absolute left-1/2 top-[8%] aspect-[4/5] h-[58%] -translate-x-1/2 overflow-hidden rounded-[6px] ${shadow}`}>
+        <Image src="/images/work/clients/netha-card.webp" alt="Netha Silks & Co.'s store, on a phone" fill sizes="(min-width: 768px) 16vw, 40vw" className="object-cover object-top" />
       </div>
     ),
   },
   {
-    ...WORK[2],
+    ...workBySlug("site")!,
     shot: (
       // the x-ray, inverted: white veins on black, fading out before the copy
       <div data-lift className="absolute inset-0 [mask-image:linear-gradient(to_bottom,#000_45%,transparent_78%)]">
@@ -83,25 +93,6 @@ const PROJECTS: Project[] = [
           fill
           sizes="(min-width: 768px) 38vw, 86vw"
           className="object-cover object-[50%_30%] invert"
-        />
-      </div>
-    ),
-  },
-  {
-    ...WORK[3],
-    shot: (
-      <div
-        data-lift
-        className={`absolute left-1/2 top-[9%] aspect-[9/16] h-[56%] -translate-x-1/2 overflow-hidden rounded-[10px] ring-1 ring-white/10 ${shadow}`}
-      >
-        <video
-          src="/videos/oneprime-logo-intro-540.mp4"
-          aria-label="The One Prime logo film"
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="h-full w-full object-cover"
         />
       </div>
     ),

@@ -18,16 +18,16 @@ import { EMAIL, SOCIALS } from "@/lib/studio";
 import BracketClock from "../BracketClock";
 import Logo from "../Logo";
 
-// the home page's sections, by id, and the work index, a page of its own. A section link on another
-// page is taken to the home page through the page transition (PageTransition)
+// the site's pages only — never a section of one
 const LINKS = [
-  { label: "Studio", id: "studio", href: "#studio" },
-  { label: "Services", id: "services", href: "#services" },
-  { label: "Projects", id: "work", href: "/projects" },
-  { label: "About", id: "about", href: "/about" },
-  { label: "Principles", id: "principles", href: "#principles" },
-  { label: "Contact", id: "contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "About", href: "/about" },
 ];
+
+/** the link for the page on screen (a case page counts as Projects) */
+const pageOf = (pathname: string) =>
+  LINKS.findLast((l) => pathname === l.href || pathname.startsWith(`${l.href}/`))?.href ?? "/";
 
 const INK = "#08064e";
 
@@ -54,7 +54,7 @@ export default function Navbar() {
   const tl = useRef<gsap.core.Timeline | null>(null);
   const say = useRef<(text: string) => void>(() => {});
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState("top");
+  const active = pageOf(pathname);
 
   // navigating closes the menu (state reset on change, during render — no effect needed)
   const [shownPath, setShownPath] = useState(pathname);
@@ -130,8 +130,8 @@ export default function Navbar() {
     { scope: root },
   );
 
-  // the section in view: its message on the status line, its id the active link — found again on every
-  // page, since the navbar outlives them
+  // the section in view: its message on the status line — found again on every page, since the navbar
+  // outlives them
   useGSAP(
     () => {
       const sections = document.querySelectorAll<HTMLElement>("[data-nav-message]");
@@ -143,15 +143,11 @@ export default function Navbar() {
           onToggle: (self) => {
             if (!self.isActive) return;
             current.current = section.dataset.navMessage ?? current.current;
-            if (section.id) setActive(section.id);
             if (!root.current?.hasAttribute("data-open")) say.current(current.current);
           },
         });
       });
       if (sections[0]?.dataset.navMessage) current.current = sections[0].dataset.navMessage;
-      setActive(
-        pathname === "/projects" ? "work" : pathname === "/about" ? "about" : (sections[0]?.id ?? "top"),
-      );
       say.current(current.current);
     },
     { dependencies: [pathname], revertOnUpdate: true },
@@ -218,7 +214,7 @@ export default function Navbar() {
         <div data-bar-row className="relative grid h-[var(--nav-h)] grid-cols-[1fr_auto_1fr] items-center pl-4 pr-1.5">
           <a
             data-collapse="start"
-            href="#top"
+            href="/"
             inert={open}
             aria-label="One Prime Studio — home"
             className="group justify-self-start text-[21px] md:text-[23px]"
@@ -255,21 +251,21 @@ export default function Navbar() {
               Menu
             </p>
 
-            {/* the sections at display size; hovering one quiets the rest */}
+            {/* the pages at display size; hovering one quiets the rest */}
             <ul className="group/links mt-4">
-              {LINKS.map(({ label, id, href }) => (
-                <li key={id} className="overflow-hidden">
+              {LINKS.map(({ label, href }) => (
+                <li key={href} className="overflow-hidden">
                   <a
                     data-menu-line
                     href={href}
                     onClick={close}
-                    aria-current={active === id ? "location" : undefined}
+                    aria-current={active === href ? "page" : undefined}
                     className="group flex items-center gap-3 py-[2px] text-[clamp(2rem,7.4vw,2.75rem)] font-medium leading-[1.06] tracking-[-0.035em] transition-colors duration-500 ease-prime group-hover/links:text-chalk/35 hover:!text-chalk"
                   >
                     <span className="transition-transform duration-500 ease-prime group-hover:translate-x-1.5">
                       {label}
                     </span>
-                    {active === id && <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />}
+                    {active === href && <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />}
                   </a>
                 </li>
               ))}

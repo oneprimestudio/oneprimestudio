@@ -4,7 +4,7 @@ import { type RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { BAYER } from "@/lib/glsl";
 import { LAND_DOTS } from "@/lib/geo/land";
-import { HOME, type Place } from "@/lib/geo/places";
+import { HOME, HYDERABAD_AREAS, isHyderabad, PLACES, type Place } from "@/lib/geo/places";
 import { gsap, prefersReducedMotion, PRIME } from "@/lib/gsap";
 
 /*
@@ -24,6 +24,11 @@ import { gsap, prefersReducedMotion, PRIME } from "@/lib/gsap";
  * The scroll (0–1, from the stage's pin) carries it from intro to settled and turns it a little on the way.
  * It sways on its own and can be dragged. Choosing a place swings it to face the middle of the arc, which
  * then draws itself from Hyderabad out to the visitor, and a pulse keeps travelling along it.
+ *
+ * Zoom: the focus frame grows until the line fills about two fifths of the stage — far places keep the
+ * whole globe, Bengaluru brings the south of India up close, and Hyderabad itself opens the city: a fine
+ * grid and its areas, and once an area is chosen, a street-scale view of the line from the centre to it.
+ * The radius is mixed geometrically (log space), so a hundredfold zoom reads as one even flight.
  */
 
 const RADIUS = 1;
@@ -48,8 +53,18 @@ const frames = (W: number, H: number) => {
 const mixFrame = (a: Frame, b: Frame, t: number): Frame => ({
   x: a.x + (b.x - a.x) * t,
   y: a.y + (b.y - a.y) * t,
-  r: a.r + (b.r - a.r) * t,
+  r: a.r * Math.pow(b.r / a.r, t), // geometric: every doubling of the zoom takes the same time
 });
+const smoothstep = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+const EARTH_KM = 6371;
+const METRO_KM = 56; // Hyderabad, opened: this many km across the stage's shorter side
+const MAX_ZOOM = 420; // the closest it comes: radius in stage-heights (an area ~6 km out fills the view)
+const isArea = (p: Place) => p.id.startsWith("hyd-");
+// the fine grid over Hyderabad, in degrees: what the city view is drawn on
+const GRID = { lat: [17.15, 17.7], lon: [78.2, 78.75], step: 0.025 };
 // the turn the scroll gives it: from west of Hyderabad, tipped north, to Hyderabad riding the middle of
 // the top half (the centre of the view sits south of it, so India clears the stage's bottom edge)
 const scrollView = (p: number) => ({ lat: 18 + (-16 - 18) * p, lon: HOME.lon - 36 + 36 * p });
@@ -275,6 +290,7 @@ export default function Globe({ place, progress }: { place: Place | null; progre
     const aim = { lat: start.lat, lon: start.lon }; // facing the chosen place's line
     const dragged = { lat: 0, lon: 0 };
     const mode = { focus: 0 };
+    const zoom = { z: 0 }; // log of how far the focus frame is enlarged beyond its own radius
     let swaying = !still;
 
     // ---- projection and occlusion, for the SVG layer ----
@@ -303,12 +319,14 @@ export default function Globe({ place, progress }: { place: Place | null; progre
     const homeLocal = toVec(HOME.lat, HOME.lon);
     const state = { draw: 0, pulse: 0 };
     let pulseTween: gsap.core.Tween | null = null;
+    let chosenArea = ""; // an area of Hyderabad, when that is the place
 
     const buildArc = (p: Place) => {
       const a = toVec(HOME.lat, HOME.lon).normalize();
       const b = toVec(p.lat, p.lon).normalize();
       const angle = a.angleTo(b);
-      const lift = 0.06 + 0.32 * (angle / Math.PI); // longer flights rise higher
+      // longer flights rise higher; short ones (across a city) only a little, or they'd leave the view
+      const lift = Math.min(0.06 + 0.32 * (angle / Math.PI), angle * 0.3);
       const pts: THREE.Vector3[] = [];
       for (let i = 0; i <= SAMPLES; i++) {
         const t = i / SAMPLES;
@@ -320,24 +338,34 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       return pts;
     };
 
-    /** swing to the centre of the stage, facing (lat, lon) */
-    const focusOn = (lat: number, lon: number) => {
+    /** how far to zoom (log of the focus radius's multiple) for a line `angle` radians long, or a view `km` across */
+    const zoomFor = (angle: number, km?: number) => {
+      const minDim = Math.min(W, H);
+      const r = km ? (minDim / 2) * (EARTH_KM / (km / 2)) : (0.4 * minDim) / Math.max(angle, 1e-6);
+      return Math.log(gsap.utils.clamp(1, (MAX_ZOOM * minDim) / stage.focus.r, r / stage.focus.r));
+    };
+
+    /** swing to the centre of the stage, facing (lat, lon), zoomed to `z` */
+    const focusOn = (lat: number, lon: number, z: number) => {
       while (lon - view.lon > 180) lon -= 360;
       while (lon - view.lon < -180) lon += 360;
       lat = gsap.utils.clamp(-35, 35, lat);
-      const d = still ? 0 : 1.6;
+      // a long zoom takes a little longer, so it never feels like a jump
+      const d = still ? 0 : 1.6 + 0.12 * Math.abs(z - zoom.z);
       swaying = false;
-      gsap.killTweensOf([aim, dragged, mode]);
+      gsap.killTweensOf([aim, dragged, mode, zoom]);
       // from the scroll's view the whole swing rides `focus`; from another place, the aim itself travels
       if (mode.focus < 0.02) gsap.set(aim, { lat, lon });
       else gsap.to(aim, { lat, lon, duration: d, ease: PRIME });
       gsap.to(dragged, { lat: 0, lon: 0, duration: d, ease: PRIME });
       gsap.to(mode, { focus: 1, duration: d, ease: PRIME });
+      gsap.to(zoom, { z, duration: d, ease: PRIME });
     };
 
     api.current = {
       show: (p) => {
         pulseTween?.kill();
+        chosenArea = "";
         if (!p) {
           // nothing chosen: back down to where the scroll left it
           arcLocal = [];
@@ -345,27 +373,33 @@ export default function Globe({ place, progress }: { place: Place | null; progre
           placeLabel.textContent = "";
           fitPill(placeNode);
           state.draw = 0;
-          gsap.killTweensOf([aim, dragged, mode]);
-          gsap.to(mode, { focus: 0, duration: still ? 0 : 1.4, ease: PRIME });
+          gsap.killTweensOf([aim, dragged, mode, zoom]);
+          // back out and down, on one curve: the zoom unwinds while the globe returns to the scroll's place
+          const d = still ? 0 : 1.6 + 0.08 * zoom.z;
+          gsap.to(mode, { focus: 0, duration: d, ease: PRIME });
+          gsap.to(zoom, { z: 0, duration: d, ease: PRIME });
           swaying = !still;
           return;
         }
-        if (p.lat === HOME.lat && p.lon === HOME.lon) {
+        if (isHyderabad(p)) {
+          // the studio's own city: open it — the grid and its areas, waiting for the second answer
           arcLocal = [];
-          placeLocal = toVec(p.lat, p.lon);
-          placeLabel.textContent = p.city;
+          placeLocal = null;
+          placeLabel.textContent = "";
           fitPill(placeNode);
           state.draw = 0;
-          focusOn(HOME.lat, HOME.lon);
+          focusOn(HOME.lat, HOME.lon, zoomFor(0, METRO_KM));
           return;
         }
         arcLocal = buildArc(p);
         placeLocal = toVec(p.lat, p.lon);
-        placeLabel.textContent = p.city;
+        chosenArea = isArea(p) ? p.id : "";
+        placeLabel.textContent = isArea(p) ? p.name : p.city;
         fitPill(placeNode);
-        // face the middle of the flight
+        // face the middle of the flight, close enough that the line fills the stage
         const mid = arcLocal[Math.floor(SAMPLES / 2)].clone().normalize();
-        focusOn((Math.asin(mid.y) * 180) / Math.PI, (Math.atan2(mid.x, mid.z) * 180) / Math.PI);
+        const angle = toVec(HOME.lat, HOME.lon).angleTo(toVec(p.lat, p.lon));
+        focusOn((Math.asin(mid.y) * 180) / Math.PI, (Math.atan2(mid.x, mid.z) * 180) / Math.PI, zoomFor(angle));
         state.draw = 0;
         gsap.to(state, { draw: 1, duration: still ? 0 : 1.8, delay: still ? 0 : 0.5, ease: PRIME });
         state.pulse = 0;
@@ -400,8 +434,10 @@ export default function Globe({ place, progress }: { place: Place | null; progre
         if (e.pointerType === "mouse") el.style.cursor = onSphere(e) ? "grab" : "";
         return;
       }
-      dragged.lon = drag.lon - (e.clientX - drag.x) * 0.3;
-      dragged.lat = gsap.utils.clamp(-50, 50, drag.lat + (e.clientY - drag.y) * 0.2);
+      // zoomed in, a pixel of drag is a much smaller turn
+      const per = 1 / Math.exp(zoom.z * mode.focus);
+      dragged.lon = drag.lon - (e.clientX - drag.x) * 0.3 * per;
+      dragged.lat = gsap.utils.clamp(-50, 50, drag.lat + (e.clientY - drag.y) * 0.2 * per);
     };
     const onUp = () => {
       drag = null;
@@ -441,14 +477,71 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       fitPill(homeNode);
       fitPill(placeNode);
     });
+    // every city in the list, a faint dot: the network the line is drawn across
+    const cityDots = Array.from(svg.querySelectorAll<SVGCircleElement>("[data-city]"));
+    const cityLocal = PLACES.map((c) => toVec(c.lat, c.lon));
+    const drawCities = () =>
+      cityDots.forEach((dot, i) => {
+        const w = world(cityLocal[i]);
+        const [x, y] = project(w);
+        const facing = w.clone().normalize().dot(toCam.subVectors(cam, w).normalize());
+        dot.setAttribute("cx", x.toFixed(1));
+        dot.setAttribute("cy", y.toFixed(1));
+        dot.style.opacity = String(gsap.utils.clamp(0, 1, facing / 0.3) * 0.5);
+      });
+
+    // the city, opened: a fine grid and every area, fading in as the zoom passes the metro view
+    const localLayer = q<SVGGElement>("[data-local]");
+    const gridPath = q<SVGPathElement>("[data-grid]");
+    const areaNodes = Array.from(svg.querySelectorAll<SVGGElement>("[data-area]"));
+    const areaLocal = HYDERABAD_AREAS.map((a) => toVec(a.lat, a.lon));
+    const gridLines: [number, number][][] = [];
+    for (let lat = GRID.lat[0]; lat <= GRID.lat[1] + 1e-9; lat += GRID.step)
+      gridLines.push([GRID.lon[0], (GRID.lon[0] + GRID.lon[1]) / 2, GRID.lon[1]].map((lon): [number, number] => [lat, lon]));
+    for (let lon = GRID.lon[0]; lon <= GRID.lon[1] + 1e-9; lon += GRID.step)
+      gridLines.push([GRID.lat[0], (GRID.lat[0] + GRID.lat[1]) / 2, GRID.lat[1]].map((lat): [number, number] => [lat, lon]));
+    const gridLocal = gridLines.map((line) => line.map(([lat, lon]) => toVec(lat, lon)));
+    const drawLocal = (zr: number) => {
+      const alpha = smoothstep(14, 44, zr);
+      localLayer.style.opacity = alpha.toFixed(3);
+      if (alpha <= 0) return;
+      gridPath.setAttribute(
+        "d",
+        gridLocal
+          .map((line) =>
+            line
+              .map((v, i) => {
+                const [x, y] = project(world(v));
+                return `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
+              })
+              .join(""),
+          )
+          .join(""),
+      );
+      // names once an area is chosen (the city view stays a field of dots to choose from), and never over
+      // the chosen one's own pill
+      const named = chosenArea ? smoothstep(60, 120, zr) : smoothstep(240, 320, zr);
+      areaNodes.forEach((node, i) => {
+        const [x, y] = project(world(areaLocal[i]));
+        const on = x > -40 && x < W + 40 && y > -40 && y < H + 40;
+        node.setAttribute("transform", `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+        node.style.display = on ? "" : "none";
+        const label = node.querySelector<SVGTextElement>("text");
+        if (label) label.style.opacity = HYDERABAD_AREAS[i].id === chosenArea ? "0" : named.toFixed(3);
+      });
+    };
+
     const tick = (time: number, deltaMs: number) => {
       const dt = Math.min(deltaMs, 64) / 1000;
-      const k = 1 - Math.exp(-dt * 4);
       const p = ease(gsap.utils.clamp(0, 1, progress.current ?? 0));
       const f = mode.focus;
+      // the view trails the scroll and drags a little; in focus it keeps right up with the aim, which is
+      // already eased — zoomed in, any lag would swing the place out of the frame
+      const k = 1 - Math.exp(-dt * (4 + 26 * f));
 
       // where it sits: the frame follows the scroll closely (it is the scroll), the view a little behind
-      const want = mixFrame(mixFrame(stage.intro, stage.settled, p), stage.focus, f);
+      const focus = { ...stage.focus, r: stage.focus.r * Math.exp(zoom.z) };
+      const want = mixFrame(mixFrame(stage.intro, stage.settled, p), focus, f);
       if (!frame) frame = want;
       else frame = mixFrame(frame, want, 1 - Math.exp(-dt * 10));
       place2D(frame);
@@ -461,10 +554,17 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       view.lon += (lon - view.lon) * k;
       globe.rotation.set((view.lat * Math.PI) / 180, (-view.lon * Math.PI) / 180, 0, "XYZ");
       globe.updateMatrixWorld();
+      // close in, the land thins to a light ground, so the city's grid and names read over it
+      const zr = frame.r / Math.min(W, H);
+      // (India, up close, keeps a mid grain; the city thins to a few dots, nearly white)
+      landMat.uniforms.uNear.value = 0.72 - 0.34 * smoothstep(1.2, 5, zr) - 0.28 * smoothstep(12, 60, zr);
+      outline.style.opacity = String(1 - smoothstep(2, 6, zr));
       renderer.render(scene, camera);
 
       setNode(homeNode, homeLocal);
       setNode(placeNode, placeLocal);
+      drawCities();
+      drawLocal(zr);
       if (!arcLocal.length) {
         arcBase.setAttribute("d", "");
         arc.setAttribute("d", "");
@@ -529,7 +629,7 @@ export default function Globe({ place, progress }: { place: Place | null; progre
     return () => {
       io.disconnect();
       gsap.ticker.remove(tick);
-      gsap.killTweensOf([aim, dragged, mode, state]);
+      gsap.killTweensOf([aim, dragged, mode, zoom, state]);
       pulseTween?.kill();
       ro.disconnect();
       el.removeEventListener("pointerdown", onDown);
@@ -558,7 +658,11 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       role="img"
       aria-label={
         place
-          ? `A globe with a line drawn from Hyderabad, India to ${place.city}, ${place.name}`
+          ? isArea(place)
+            ? `A map of Hyderabad with a line drawn from the city centre to ${place.name}`
+            : isHyderabad(place)
+              ? "A map of Hyderabad, India, marking its areas"
+              : `A globe with a line drawn from Hyderabad, India to ${place.city}, ${place.name}`
           : "A globe marking Hyderabad, India"
       }
     >
@@ -571,6 +675,29 @@ export default function Globe({ place, progress }: { place: Place | null; progre
             <stop offset="1" stopColor="#08064e" />
           </linearGradient>
         </defs>
+        {/* every city in the list: a faint dot */}
+        <g aria-hidden>
+          {PLACES.map((c) => (
+            <circle key={c.id} data-city r={1.6} fill="#08064e" style={{ opacity: 0 }} />
+          ))}
+        </g>
+        {/* Hyderabad, opened: the fine grid and its areas */}
+        <g data-local style={{ opacity: 0 }}>
+          <path data-grid fill="none" stroke="#08064e" strokeOpacity={0.07} strokeWidth={1} />
+          {HYDERABAD_AREAS.map((a) => (
+            <g key={a.id} data-area>
+              <circle r={2.25} fill="#08064e" fillOpacity={0.55} />
+              <text
+                x={6}
+                y={3.5}
+                className="fill-ink font-mono text-[9px] uppercase tracking-[0.12em]"
+                style={{ paintOrder: "stroke", stroke: "#fff", strokeWidth: 3, opacity: 0 }}
+              >
+                {a.name}
+              </text>
+            </g>
+          ))}
+        </g>
         <path data-arc-base fill="none" stroke="#08064e" strokeOpacity={0.18} strokeWidth={1} strokeDasharray="1 5" strokeLinecap="round" />
         <path data-arc-keyline fill="none" stroke="#ffffff" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" />
         <path data-arc fill="none" stroke="url(#globe-arc)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />

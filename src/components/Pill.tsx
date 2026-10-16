@@ -88,9 +88,13 @@ export function PillButton({
   );
 }
 
-export function PillLink({ href, ...props }: Common & { href: string }) {
+export function PillLink({ href, external, ...props }: Common & { href: string; external?: boolean }) {
   return (
-    <a href={href} className={`${base(props.active, props.tone)} ${props.className ?? ""}`}>
+    <a
+      href={href}
+      {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+      className={`${base(props.active, props.tone)} ${props.className ?? ""}`}
+    >
       <Body {...props} />
     </a>
   );

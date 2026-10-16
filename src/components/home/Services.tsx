@@ -14,15 +14,14 @@ import {
   useGSAP,
 } from "@/lib/gsap";
 import { gooHeadings } from "@/lib/goo";
-import ServiceArt, { type ArtKind } from "./ServiceArt";
+import Logo from "@/components/Logo";
 
 type Service = {
   title: string;
   tag: string;
-  /** three deliverables, rolled in under the title on hover */
+  /** what the service provides, listed on the card */
   items: string[];
   body: string;
-  art: ArtKind;
 };
 
 const SERVICES: Service[] = [
@@ -31,42 +30,36 @@ const SERVICES: Service[] = [
     tag: "Design",
     items: ["Research", "UI", "Prototypes"],
     body: "Interfaces shaped around the people who use them, every day.",
-    art: "screen",
   },
   {
     title: "Custom Shopify.",
     tag: "Commerce",
     items: ["Themes", "Liquid", "Apps"],
     body: "Storefronts built from a blank file — never from a theme store.",
-    art: "bag",
   },
   {
     title: "E-Commerce.",
     tag: "Commerce",
     items: ["Storefront", "Checkout", "Payments"],
     body: "Catalogue to checkout, designed to turn visits into repeat buyers.",
-    art: "cart",
   },
   {
     title: "CRM & ERP Systems.",
     tag: "Systems",
     items: ["Dashboards", "Workflows", "Reports"],
     body: "Internal tools your team actually wants to open.",
-    art: "chart",
   },
   {
     title: "SaaS Products.",
     tag: "Product",
     items: ["MVP", "Billing", "Onboarding"],
     body: "From first MVP to scale, with an onboarding that counts.",
-    art: "layers",
   },
   {
     title: "Brand & Logo Identity.",
     tag: "Brand",
     items: ["Logo", "Type", "Guidelines"],
     body: "An identity with a reason behind every curve.",
-    art: "pen",
   },
 ];
 
@@ -76,15 +69,14 @@ const label = "font-mono text-[10px] uppercase tracking-[0.14em] md:text-[11px]"
 const HOVER = { ease: PRIME, duration: 0.7, overwrite: "auto" as const };
 
 /**
- * What the studio makes: six plain white, square-cornered 4:5 cards on the bloom, after the reference's
- * doodle cards — a large hand-drawn line illustration at the top, the name in display type at the foot,
- * a quiet line under it and a mono tag. On wide screens the row waits in the right 40% of the screen; the
- * section pins and scrolling carries it leftward, the cards trailing a little behind one another the
- * faster it moves. On phones it swipes.
+ * What the studio makes: six square-cornered 4:5 cards in warm paper on the bloom, after a poster-card
+ * reference — the name set huge and tight at the top, a small uppercase label and what the service provides
+ * as a numbered list in the middle, and the studio's mark over a short paragraph at the foot. On wide
+ * screens the row waits in the right 40% of the screen; the section pins and scrolling carries it leftward,
+ * the cards trailing a little behind one another the faster it moves. On phones it swipes.
  *
- * The illustrations draw themselves in as the row arrives. Hover, on the prime curve: the card lifts and
- * its illustration acts out the service (the cursor presses the button, the bag is lifted, the cart rolls,
- * the bars rise, the stack opens, the pencil leans in), while the tag rolls over to the deliverables.
+ * Each card's list settles in as the row arrives. Hover, on the prime curve: the card lifts, its list rows
+ * step aside one after another, and the mark's switch throws on.
  */
 export default function Services() {
   const root = useRef<HTMLElement>(null);
@@ -133,27 +125,11 @@ export default function Services() {
         scrollTrigger: { trigger: el, start: "top 70%", once: true },
       });
 
-      // the row rises in card by card, then each illustration draws itself in, line by line
-      gsap.set(el.querySelectorAll("[data-draw]"), { strokeDasharray: 1, strokeDashoffset: 1 });
-      gsap.set(el.querySelectorAll("[data-pop]"), { scale: 0.4, opacity: 0, transformOrigin: "50% 50%" });
+      // the row rises in card by card, then each card's list settles in, row by row
       const arrive = gsap.timeline({ scrollTrigger: { trigger: track, start: "top 92%", once: true } });
       arrive.from(items, { y: 90, autoAlpha: 0, duration: 1.2, ease: PRIME, stagger: 0.1 }, 0);
       cards.forEach((card, i) =>
-        arrive.to(
-          card.querySelectorAll("[data-draw]"),
-          {
-            strokeDashoffset: 0,
-            duration: 1.1,
-            ease: PRIME,
-            stagger: 0.05,
-            // once drawn, the dashes go, so nothing is left to seam at the line caps
-            onComplete: () =>
-              gsap.set(card.querySelectorAll("[data-draw]:not([data-redraw])"), {
-                clearProps: "strokeDasharray,strokeDashoffset",
-              }),
-          },
-          0.5 + i * 0.1,
-        ),
+        arrive.from(card.querySelectorAll("[data-li]"), { yPercent: 100, duration: 1, ease: PRIME, stagger: 0.06 }, 0.45 + i * 0.1),
       );
 
       // the hint's runner: a short dash that slides along its rail, over and over
@@ -215,7 +191,7 @@ export default function Services() {
         live.add(i);
         gsap.to(card, { y: -12, ...HOVER });
         gsap.to(q("[data-shadow]"), { opacity: 1, ...HOVER });
-        gsap.to(q("[data-body]"), { color: "#3b3a56", ...HOVER });
+        gsap.to(q("[data-body]"), { color: "#08064e", ...HOVER });
         gsap.to(q("[data-roll]"), { yPercent: -50, ...HOVER });
         gsap.fromTo(q("[data-arrow]"), { x: -10, y: 10, opacity: 0 }, { x: 0, y: 0, opacity: 1, ...HOVER, delay: 0.12 });
         q("[data-h]").forEach((node) => {
@@ -247,7 +223,7 @@ export default function Services() {
         live.delete(i);
         gsap.to(card, { y: 0, ...back });
         gsap.to(q("[data-shadow]"), { opacity: 0, ...back });
-        gsap.to(q("[data-body]"), { color: "#66657d", ...back });
+        gsap.to(q("[data-body]"), { color: "rgba(8, 6, 78, 0.8)", ...back });
         gsap.to(q("[data-roll]"), { yPercent: 0, ...back });
         gsap.to(q("[data-arrow]"), { x: 10, y: -10, opacity: 0, ...back, duration: 0.4 });
         // the parts go home in the reverse order to the way they left
@@ -375,7 +351,7 @@ export default function Services() {
               <li key={s.title} data-item className="snap-start scroll-ml-[var(--gutter)] will-change-transform">
                 <article
                   data-card
-                  className="relative flex aspect-[4/5] w-[78vw] max-w-[320px] flex-col bg-white p-7 text-ink md:h-[min(54svh,560px)] md:w-auto md:max-w-none md:p-9"
+                  className="group relative flex aspect-[4/5] w-[78vw] max-w-[320px] flex-col bg-[#fbf8f2] p-6 text-ink md:h-[min(58svh,600px)] md:w-auto md:max-w-none md:p-8"
                 >
                   {/* a soft resting shadow, and a deeper one that fades in as the card lifts */}
                   <span
@@ -387,17 +363,39 @@ export default function Services() {
                     data-shadow
                     className="pointer-events-none absolute inset-0 opacity-0 shadow-[0_50px_90px_-30px_rgba(0,0,0,0.5)]"
                   />
+                  <Logo markOnly className="text-[22px] text-ink" />
 
-                  <ServiceArt kind={s.art} className="relative w-[118px] text-[#1d1c38] md:w-[clamp(120px,11vw,168px)]" />
+                  <h3 className="relative text-[clamp(2.25rem,3.3vw,3.5rem)] font-medium leading-[0.9] tracking-[-0.055em]">
+                    {s.title}
+                  </h3>
+
+                  {/* what it is, and what it provides */}
+
+
+                  {/* the mark, which throws on as the card is hovered, over the paragraph */}
 
                   <div className="relative mt-auto">
-                    <h3 className="text-[clamp(1.5rem,2vw,2.125rem)] font-medium leading-[1.06] tracking-[-0.035em]">
-                      {s.title}
-                    </h3>
-                    <p data-body className="mt-3 max-w-[30ch] text-[14px] leading-[1.45] text-stone md:text-[15px]">
-                      {s.body}
-                    </p>
-            
+                    <div className="relative mt-auto">
+                      <p data-body className="mt-3 max-w-[32ch] text-[14px] font-medium leading-[1.35] text-ink/80 md:text-[15px]">
+                        {s.body}
+                      </p>
+                    </div>
+                    <p className="text-[11px] mt-3 font-semibold text-end uppercase tracking-[0.06em]">{s.tag}</p>
+                    <ul className=" text-[14px] leading-none flex items-end justify-end flex-col  md:text-[15px]">
+                      {s.items.map((item, k) => (
+                        <li key={item} className="overflow-hidden mt-2 ">
+                          <span
+                            data-li
+                            data-h
+                            data-hx="6"
+                            data-hd={k * 0.04}
+                            className="flex items-baseline gap-1"
+                          >
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </article>
               </li>

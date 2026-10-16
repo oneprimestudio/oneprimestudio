@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Globe from "@/components/world/Globe";
 import PlacePicker from "@/components/world/PlacePicker";
-import { HOME, PLACES, distanceKm, offsetMinutes } from "@/lib/geo/places";
+import { fromCentre, HOME, HYDERABAD_AREAS, isHyderabad, PLACES, distanceKm, offsetMinutes, type Place } from "@/lib/geo/places";
 import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 /*
@@ -16,11 +16,16 @@ import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, S
  *
  * The screen pins for a while: the scroll carries the globe from small and centred to large and settled on
  * the bottom edge, its top half showing, turning it a little on the way (Globe reads `progress`). Choosing
- * a place lifts it back to the centre and swings it to the line.
+ * a place lifts it back to the centre and swings it to the line — closer for nearer places: India comes up
+ * close, and Hyderabad opens the city and asks which part of it (its areas), zooming to the one chosen.
+ * Clearing flies back out to where the scroll left it.
  */
 
 const label = "font-mono text-[10px] uppercase md:text-[11px]";
 const top = "top-[calc(var(--nav-top)+var(--nav-h)+28px)]";
+
+// an area's second line: how far and which way from the centre, since every one is in Hyderabad
+const areaSecondary = (a: Place) => `Hyderabad · ${fromCentre(a)}`;
 
 const hm = (minutes: number) => {
   const m = ((minutes % 1440) + 1440) % 1440;
@@ -56,19 +61,24 @@ export default function WorldSection({ index }: { index: string }) {
   const root = useRef<HTMLElement>(null);
   const progress = useRef(0);
   const [placeId, setPlaceId] = useState("");
+  const [areaId, setAreaId] = useState("");
   const place = PLACES.find((p) => p.id === placeId) ?? null;
+  const local = isHyderabad(place);
+  const area = local ? (HYDERABAD_AREAS.find((a) => a.id === areaId) ?? null) : null;
+  // what the globe draws the line to: the area, once Hyderabad has one
+  const target: Place | null = area ?? place;
   const homeTime = useHomeTime();
 
   // what the line means: how far, how many hours apart, and where their working day lands in ours
   const facts = useMemo(() => {
-    if (!place) return null;
-    const ahead = offsetMinutes(HOME.tz) - offsetMinutes(place.tz);
+    if (!target || (local && !area)) return null;
+    const ahead = offsetMinutes(HOME.tz) - offsetMinutes(target.tz);
     return {
-      km: `${Math.round(distanceKm(HOME, place)).toLocaleString("en-IN")} km`,
+      km: `${Math.round(distanceKm(HOME, target)).toLocaleString("en-IN")} km`,
       apart: ahead === 0 ? "Same time as us" : `Hyderabad is ${span(ahead)} ${ahead > 0 ? "ahead" : "behind"}`,
       day: `${hm(9 * 60 + ahead)} – ${hm(18 * 60 + ahead)} here`,
     };
-  }, [place]);
+  }, [target, local, area]);
 
   useGSAP(
     () => {
@@ -114,10 +124,14 @@ export default function WorldSection({ index }: { index: string }) {
       data-nav-message="Where we are"
       className="relative z-10 h-[100svh] min-h-[600px] overflow-hidden bg-white text-ink"
     >
-      <Globe place={place} progress={progress} />
+      <Globe place={target} progress={progress} />
 
       {/* top left: who and where, small */}
-      <div data-corner className={`absolute left-[var(--gutter)] ${top} max-w-[30ch] md:max-w-[34ch]`}>
+      {/* the corners sit on white that feathers out, so they read over the globe once it has zoomed in */}
+      <div
+        data-corner
+        className={`absolute left-[var(--gutter)] ${top} max-w-[30ch] bg-white shadow-[0_0_32px_24px_#fff] md:max-w-[34ch]`}
+      >
         <p data-hover-scramble className={`${label} text-stone`}>
           {index} — Where we are
         </p>
@@ -128,7 +142,10 @@ export default function WorldSection({ index }: { index: string }) {
       </div>
 
       {/* top right: our clock */}
-      <p data-corner className={`${label} absolute right-[var(--gutter)] ${top} hidden text-right text-stone md:block`}>
+      <p
+        data-corner
+        className={`${label} absolute right-[var(--gutter)] ${top} hidden bg-white text-right text-stone shadow-[0_0_28px_20px_#fff] md:block`}
+      >
         Hyderabad <span className="tabular-nums text-ink">{homeTime ?? "--:--:--"}</span> IST
         <br />
         17.38° N · 78.49° E
@@ -139,7 +156,7 @@ export default function WorldSection({ index }: { index: string }) {
       <div data-corner className="absolute bottom-[calc(var(--gutter)+8px)] left-[var(--gutter)] hidden w-[280px] md:block">
         <dl
           aria-live="polite"
-          className={`text-[14px] transition-[opacity,transform] duration-700 ease-prime ${
+          className={`bg-white text-[14px] shadow-[0_0_32px_24px_#fff] transition-[opacity,transform] duration-700 ease-prime ${
             facts ? "opacity-100" : "translate-y-3 opacity-0"
           }`}
         >
@@ -162,7 +179,33 @@ export default function WorldSection({ index }: { index: string }) {
         data-corner
         className="absolute bottom-[calc(var(--gutter)+8px)] left-[var(--gutter)] right-[var(--gutter)] bg-white pt-4 shadow-[0_0_36px_28px_#fff] md:left-auto md:w-[280px] md:pt-0 xl:w-[320px]"
       >
-        <PlacePicker value={place} onChange={(p) => setPlaceId(p?.id ?? "")} />
+        <PlacePicker
+          value={place}
+          onChange={(p) => {
+            setPlaceId(p?.id ?? "");
+            setAreaId("");
+          }}
+        />
+        {/* Hyderabad: the second question — which part of it */}
+        {local && (
+          <div className="mt-6">
+            <PlacePicker
+              key="areas"
+              value={area}
+              onChange={(a) => setAreaId(a?.id ?? "")}
+              places={HYDERABAD_AREAS}
+              title="Which part of Hyderabad?"
+              noun="Areas"
+              empty="Choose your area"
+              hint="Uppal, Miyapur, Gachibowli…"
+              search="Search an area"
+              secondary={areaSecondary}
+              meta={fromCentre}
+              guess={false}
+              openOnMount
+            />
+          </div>
+        )}
         {facts && (
           <p className={`${label} mt-3 text-stone md:hidden`}>
             {facts.km} · {facts.apart}
