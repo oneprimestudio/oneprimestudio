@@ -9,9 +9,15 @@ import { Launch2 } from "./launch2/Launch2";
 import launch2Cues from "./launch2/cues.json";
 import { LogoFilm } from "./logo/Logo";
 import logoCues from "./logo/cues.json";
+import { AboutFilm } from "./about/AboutFilm";
+import aboutTl from "./about/timeline.json";
+import { Film2 } from "./about2/Film";
+import about2Tl from "./about2/timeline.json";
 
 export const Root = () => (
   <>
+    <Composition id="About2" component={Film2} durationInFrames={about2Tl.frames} fps={about2Tl.fps} width={1080} height={1920} />
+    <Composition id="About" component={AboutFilm} durationInFrames={aboutTl.frames} fps={aboutTl.fps} width={1080} height={1920} />
     <Composition id="Intro" component={Intro} durationInFrames={tl.frames} fps={tl.fps} width={1080} height={1920} />
     <Composition id="Doc" component={Doc} durationInFrames={docTl.frames} fps={docTl.fps} width={1080} height={1920} />
     <Composition id="Logo" component={LogoFilm} durationInFrames={Math.round(logoCues.duration * logoCues.fps)} fps={logoCues.fps} width={1080} height={1920} />

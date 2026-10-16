@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { RefObject } from "react";
+import { SOCIALS } from "@/lib/studio";
 import BracketClock from "../BracketClock";
 
 // the page's sections, plus what is still to come
@@ -11,15 +12,9 @@ const LINKS: { label: string; href?: string }[] = [
   { label: "Principles", href: "#principles" },
   { label: "Status", href: "#prime" },
   { label: "Work" },
-  { label: "Contact" },
+  { label: "Contact", href: "#contact" },
 ];
 
-// TODO: replace "#" with the studio's real profile URLs
-const SOCIALS = [
-  { label: "Instagram", href: "#" },
-  { label: "LinkedIn", href: "#" },
-  { label: "Behance", href: "#" },
-];
 
 /**
  * Lives behind the page. Opening the menu scales the page down and slides it below

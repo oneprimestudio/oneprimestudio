@@ -1,0 +1,550 @@
+{
+  "title": "One Prime Studio — About (launch film)",
+  "version": 2,
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "aspect": "9:16",
+    "target": "Instagram Reels · LinkedIn · site hero"
+  },
+  "direction": {
+    "logline": "The About page, performed as pure motion: a studio that designs the brand, builds the website and engineers the systems as one — told with the site's own type, cards, easing and globe, and no interface chrome.",
+    "tone": "Calm voice, fast picture. The narrator never hurries; the motion graphics do. Every cut lands on the grid, every hold is earned.",
+    "references": [
+      "the /about page (bleibtgleich.dev spacing, obys.agency type)",
+      "the navbar menu (cominvi.com.mx page scale-down)",
+      "the dither seam page transition",
+      "SaaS launch films: Linear, Vercel Ship, Raycast"
+    ],
+    "palette": {
+      "paper": "#ffffff",
+      "ink": "#08064e",
+      "accent": "#2f6bff",
+      "stone": "#66657d",
+      "graphite": "#3b3a56",
+      "chalk": "#f7f6f2",
+      "rule": "rgba(8,6,78,0.12)"
+    },
+    "type": {
+      "display": "PP Neue Montreal Medium, tracking −0.05em, leading 0.9, stepped lines with em indents",
+      "body": "PP Neue Montreal Book, 30–34 px, graphite",
+      "rule": "No mono, no navbar, no cursor, no HUD — every element on screen is part of the story."
+    },
+    "motion": {
+      "principles": [
+        "Pure animation and story: no navbar, no labels, no timecodes, no cursor.",
+        "Arrivals use the studio's curves; nothing linear.",
+        "Big moves take one bar (2.0 s at 120 BPM); micro moves take an eighth (0.25 s).",
+        "The navbar's opening move (PRIME, 1.0 s: the page scales down and slides away) is used as the film's reveal, without the navbar itself.",
+        "Dither only at hand-overs (the four-front B/W seam train) and in the globe's land grain."
+      ],
+      "easing": {
+        "prime": "cubic-bezier(0.87, 0, 0.13, 1) — navbar open, card lifts, wipes, the 'Start a project' hover",
+        "menu": "M0,0 C0.18,0 0.24,0.36 0.4,0.62 0.56,0.88 0.7,1 1,1 — reveals, rules drawing",
+        "card": "M0,0 C0.3,0 0.32,0.26 0.48,0.56 0.62,0.82 0.72,1 1,1 — 4:5 cards entering",
+        "out": "cubic-bezier(0.16, 1, 0.3, 1) — micro arrivals",
+        "back": "cubic-bezier(0.34, 1.56, 0.64, 1) — the switch knob only"
+      },
+      "durations": {
+        "menuOpen": 1.0,
+        "menuClose": 0.85,
+        "cardLift": 0.7,
+        "seamTrain": 1.6,
+        "goo": 0.9
+      }
+    },
+    "sound": {
+      "music": "120 BPM electronic pulse in D minor → F major at the first drop: muted kick + plucks under the head, a full drop on 'One Prime Studio', a breakdown under 'why', half-time warmth under the founders, a second drop on 'everywhere', a final stab and a long tail on the sign-off.",
+      "ducking": "Music sits under the voice: −9 dB on the mids, −5 dB on the lows whenever a word is spoken, 30 ms look-ahead, 280 ms release. Effects duck −3 dB.",
+      "sfx": "Synthesised in scripts/about/audio.py in the SaaS-launch idiom: soft ticks, swooshes, slams, glitch stutters, risers, sub drops, the switch, the seam crackle, arc zips, a notification ding.",
+      "master": "−14 LUFS-ish RMS for social, −1 dBFS ceiling, 48 kHz stereo."
+    }
+  },
+  "voice": {
+    "engine": "edge-tts (Microsoft neural)",
+    "narrator": "en-US-AndrewMultilingualNeural",
+    "character": "An agent, not an announcer: close-mic, level, certain. Slightly fast on lists, slower on the name.",
+    "styles": {
+      "agent": {
+        "rate": "+4%",
+        "pitch": "-2Hz"
+      },
+      "name": {
+        "rate": "-6%",
+        "pitch": "-3Hz"
+      },
+      "list": {
+        "rate": "+8%",
+        "pitch": "-1Hz"
+      },
+      "warm": {
+        "rate": "+0%",
+        "pitch": "-2Hz"
+      },
+      "sign": {
+        "rate": "-8%",
+        "pitch": "-3Hz"
+      }
+    },
+    "treatment": "HPF 90 Hz, +2 dB presence at 3 kHz, 3:1 compression, a 12 ms digital doubler at −22 dB for the 'agent' sheen, short room."
+  },
+  "bpm": 120,
+  "endHold": 3.0,
+  "scenes": [
+    {
+      "id": "boot",
+      "title": "Boot",
+      "start": 0.0,
+      "picture": [
+        "White frame. A 18 px ink dot pops at centre on the first tick — the About page's bullet.",
+        "Crosshair hairlines draw out from the dot (menu ease), and fade as the headline arrives."
+      ],
+      "sfx": [
+        {
+          "at": "scene:boot",
+          "offset": 0.05,
+          "sound": "pop",
+          "gain": 0.6
+        },
+        {
+          "at": "scene:boot",
+          "offset": 0.5,
+          "sound": "tick",
+          "gain": 0.5
+        },
+        {
+          "at": "scene:boot",
+          "offset": 1.0,
+          "sound": "tick",
+          "gain": 0.5
+        },
+        {
+          "at": "scene:boot",
+          "offset": 1.5,
+          "sound": "tick",
+          "gain": 0.6
+        },
+        {
+          "at": "word:h1:0",
+          "offset": -1.2,
+          "sound": "riser",
+          "gain": 0.4,
+          "dur": 1.2
+        }
+      ]
+    },
+    {
+      "id": "head",
+      "title": "Every business deserves…",
+      "lead": 0.25,
+      "vo": [
+        {
+          "id": "h1",
+          "style": "agent",
+          "text": "Every business deserves to be found, chosen, and run well.",
+          "gap": 0.0,
+          "land": [
+            0,
+            "bar"
+          ]
+        }
+      ],
+      "picture": [
+        "The page's h1 as four stepped lines (indents 0 / 1.4em / 0.5em / 2.2em), each gooing in as the voice reaches it.",
+        "Under it, three outcomes tick in with blue checks as they are said: Found · Chosen · Run well.",
+        "A one-line description rises word by word below."
+      ],
+      "sfx": [
+        {
+          "at": "word:h1:0",
+          "sound": "impact",
+          "gain": 0.55
+        },
+        {
+          "at": "word:h1:0",
+          "sound": "swoosh",
+          "gain": 0.4
+        },
+        {
+          "at": "word:h1:2",
+          "sound": "swoosh",
+          "gain": 0.35
+        },
+        {
+          "at": "word:h1:5",
+          "sound": "swoosh",
+          "gain": 0.35
+        },
+        {
+          "at": "word:h1:7",
+          "sound": "swoosh",
+          "gain": 0.35
+        },
+        {
+          "at": "word:h1:5",
+          "sound": "blip",
+          "gain": 0.25,
+          "note": 74
+        },
+        {
+          "at": "word:h1:6",
+          "sound": "blip",
+          "gain": 0.25,
+          "note": 77
+        },
+        {
+          "at": "word:h1:8",
+          "sound": "blip",
+          "gain": 0.3,
+          "note": 81
+        }
+      ]
+    },
+    {
+      "id": "reveal",
+      "title": "This is One Prime Studio",
+      "lead": 1.5,
+      "vo": [
+        {
+          "id": "name",
+          "style": "name",
+          "text": "This is One Prime Studio.",
+          "gap": 1.1,
+          "land": [
+            2,
+            "bar"
+          ]
+        }
+      ],
+      "picture": [
+        "The navbar's opening move without the navbar: on PRIME (1.0 s) the white page scales to 0.86 and slides down, dimming, to reveal an ink stage.",
+        "On 'One' the studio's switch flips on (knob on the back curve) with a white flash; 'ne' rises, 'Prime Studio' slides out — the lockup at 120 px, white on ink.",
+        "Transition out: the four-front seam train — white, grey halftone, black, next page — rising in Bayer squares."
+      ],
+      "sfx": [
+        {
+          "at": "mark:reveal.open",
+          "sound": "whoomp",
+          "gain": 0.6
+        },
+        {
+          "at": "mark:reveal.open",
+          "offset": 0.05,
+          "sound": "swoosh",
+          "gain": 0.45
+        },
+        {
+          "at": "word:name:2",
+          "offset": -1.0,
+          "sound": "riser",
+          "gain": 0.5,
+          "dur": 1.0
+        },
+        {
+          "at": "word:name:2",
+          "sound": "drop",
+          "gain": 0.9
+        },
+        {
+          "at": "word:name:2",
+          "sound": "switch",
+          "gain": 0.7
+        },
+        {
+          "at": "mark:reveal.seam",
+          "sound": "seam",
+          "gain": 0.6
+        }
+      ]
+    },
+    {
+      "id": "what",
+      "title": "01 — What we do",
+      "lead": 0.55,
+      "vo": [
+        {
+          "id": "what1",
+          "style": "list",
+          "text": "Identity. Leads. Solutions.",
+          "gap": 1.4,
+          "land": [
+            0,
+            "bar"
+          ]
+        },
+        {
+          "id": "what2",
+          "style": "agent",
+          "text": "For every business — from a single shop to a growing product.",
+          "gap": 0.35,
+          "land": [
+            0,
+            "beat"
+          ]
+        }
+      ],
+      "picture": [
+        "A hairline draws across; the stepped heading 'Identity, leads / and solutions — / for every business.' goos in.",
+        "Three ink 4:5 cards (Identity / Leads / Solutions) slam in on each word, fanned with a tilt that settles, each landing with a punch.",
+        "what2: the cards fold into a row and the lede rises word by word: 'From a single shop to a growing product — the scope changes, the standard doesn't.'"
+      ],
+      "sfx": [
+        {
+          "at": "scene:what",
+          "sound": "rule",
+          "gain": 0.4
+        },
+        {
+          "at": "word:what1:0",
+          "sound": "slam",
+          "gain": 0.7
+        },
+        {
+          "at": "word:what1:1",
+          "sound": "slam",
+          "gain": 0.7
+        },
+        {
+          "at": "word:what1:2",
+          "sound": "slam",
+          "gain": 0.8
+        },
+        {
+          "at": "word:what2:0",
+          "sound": "swoosh",
+          "gain": 0.45
+        },
+        {
+          "at": "word:what2:6",
+          "sound": "tick",
+          "gain": 0.4
+        },
+        {
+          "at": "word:what2:10",
+          "sound": "tick",
+          "gain": 0.4
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "title": "02 — Why we started",
+      "lead": 0.55,
+      "vo": [
+        {
+          "id": "why1",
+          "style": "agent",
+          "text": "Most studios split the brand, the website, and the software.",
+          "gap": 0.9,
+          "land": [
+            0,
+            "bar"
+          ]
+        },
+        {
+          "id": "why2",
+          "style": "name",
+          "text": "We build them as one.",
+          "gap": 0.35,
+          "land": [
+            4,
+            "bar"
+          ]
+        }
+      ],
+      "picture": [
+        "'Most studios split / it three ways.' goos in.",
+        "Three chalk tiles — Brand, Website, Software — fly apart on their words, each tagged with a different agency; a glitch stutter when the last one goes.",
+        "On 'one' (the downbeat) the tiles slam together into one ink block, which opens on PRIME to fill the frame: 'Average was / never an / option.' in white."
+      ],
+      "sfx": [
+        {
+          "at": "word:why1:4",
+          "sound": "snap",
+          "gain": 0.6
+        },
+        {
+          "at": "word:why1:6",
+          "sound": "snap",
+          "gain": 0.6
+        },
+        {
+          "at": "word:why1:9",
+          "sound": "snap",
+          "gain": 0.6
+        },
+        {
+          "at": "word:why1:9",
+          "offset": 0.15,
+          "sound": "glitch",
+          "gain": 0.5
+        },
+        {
+          "at": "word:why2:4",
+          "offset": -0.9,
+          "sound": "suck",
+          "gain": 0.55
+        },
+        {
+          "at": "word:why2:4",
+          "sound": "impact",
+          "gain": 0.9
+        },
+        {
+          "at": "word:why2:4",
+          "sound": "slam",
+          "gain": 0.7
+        }
+      ]
+    },
+    {
+      "id": "where",
+      "title": "04 — Where we are",
+      "lead": 0.9,
+      "vo": [
+        {
+          "id": "w1",
+          "style": "agent",
+          "text": "Based in Hyderabad, India.",
+          "gap": 2.2,
+          "land": [
+            2,
+            "bar"
+          ]
+        },
+        {
+          "id": "w2",
+          "style": "agent",
+          "text": "Working with businesses everywhere.",
+          "gap": 0.35,
+          "land": [
+            3,
+            "bar"
+          ]
+        }
+      ],
+      "picture": [
+        "The ink frame collapses on PRIME into a disc the size of the globe; the land grain fills in from the centre as the ink drains away (Bayer 2 px squares, far side seen through, hairline graticule).",
+        "w1: the globe swings to face India; the Hyderabad node lands — rings breathing out, blue core, its name in a pill. The heading reads 'Based in / Hyderabad, India —'.",
+        "'everywhere' (downbeat): the globe spins west and arcs fire from Hyderabad on dotted 8ths — Dubai, Singapore, Sydney, Berlin, London, New York, Toronto — gradient strokes on white keylines, a pulse riding each; 'and everywhere.' lands in blue."
+      ],
+      "sfx": [
+        {
+          "at": "mark:where.collapse",
+          "sound": "suck",
+          "gain": 0.5,
+          "offset": -0.6
+        },
+        {
+          "at": "mark:where.collapse",
+          "offset": 0.55,
+          "sound": "impact",
+          "gain": 0.55
+        },
+        {
+          "at": "word:w1:2",
+          "sound": "ping",
+          "gain": 0.5
+        },
+        {
+          "at": "word:w2:3",
+          "offset": -1.0,
+          "sound": "riser",
+          "gain": 0.45,
+          "dur": 1.0
+        },
+        {
+          "at": "word:w2:3",
+          "sound": "drop",
+          "gain": 0.8
+        },
+        {
+          "at": "mark:where.arcs",
+          "sound": "arcs",
+          "gain": 0.5
+        }
+      ]
+    },
+    {
+      "id": "sign",
+      "title": "Sign-off",
+      "lead": 0.6,
+      "vo": [
+        {
+          "id": "sign",
+          "style": "sign",
+          "text": "One Prime Studio. Average is not an option.",
+          "gap": 2.6,
+          "land": [
+            0,
+            "bar"
+          ]
+        }
+      ],
+      "picture": [
+        "Seam train hands over to white. The lockup assembles: the switch flips on with 'One', 'ne' rises, 'Prime Studio' slides out.",
+        "'Average is not an option.' rises word by word in stone.",
+        "A 'Start a project →' pill fills with ink on PRIME, the arrow nudges, and the address rises under it: hello@oneprimestudio.com.",
+        "The content eases away and the boot's ink dot returns at centre."
+      ],
+      "sfx": [
+        {
+          "at": "mark:sign.seam",
+          "sound": "seam",
+          "gain": 0.5
+        },
+        {
+          "at": "word:sign:0",
+          "sound": "switch",
+          "gain": 0.8
+        },
+        {
+          "at": "word:sign:0",
+          "sound": "impact",
+          "gain": 0.8
+        },
+        {
+          "at": "word:sign:3",
+          "sound": "swoosh",
+          "gain": 0.35
+        },
+        {
+          "at": "mark:sign.cta",
+          "offset": 0.05,
+          "sound": "ding",
+          "gain": 0.4
+        }
+      ]
+    }
+  ],
+  "marks": {
+    "reveal.open": {
+      "at": "scene:reveal",
+      "offset": 0.25
+    },
+    "reveal.seam": {
+      "at": "scene:what",
+      "offset": -0.8
+    },
+    "where.collapse": {
+      "at": "scene:where",
+      "offset": 0.0
+    },
+    "where.arcs": {
+      "at": "word:w2:3",
+      "offset": 0.0
+    },
+    "sign.seam": {
+      "at": "scene:sign",
+      "offset": -0.8
+    },
+    "sign.cta": {
+      "at": "end:sign",
+      "offset": 0.9
+    }
+  },
+  "deliverables": [
+    "out/oneprime-about.mp4 (1080×1920, 60 fps, H.264 CRF 16, AAC 320k)"
+  ]
+}

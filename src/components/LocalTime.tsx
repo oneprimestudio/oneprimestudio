@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 /** The visitor's local time, ticking. Renders a placeholder on the server to avoid a hydration mismatch. */
-export default function LocalTime() {
+export default function LocalTime({ className = "text-white" }: { className?: string }) {
   const [time, setTime] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,5 +19,5 @@ export default function LocalTime() {
     return () => window.clearInterval(id);
   }, []);
 
-  return <span className="tabular-nums text-white">{time ?? "--:--:--"}</span>;
+  return <span className={`tabular-nums ${className}`}>{time ?? "--:--:--"}</span>;
 }

@@ -1,0 +1,483 @@
+{
+ "h1": {
+  "id": "h1",
+  "style": "agent",
+  "text": "Every business deserves to be found, chosen, and run well.",
+  "duration": 4.248,
+  "words": [
+   {
+    "w": "Every",
+    "t": 0.084125,
+    "d": 0.240375
+   },
+   {
+    "w": "business",
+    "t": 0.3245,
+    "d": 0.444708
+   },
+   {
+    "w": "deserves",
+    "t": 0.78125,
+    "d": 0.45675
+   },
+   {
+    "w": "to",
+    "t": 1.238,
+    "d": 0.060083
+   },
+   {
+    "w": "be",
+    "t": 1.298083,
+    "d": 0.120208
+   },
+   {
+    "w": "found",
+    "t": 1.430291,
+    "d": 0.516833
+   },
+   {
+    "w": "chosen",
+    "t": 2.211541,
+    "d": 0.540875
+   },
+   {
+    "w": "and",
+    "t": 3.149041,
+    "d": 0.132208
+   },
+   {
+    "w": "run",
+    "t": 3.28125,
+    "d": 0.252416
+   },
+   {
+    "w": "well",
+    "t": 3.533666,
+    "d": 0.372583
+   }
+  ]
+ },
+ "name": {
+  "id": "name",
+  "style": "name",
+  "text": "This is One Prime Studio.",
+  "duration": 2.088,
+  "words": [
+   {
+    "w": "This",
+    "t": 0.106375,
+    "d": 0.186166
+   },
+   {
+    "w": "is",
+    "t": 0.292541,
+    "d": 0.132958
+   },
+   {
+    "w": "One",
+    "t": 0.438833,
+    "d": 0.34575
+   },
+   {
+    "w": "Prime",
+    "t": 0.784583,
+    "d": 0.319166
+   },
+   {
+    "w": "Studio",
+    "t": 1.117041,
+    "d": 0.585125
+   }
+  ]
+ },
+ "what1": {
+  "id": "what1",
+  "style": "list",
+  "text": "Identity. Leads. Solutions.",
+  "duration": 2.688,
+  "words": [
+   {
+    "w": "Identity",
+    "t": 0.092583,
+    "d": 0.497666
+   },
+   {
+    "w": "Leads",
+    "t": 0.960666,
+    "d": 0.474541
+   },
+   {
+    "w": "Solutions",
+    "t": 1.817125,
+    "d": 0.520833
+   }
+  ]
+ },
+ "what2": {
+  "id": "what2",
+  "style": "agent",
+  "text": "For every business \u2014 from a single shop to a growing product.",
+  "duration": 3.96,
+  "words": [
+   {
+    "w": "For",
+    "t": 0.14425,
+    "d": 0.228375
+   },
+   {
+    "w": "every",
+    "t": 0.45675,
+    "d": 0.300458
+   },
+   {
+    "w": "business",
+    "t": 0.757208,
+    "d": 0.661041
+   },
+   {
+    "w": "from",
+    "t": 1.610583,
+    "d": 0.108166
+   },
+   {
+    "w": "a",
+    "t": 1.71875,
+    "d": 0.048083
+   },
+   {
+    "w": "single",
+    "t": 1.766833,
+    "d": 0.336541
+   },
+   {
+    "w": "shop",
+    "t": 2.103375,
+    "d": 0.408666
+   },
+   {
+    "w": "to",
+    "t": 2.632208,
+    "d": 0.120208
+   },
+   {
+    "w": "a",
+    "t": 2.752416,
+    "d": 0.060083
+   },
+   {
+    "w": "growing",
+    "t": 2.8245,
+    "d": 0.3125
+   },
+   {
+    "w": "product",
+    "t": 3.137,
+    "d": 0.45675
+   }
+  ]
+ },
+ "why1": {
+  "id": "why1",
+  "style": "agent",
+  "text": "Most studios split the brand, the website, and the software.",
+  "duration": 4.128,
+  "words": [
+   {
+    "w": "Most",
+    "t": 0.072125,
+    "d": 0.216333
+   },
+   {
+    "w": "studios",
+    "t": 0.288458,
+    "d": 0.504791
+   },
+   {
+    "w": "split",
+    "t": 0.805291,
+    "d": 0.408666
+   },
+   {
+    "w": "the",
+    "t": 1.213958,
+    "d": 0.084125
+   },
+   {
+    "w": "brand",
+    "t": 1.298083,
+    "d": 0.504791
+   },
+   {
+    "w": "the",
+    "t": 2.067291,
+    "d": 0.084125
+   },
+   {
+    "w": "website",
+    "t": 2.151458,
+    "d": 0.576916
+   },
+   {
+    "w": "and",
+    "t": 2.96875,
+    "d": 0.048083
+   },
+   {
+    "w": "the",
+    "t": 3.016833,
+    "d": 0.060083
+   },
+   {
+    "w": "software",
+    "t": 3.088958,
+    "d": 0.697125
+   }
+  ]
+ },
+ "why2": {
+  "id": "why2",
+  "style": "name",
+  "text": "We build them as one.",
+  "duration": 1.872,
+  "words": [
+   {
+    "w": "We",
+    "t": 0.093083,
+    "d": 0.106375
+   },
+   {
+    "w": "build",
+    "t": 0.199458,
+    "d": 0.27925
+   },
+   {
+    "w": "them",
+    "t": 0.478708,
+    "d": 0.106375
+   },
+   {
+    "w": "as",
+    "t": 0.585125,
+    "d": 0.106375
+   },
+   {
+    "w": "one",
+    "t": 0.704791,
+    "d": 0.372333
+   }
+  ]
+ },
+ "f0": {
+  "id": "f0",
+  "style": "agent",
+  "text": "Two founders. Every layer.",
+  "duration": 2.376,
+  "words": [
+   {
+    "w": "Two",
+    "t": 0.096166,
+    "d": 0.204333
+   },
+   {
+    "w": "founders",
+    "t": 0.3005,
+    "d": 0.673083
+   },
+   {
+    "w": "Every",
+    "t": 1.370208,
+    "d": 0.216333
+   },
+   {
+    "w": "layer",
+    "t": 1.598541,
+    "d": 0.408666
+   }
+  ]
+ },
+ "f1": {
+  "id": "f1",
+  "style": "warm",
+  "text": "Nagaruthwik \u2014 full-stack engineer and creative designer.",
+  "duration": 4.008,
+  "words": [
+   {
+    "w": "Nagaruthwik",
+    "t": 0.0875,
+    "d": 0.6875
+   },
+   {
+    "w": "full-stack",
+    "t": 1.175,
+    "d": 0.6125
+   },
+   {
+    "w": "engineer",
+    "t": 1.7875,
+    "d": 0.575
+   },
+   {
+    "w": "and",
+    "t": 2.5625,
+    "d": 0.075
+   },
+   {
+    "w": "creative",
+    "t": 2.6375,
+    "d": 0.4875
+   },
+   {
+    "w": "designer",
+    "t": 3.125,
+    "d": 0.5375
+   }
+  ]
+ },
+ "f2": {
+  "id": "f2",
+  "style": "warm",
+  "text": "Vinith \u2014 senior backend engineer and database administrator.",
+  "duration": 4.464,
+  "words": [
+   {
+    "w": "Vinith",
+    "t": 0.1,
+    "d": 0.45
+   },
+   {
+    "w": "senior",
+    "t": 0.8,
+    "d": 0.4375
+   },
+   {
+    "w": "backend",
+    "t": 1.2375,
+    "d": 0.475
+   },
+   {
+    "w": "engineer",
+    "t": 1.725,
+    "d": 0.6375
+   },
+   {
+    "w": "and",
+    "t": 2.525,
+    "d": 0.1
+   },
+   {
+    "w": "database",
+    "t": 2.725,
+    "d": 0.575
+   },
+   {
+    "w": "administrator",
+    "t": 3.3125,
+    "d": 0.775
+   }
+  ]
+ },
+ "w1": {
+  "id": "w1",
+  "style": "agent",
+  "text": "Based in Hyderabad, India.",
+  "duration": 2.28,
+  "words": [
+   {
+    "w": "Based",
+    "t": 0.096166,
+    "d": 0.240375
+   },
+   {
+    "w": "in",
+    "t": 0.348541,
+    "d": 0.060083
+   },
+   {
+    "w": "Hyderabad",
+    "t": 0.408666,
+    "d": 0.673083
+   },
+   {
+    "w": "India",
+    "t": 1.454333,
+    "d": 0.45675
+   }
+  ]
+ },
+ "w2": {
+  "id": "w2",
+  "style": "agent",
+  "text": "Working with businesses everywhere.",
+  "duration": 2.376,
+  "words": [
+   {
+    "w": "Working",
+    "t": 0.096166,
+    "d": 0.276416
+   },
+   {
+    "w": "with",
+    "t": 0.372583,
+    "d": 0.120208
+   },
+   {
+    "w": "businesses",
+    "t": 0.504791,
+    "d": 0.745208
+   },
+   {
+    "w": "everywhere",
+    "t": 1.370208,
+    "d": 0.637
+   }
+  ]
+ },
+ "sign": {
+  "id": "sign",
+  "style": "sign",
+  "text": "One Prime Studio. Average is not an option.",
+  "duration": 3.504,
+  "words": [
+   {
+    "w": "One",
+    "t": 0.108708,
+    "d": 0.217375
+   },
+   {
+    "w": "Prime",
+    "t": 0.326083,
+    "d": 0.298916
+   },
+   {
+    "w": "Studio",
+    "t": 0.638583,
+    "d": 0.611416
+   },
+   {
+    "w": "Average",
+    "t": 1.671208,
+    "d": 0.394041
+   },
+   {
+    "w": "is",
+    "t": 2.1875,
+    "d": 0.108708
+   },
+   {
+    "w": "not",
+    "t": 2.296208,
+    "d": 0.258125
+   },
+   {
+    "w": "an",
+    "t": 2.554333,
+    "d": 0.067916
+   },
+   {
+    "w": "option",
+    "t": 2.622291,
+    "d": 0.489125
+   }
+  ]
+ }
+}

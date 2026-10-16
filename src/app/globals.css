@@ -37,14 +37,16 @@
 
 :root {
     --gutter: 20px;
-    /* the navbar's bar: a see-through row across the top */
-    --nav-h: 60px;
+    /* the floating navbar pill: its gap from the top, and its closed height */
+    --nav-top: 12px;
+    --nav-h: 48px;
 }
 
 @media (min-width: 768px) {
     :root {
         --gutter: 32px;
-        --nav-h: 72px;
+        --nav-top: 16px;
+        --nav-h: 52px;
     }
 }
 
@@ -72,11 +74,25 @@ body {
 }
 
 
+/* The hero's photograph is drawn by WebGL once it can be (HeroBloom); the <img> stays for its alt text */
+
+[data-gl="on"] img {
+    opacity: 0;
+}
+
+
 /* SplitText line masks: room for descenders under the tight leading */
 
 .split-line-mask {
     padding-bottom: 0.12em;
     margin-bottom: -0.12em;
+}
+
+/* SplitText letter masks: the same room, so a "g" or a "p" keeps its tail */
+
+.split-char-mask {
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
 }
 
 

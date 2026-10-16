@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { ensureSmoother, gsap, MENU_EASE, prefersReducedMotion, SplitText, useGSAP } from "@/lib/gsap";
+import HeroBloom from "./HeroBloom";
 
 /*
  * A quiet hero: one flower on an open ground, and three things at the bottom — a justified line of
@@ -60,13 +61,16 @@ export default function Hero() {
         const bloom = hero.querySelector<HTMLElement>("[data-hero-bloom]");
         if (!alive || !title || !desc || !rule || !bloom) return;
 
-        // the flower is uncovered from the stem up — a clip, so its pixels are never resampled
+        // the flower is uncovered from the stem up — a clip, so its pixels are never resampled. With WebGL
+        // the shader develops it instead, through a dithered front (HeroBloom)
         gsap.set(bloom, { visibility: "visible" });
-        gsap.fromTo(
-          bloom,
-          { clipPath: "inset(100% 0% 0% 0%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 2.2, ease, clearProps: "clipPath" },
-        );
+        if (bloom.dataset.gl !== "on") {
+          gsap.fromTo(
+            bloom,
+            { clipPath: "inset(100% 0% 0% 0%)" },
+            { clipPath: "inset(0% 0% 0% 0%)", duration: 2.2, ease, clearProps: "clipPath" },
+          );
+        }
         // the hairline draws out from the left, the facts settle on it
         gsap.fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease, delay: 0.2 });
         gsap.fromTo(
@@ -131,6 +135,8 @@ export default function Hero() {
           loading="eager"
           className="object-cover"
         />
+        {/* the same photograph, alive: drawn by a shader over the <img>, which stays as the fallback */}
+        <HeroBloom />
       </div>
 
       <div data-hero-copy className="absolute inset-x-0 bottom-0 px-[max(var(--gutter),3.2vw)] pb-[max(24px,4svh)]">

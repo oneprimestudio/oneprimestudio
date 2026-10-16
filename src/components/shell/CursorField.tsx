@@ -151,7 +151,7 @@ export default function CursorField() {
     const resize = () => {
       W = window.innerWidth;
       H = window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       renderer.setPixelRatio(dpr);
       renderer.setSize(W, H, false);
       const fw = Math.max(2, Math.round((W * dpr) / FIELD));
@@ -170,8 +170,16 @@ export default function CursorField() {
     let lastMove = -Infinity;
     let drawing = false;
 
+    // idle, the layer is taken out of rendering: a full-screen difference blend would otherwise be
+    // composited over the whole page on every scrolled frame, even with nothing drawn in it
+    const show = (on: boolean) => {
+      el.style.visibility = on ? "visible" : "hidden";
+    };
+    show(false);
+
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
+      if (!drawing) show(true);
       const now: [number, number] = [e.clientX, e.clientY];
       if (last) segments.push([last[0], last[1], now[0], now[1]]);
       last = now;
@@ -198,6 +206,7 @@ export default function CursorField() {
       renderer.clear();
       if (performance.now() - lastMove > IDLE_MS) {
         drawing = false; // field has faded; leave the canvas clear until the next move
+        show(false);
         return;
       }
       draw.uniforms.uVel.value = read.texture;

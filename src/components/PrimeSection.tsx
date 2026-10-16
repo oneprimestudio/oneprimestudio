@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { ensureSmoother, gsap, prefersReducedMotion, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import FlowerScene from "./FlowerScene";
-import LocalTime from "./LocalTime";
 import Spinner from "./Spinner";
 
 const CELLS = 40;
@@ -183,13 +182,13 @@ export default function PrimeSection() {
       ref={root}
       data-cursor="dark"
       data-nav-message="Getting ready for prime"
-      className="relative z-10 overflow-hidden bg-ink px-5 pb-6 pt-24 text-white md:px-8 md:pb-8 md:pt-32"
+      className="relative z-10 overflow-hidden bg-ink px-5 pb-24 pt-24 text-white md:px-8 md:pb-32 md:pt-32"
     >
       <div
         data-fade
         className="grid grid-cols-2 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 md:grid-cols-12"
       >
-        <p className="md:col-span-3">(003) — Status</p>
+        <p className="md:col-span-3">(006) — Status</p>
         <p className="justify-self-end text-right md:col-span-3 md:col-start-10">Build 0.9 · Under construction</p>
       </div>
 
@@ -274,17 +273,6 @@ export default function PrimeSection() {
           </div>
         </div>
       </div>
-
-      <footer
-        data-fade
-        className="mt-24 grid grid-cols-2 gap-y-3 border-t border-white/15 pt-5 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 md:mt-32 md:grid-cols-12"
-      >
-        <p className="md:col-span-3">© 2026 One Prime Studio</p>
-        <p className="justify-self-end md:col-span-3 md:col-start-6 md:justify-self-start">
-          Your time <LocalTime />
-        </p>
-        <p className="col-span-2 md:col-span-3 md:col-start-10 md:justify-self-end">Average is not an option.</p>
-      </footer>
     </section>
   );
 }

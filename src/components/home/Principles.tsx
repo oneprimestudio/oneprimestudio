@@ -102,7 +102,7 @@ export default function Principles() {
           Why One Prime
         </h2>
         <p data-reveal data-hover-scramble className={`${label} mt-4 md:col-span-3 md:col-start-10 md:mt-0 md:justify-self-end`}>
-          (002) — Principles
+          (005) — Principles
         </p>
       </div>
 

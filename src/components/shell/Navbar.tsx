@@ -9,46 +9,44 @@ import {
   MENU_EASE,
   MENU_OPEN,
   prefersReducedMotion,
+  PRIME,
+  holdScroll,
   ScrollTrigger,
   useGSAP,
 } from "@/lib/gsap";
+import { EMAIL, SOCIALS } from "@/lib/studio";
 import BracketClock from "../BracketClock";
 import Logo from "../Logo";
 
-const MENU_MESSAGE = "[ Menu ]";
-
-// the page's sections (by id), then what is still to come
-const LINKS: { label: string; id?: string }[] = [
-  { label: "Home", id: "top" },
-  { label: "Studio", id: "studio" },
-  { label: "Principles", id: "principles" },
-  { label: "Status", id: "prime" },
-  { label: "Work" },
-  { label: "Contact" },
+// the home page's sections, by id, and the work index, a page of its own. A section link on another
+// page is taken to the home page through the page transition (PageTransition)
+const LINKS = [
+  { label: "Studio", id: "studio", href: "#studio" },
+  { label: "Services", id: "services", href: "#services" },
+  { label: "Projects", id: "work", href: "/projects" },
+  { label: "About", id: "about", href: "/about" },
+  { label: "Principles", id: "principles", href: "#principles" },
+  { label: "Contact", id: "contact", href: "#contact" },
 ];
 
-// TODO: replace "#" with the studio's real profile URLs
-const SOCIALS = [
-  { label: "Instagram", href: "#" },
-  { label: "LinkedIn", href: "#" },
-  { label: "Behance", href: "#" },
-];
+const INK = "#08064e";
 
-// the hero's own measure, so the bar's edges line up with the type below it
-const EDGE = "px-[max(var(--gutter),3.2vw)]";
+/** holds the page still while the menu is open (shared with the page transition, which may hold it too) */
+const lockPage = (on: boolean) => holdScroll("menu", on);
+const CHALK = "#f7f6f2";
 
 /**
- * The navbar, as quiet as the hero: no box — the mark, a scrambling status line and "Menu", set in
- * the hero's ink on its measure. Its colour follows the ground under it (ink on light sections, sand
- * on dark ones); the status line follows the section in view (its `data-nav-message`). Opening it
- * lays a sheet of the hero's ground down from the top with the links on it, closing on a hairline and
- * a justified line of facts, the way the hero does. Escape, a click outside or any link closes it.
+ * The floating navbar: mark · scrambling status line · toggle, on a sheet of the hero's own ground with a
+ * hairline edge. The status line follows the section in view (its `data-nav-message`). Opening it doesn't
+ * move the page — the pill itself grows downward and turns to dark ink over the dimmed page:
+ * a mono "Menu" label, the sections at display size rising out of their masks, the socials and the
+ * studio's details in two quiet columns, and one call to action across the foot. Escape, a click outside
+ * or any link closes it again.
  */
 export default function Navbar() {
   const pathname = usePathname();
   const root = useRef<HTMLElement>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const barRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const msgRef = useRef<HTMLSpanElement>(null);
@@ -57,7 +55,6 @@ export default function Navbar() {
   const say = useRef<(text: string) => void>(() => {});
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("top");
-  const [ground, setGround] = useState<"light" | "dark">("light");
 
   // navigating closes the menu (state reset on change, during render — no effect needed)
   const [shownPath, setShownPath] = useState(pathname);
@@ -69,10 +66,10 @@ export default function Navbar() {
   useGSAP(
     () => {
       const msg = msgRef.current;
-      const bar = barRef.current;
+      const pill = pillRef.current;
       const panel = panelRef.current;
       const toggle = toggleRef.current;
-      if (!msg || !bar || !panel || !toggle) return;
+      if (!msg || !pill || !panel || !toggle) return;
       ensureSmoother();
       const still = prefersReducedMotion();
 
@@ -84,7 +81,59 @@ export default function Navbar() {
           scrambleText: { text, chars: "upperCase", speed: 0.6 },
         });
 
-      // the section in view: its message on the status line, its id the active link
+      // on the "Start a project" hover's curve: the pill grows to the panel's height and darkens, the mark and
+      // status line close their width away, the two bars meet in the middle and turn into the close cross,
+      // and the links rise out of their masks
+      const bars = toggle.querySelectorAll("[data-bar]");
+      gsap.set(panel, { height: 0 });
+      const timeline = gsap
+        .timeline({ paused: true, defaults: { ease: PRIME, duration: still ? 0 : MENU_OPEN } })
+        .to(panel, { height: "auto" }, 0)
+        .fromTo(
+          pill.querySelector("[data-collapse='start']"),
+          { clipPath: "inset(0% 0% 0% 0%)" },
+          { clipPath: "inset(0% 100% 0% 0%)", duration: still ? 0 : 0.7 },
+          0,
+        )
+        .fromTo(
+          pill.querySelector("[data-collapse='center']"),
+          { clipPath: "inset(0% 0% 0% 0%)" },
+          { clipPath: "inset(0% 50% 0% 50%)", duration: still ? 0 : 0.7 },
+          0,
+        )
+        .to(pill.querySelector("[data-dark]"), { opacity: 1 }, 0)
+        .to(root.current!.querySelector("[data-veil]"), { autoAlpha: 1 }, 0)
+        .fromTo(pill.querySelector("[data-bar-row]"), { color: INK }, { color: CHALK }, 0)
+        .fromTo(
+          panel.querySelectorAll("[data-menu-line]"),
+          { yPercent: 110 },
+          { yPercent: 0, stagger: 0.05, duration: still ? 0 : 0.9 },
+          still ? 0 : 0.1,
+        )
+        .fromTo(
+          panel.querySelectorAll("[data-menu-item]"),
+          { y: 14, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, stagger: 0.04, duration: still ? 0 : 0.7 },
+          still ? 0 : 0.3,
+        );
+      if (bars.length === 2) {
+        const meet = still ? 0 : 0.4;
+        const turn = still ? 0 : 0.55;
+        timeline
+          .to(bars, { y: (i) => (i === 0 ? 4 : -4), duration: meet }, 0)
+          .to(bars, { rotate: (i) => (i === 0 ? 45 : -45), duration: turn }, still ? 0 : 0.3);
+      }
+      tl.current = timeline;
+
+      if (!still) gsap.from(pill, { yPercent: -160, duration: 1.2, ease: MENU_EASE, delay: 0.25 });
+    },
+    { scope: root },
+  );
+
+  // the section in view: its message on the status line, its id the active link — found again on every
+  // page, since the navbar outlives them
+  useGSAP(
+    () => {
       const sections = document.querySelectorAll<HTMLElement>("[data-nav-message]");
       sections.forEach((section) => {
         ScrollTrigger.create({
@@ -100,57 +149,28 @@ export default function Navbar() {
         });
       });
       if (sections[0]?.dataset.navMessage) current.current = sections[0].dataset.navMessage;
+      setActive(
+        pathname === "/projects" ? "work" : pathname === "/about" ? "about" : (sections[0]?.id ?? "top"),
+      );
       say.current(current.current);
-
-      // the section under the bar itself: its ground (data-cursor) decides the bar's colour
-      document.querySelectorAll<HTMLElement>("[data-cursor]").forEach((section) => {
-        ScrollTrigger.create({
-          trigger: section,
-          start: () => `top ${bar.offsetHeight / 2}px`,
-          end: () => `bottom ${bar.offsetHeight / 2}px`,
-          onToggle: (self) => {
-            if (self.isActive) setGround(section.dataset.cursor === "dark" ? "dark" : "light");
-          },
-        });
-      });
-
-      // the sheet grows to the panel's height, the bars cross, the rows settle in
-      const bars = toggle.querySelectorAll("[data-bar]");
-      gsap.set(panel, { height: 0 });
-      const timeline = gsap
-        .timeline({ paused: true, defaults: { ease: MENU_EASE, duration: still ? 0 : MENU_OPEN } })
-        .to(panel, { height: "auto" }, 0)
-        .fromTo(
-          panel.querySelectorAll("[data-menu-item]"),
-          { y: 14, autoAlpha: 0 },
-          { y: 0, autoAlpha: 1, stagger: 0.04, duration: still ? 0 : 0.7 },
-          still ? 0 : 0.12,
-        );
-      if (bars.length === 2) timeline.to(bars[0], { y: 3, rotate: 45 }, 0).to(bars[1], { y: -3, rotate: -45 }, 0);
-      tl.current = timeline;
-
-      // the bar's three parts drop in with the hero's intro
-      if (!still) {
-        gsap.from(bar.children, { yPercent: -120, autoAlpha: 0, duration: 1.1, ease: MENU_EASE, stagger: 0.08, delay: 0.3 });
-      }
     },
-    { scope: root },
+    { dependencies: [pathname], revertOnUpdate: true },
   );
 
-  // play / reverse with the state; the status line reads "[ Menu ]" while it is open
+  // play / reverse with the state; closing, the status line scrambles back to the section in view
   useEffect(() => {
+    lockPage(open);
     const timeline = tl.current;
     if (!timeline) return;
     if (open) {
       timeline.timeScale(1).play();
-      say.current(MENU_MESSAGE);
     } else if (timeline.progress() > 0) {
       timeline.timeScale(MENU_OPEN / MENU_CLOSE).reverse();
       say.current(current.current);
     }
   }, [open]);
 
-  // Escape or a click anywhere outside the sheet closes it
+  // Escape or a click anywhere outside the pill closes it
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -159,7 +179,7 @@ export default function Navbar() {
       toggleRef.current?.focus();
     };
     const onDown = (e: PointerEvent) => {
-      if (!navRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!pillRef.current?.contains(e.target as Node)) setOpen(false);
     };
     window.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onDown);
@@ -169,33 +189,47 @@ export default function Navbar() {
     };
   }, [open]);
 
-  const close = () => setOpen(false);
+  // a link closes the menu: release the page at once, so the anchor glide that follows the click can move it
+  const close = () => {
+    lockPage(false);
+    setOpen(false);
+  };
 
   return (
     <header
       ref={root}
       data-open={open ? "" : undefined}
-      // the bar is see-through: only its mark and button take clicks until the sheet is open
-      className={`pointer-events-none fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-prime ${
-        ground === "dark" && !open ? "text-sand" : "text-ink"
-      }`}
+      className="pointer-events-none fixed inset-x-0 top-[var(--nav-top)] z-50 flex justify-center px-[var(--gutter)]"
     >
+      {/* open, the page behind dims and darkens; it also takes the click that closes the menu */}
+      <div
+        data-veil
+        aria-hidden
+        className={`invisible fixed inset-0 bg-black/50 opacity-0 backdrop-brightness-[0.7] ${open ? "pointer-events-auto" : "pointer-events-none"}`}
+      />
       <nav
-        ref={navRef}
+        ref={pillRef}
         aria-label="Primary"
-        className={`transition-[background-color,box-shadow] duration-500 ease-prime ${
-          open ? "pointer-events-auto bg-bloom shadow-[0_24px_60px_-30px_rgba(8,6,78,0.25)]" : "bg-transparent"
-        }`}
+        className="pointer-events-auto relative w-full max-w-[560px] overflow-hidden  bg-bloom/95 text-ink shadow-[0_14px_36px_-22px_rgba(8,6,78,0.4)] ring-1 ring-ink/10"
       >
-        <div ref={barRef} className={`grid h-[var(--nav-h)] grid-cols-[1fr_auto_1fr] items-center ${EDGE}`}>
+        {/* open, the whole pill turns to dark frosted ink — a layer that fades in, so it stays on the GPU */}
+        <span data-dark aria-hidden className="pointer-events-none absolute inset-0 bg-ink/[0.95] opacity-0" />
+
+        <div data-bar-row className="relative grid h-[var(--nav-h)] grid-cols-[1fr_auto_1fr] items-center pl-4 pr-1.5">
           <a
+            data-collapse="start"
             href="#top"
+            inert={open}
             aria-label="One Prime Studio — home"
-            className="group pointer-events-auto justify-self-start text-[17px] md:text-[19px]"
+            className="group justify-self-start text-[21px] md:text-[23px]"
           >
             <Logo markOnly />
           </a>
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] opacity-75 md:text-[11px]" aria-live="polite">
+          <p
+            data-collapse="center"
+            className="font-mono text-[11px] uppercase tracking-[0.08em] opacity-70"
+            aria-live="polite"
+          >
             <span ref={msgRef}>We switch the things</span>
           </p>
           <button
@@ -204,88 +238,100 @@ export default function Navbar() {
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             aria-controls="site-menu"
-            className="pointer-events-auto flex cursor-pointer items-center gap-2.5 justify-self-end py-2 text-[13px] font-medium tracking-[-0.01em] md:text-[15px]"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="grid h-10 w-10 cursor-pointer place-items-center justify-self-end rounded-md transition-colors duration-500 ease-prime hover:bg-current/10"
           >
-            {/* the label rolls over to "Close", the two bars cross */}
-            <span className="block h-[1.2em] overflow-hidden">
-              <span
-                className={`block transition-transform duration-500 ease-prime ${open ? "-translate-y-1/2" : "translate-y-0"}`}
-              >
-                <span className="block leading-[1.2em]">Menu</span>
-                <span className="block leading-[1.2em]">Close</span>
-              </span>
-            </span>
-            <span aria-hidden className="relative block h-[7px] w-4">
+            <span className="relative block h-[9px] w-[18px]">
               <span data-bar className="absolute left-0 top-0 h-px w-full bg-current" />
               <span data-bar className="absolute bottom-0 left-0 h-px w-full bg-current" />
             </span>
           </button>
         </div>
 
-        {/* the sheet's body */}
-        <div ref={panelRef} id="site-menu" inert={!open} className="h-0 overflow-hidden">
-          <div className={`pb-[max(20px,3svh)] pt-6 md:pt-10 ${EDGE}`}>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-12">
-              <ul className="md:col-span-7">
-                {LINKS.map(({ label, id }, i) => {
-                  const index = (
-                    <span className="w-6 font-mono text-[10px] tracking-normal text-stone">
-                      {String(i + 1).padStart(2, "0")}
+        {/* the expanding part of the pill */}
+        <div ref={panelRef} id="site-menu" inert={!open} className="relative h-0 overflow-hidden text-chalk">
+          <div className="px-5 pb-5 pt-5 md:px-6 md:pb-6">
+            <p data-menu-item className="font-mono text-[10px] uppercase tracking-[0.14em] text-chalk/55">
+              Menu
+            </p>
+
+            {/* the sections at display size; hovering one quiets the rest */}
+            <ul className="group/links mt-4">
+              {LINKS.map(({ label, id, href }) => (
+                <li key={id} className="overflow-hidden">
+                  <a
+                    data-menu-line
+                    href={href}
+                    onClick={close}
+                    aria-current={active === id ? "location" : undefined}
+                    className="group flex items-center gap-3 py-[2px] text-[clamp(2rem,7.4vw,2.75rem)] font-medium leading-[1.06] tracking-[-0.035em] transition-colors duration-500 ease-prime group-hover/links:text-chalk/35 hover:!text-chalk"
+                  >
+                    <span className="transition-transform duration-500 ease-prime group-hover:translate-x-1.5">
+                      {label}
                     </span>
-                  );
-                  return (
-                    <li key={label} data-menu-item>
-                      {id ? (
-                        <a
-                          href={`#${id}`}
-                          onClick={close}
-                          aria-current={active === id ? "location" : undefined}
-                          className="group flex items-center gap-3 py-0.5 text-[26px] tracking-[-0.02em]"
-                        >
-                          {index}
-                          <span className="transition-transform duration-500 ease-prime group-hover:translate-x-1">{label}</span>
-                          {active === id && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" />}
-                        </a>
-                      ) : (
-                        <span aria-disabled className="flex items-center gap-3 py-0.5 text-[26px] tracking-[-0.02em] text-ink/30">
-                          {index}
-                          {label}
-                          <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-accent">Soon</span>
-                        </span>
-                      )}
-                    </li>
-                  );
-                })}
+                    {active === id && <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* two quiet columns: where to follow, and how to reach */}
+            <div className="mt-9 grid grid-cols-[auto_1fr] gap-x-10 text-[15px] leading-[1.45] md:text-[16px]">
+              <ul>
+                {SOCIALS.map((s) => (
+                  <li key={s.label} data-menu-item>
+                    <a
+                      href={s.href}
+                      className="group inline-flex items-center gap-1.5 text-chalk/55 transition-colors duration-500 ease-prime hover:text-chalk"
+                    >
+                      {s.label}
+                      <span
+                        aria-hidden
+                        className="-translate-x-1 text-[12px] opacity-0 transition-[transform,opacity] duration-500 ease-prime group-hover:translate-x-0 group-hover:opacity-100"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  </li>
+                ))}
               </ul>
-
-              <div className="text-[11px] uppercase md:col-span-4 md:col-start-9">
-                <p data-menu-item className="mb-2 font-mono tracking-tight text-stone">
-                  [ Get in touch ]
-                </p>
-                <ul>
-                  {SOCIALS.map((s) => (
-                    <li key={s.label} data-menu-item className="border-t border-ink/15 last:border-b">
-                      <a href={s.href} className="group flex items-center justify-between py-1.5 tracking-wider">
-                        <span>{s.label}</span>
-                        <span className="transition-transform duration-500 ease-prime group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-                          ↗
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="min-w-0">
+                <li data-menu-item>
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className="block truncate text-chalk/80 transition-colors duration-500 ease-prime hover:text-chalk"
+                  >
+                    {EMAIL}
+                  </a>
+                </li>
+                <li data-menu-item className="text-chalk/55">
+                  Hyderabad, India
+                </li>
+                <li data-menu-item>
+                  <BracketClock className="font-mono text-[10px] tracking-[0.08em] text-chalk/55" />
+                </li>
+              </ul>
             </div>
 
-            {/* the hero's closing line: a hairline, and the facts justified across it */}
-            <div
+            {/* the one call to action: a solid bar across the foot; the accent sweeps in under it on hover */}
+            <a
               data-menu-item
-              className="mt-12 flex items-center justify-between gap-4 border-t border-ink/25 pt-4 text-[13px] font-medium tracking-[-0.01em] text-ink/85 md:mt-16 md:text-[15px]"
+              href="#contact"
+              onClick={close}
+              className="group relative mt-8 flex h-12 items-center justify-center gap-3 overflow-hidden rounded-[4px] bg-[#04032e] font-mono text-[11px] uppercase tracking-[0.16em] text-chalk"
             >
-              <span>© One Prime Studio</span>
-              <span className="hidden sm:inline">Hyderabad</span>
-              <BracketClock className="font-mono text-[10px] tracking-[0.08em] md:text-[11px]" />
-            </div>
+              <span
+                aria-hidden
+                className="absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-700 ease-prime group-hover:scale-x-100"
+              />
+              <span
+                aria-hidden
+                className="relative transition-transform duration-500 ease-prime group-hover:translate-x-1"
+              >
+                ↳
+              </span>
+              <span className="relative">Start a project</span>
+            </a>
           </div>
         </div>
       </nav>

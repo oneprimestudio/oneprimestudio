@@ -94,3 +94,47 @@ capsule and hollows out; droplets merge into the knob; the switch flips the worl
 fields; the lockup clicks on with "Average is not an option." Effects follow Pinterest logo-animation
 references (gooey metaballs, elastic pill, circle invert, sliced type, bouncing letters, word + dot).
 Sound: `scripts/logo/audio.py`. `npm run logo:sound`, `npm run logo:render` → `out/oneprime-logo-intro.mp4`.
+
+---
+
+# One Prime — About (launch film, 1080×1920, 60 fps, 44.5 s)
+
+The /about page told as pure motion and story — no navbar, no mono type, no cursor — driven by one
+director's script.
+
+```
+src/about/script.json   THE SCRIPT: direction, palette, type, easing, voice styles, every VO line, what each
+                        scene shows, every sound cue (anchored to scenes, words or named marks)
+scripts/about/vo.py      male "agent" narrator (edge-tts en-US-AndrewMultilingualNeural)  → public/about/vo, src/about/vo.json
+scripts/about/timeline.py lines on a 120 BPM grid, scene bounds, marks, resolved sound cues → src/about/timeline.json
+scripts/about/audio.py   score (D minor → F, two drops), SaaS-launch SFX kit, VO chain, ducking
+                         (music −9 dB mids / −5 dB lows under every word, 30 ms look-ahead, 280 ms release),
+                         kick pump, master                                                 → public/about/master.wav, src/about/levels.json
+src/about/
+  AboutFilm.jsx  boot dot · headline · the navbar's PRIME opening move as the name reveal · seam ·
+                 three 4:5 cards · split → one → "Average was never an option" · ink collapses and
+                 dithers into the globe · arcs out of Hyderabad · sign-off + CTA
+  Globe.jsx      the /about globe: land in a 2 px Bayer-8 dither, far side seen through, graticule, SVG arcs + pills
+  Seam.jsx       the site's four-front B/W seam train (page transition)
+  kit.jsx        goo headings, stepped lines, section rules
+```
+
+Edit `script.json`, then `npm run about:sound` (new voice) or `npm run about:mix` (timing/sound only),
+`COMP=About npm run stills -- 8.3 26.4 34.9` for review frames, `npm run about:render` → `out/oneprime-about.mp4`.
+
+## About v2: problem to solution (1080×1920, 60 fps, 46.6 s)
+
+`src/about2/script.json` is the director's script (story in four acts, voice styles, every cue).
+Act 1 is night, handheld, grain and reverb voice: a website nobody finds, a brand that blends in, tools
+that never talk, customers walking past. "Not anymore." explodes it into white. Act 3 lands each fix
+with a cash hit. Act 4 spirals design, development and software into one point that blooms into the
+dithered globe. Effects (`src/about2/fx.jsx`) are driven by the sound cues: shake, zoom punch, invert
+frames, chromatic split, dithered shockwave, swinging cards.
+
+Sound: `scripts/about2/dsp.py` (phonk / funk kit + effects) and `scripts/about2/audio.py` (130 BPM
+original score, problem-voice echo + hall, ducking, kick pump). Writes `public/about2/master.wav` and
+`master-nomusic.wav` (voice + effects only). To use a licensed song, put it at
+`public/about2/music.wav` and run `npm run about2:mix`.
+
+`npm run about2:sound` (re-voice), `npm run about2:mix`, `COMP=About2 npm run stills -- 14.85 21.4`,
+`npm run about2:render` → `out/oneprime-about-v2.mp4`.

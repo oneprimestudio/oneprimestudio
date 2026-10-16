@@ -17,7 +17,13 @@
     "launch2:sound": "python scripts/launch2/audio.py",
     "launch2:render": "remotion render src/index.jsx Launch2 out/oneprime-launch-v2.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=8",
     "logo:sound": "python scripts/logo/audio.py",
-    "logo:render": "remotion render src/index.jsx Logo out/oneprime-logo-intro.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=8"
+    "logo:render": "remotion render src/index.jsx Logo out/oneprime-logo-intro.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=8",
+    "about:sound": "python scripts/about/vo.py && python scripts/about/timeline.py && python scripts/about/audio.py",
+    "about:mix": "python scripts/about/timeline.py && python scripts/about/audio.py",
+    "about:render": "remotion render src/index.jsx About out/oneprime-about.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=8",
+    "about2:sound": "set FILM=about2&& python scripts/about/vo.py && set FILM=about2&& python scripts/about/timeline.py && python scripts/about2/audio.py",
+    "about2:mix": "set FILM=about2&& python scripts/about/timeline.py && python scripts/about2/audio.py",
+    "about2:render": "remotion render src/index.jsx About2 out/oneprime-about-v2.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=8"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.534",

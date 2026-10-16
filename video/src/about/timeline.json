@@ -1,0 +1,671 @@
+{
+ "fps": 60,
+ "bpm": 120,
+ "beat": 0.5,
+ "bar": 2.0,
+ "duration": 44.5,
+ "frames": 2670,
+ "cues": {
+  "h1": {
+   "start": 1.9159,
+   "speechStart": 2.0,
+   "speechEnd": 5.8221,
+   "text": "Every business deserves to be found, chosen, and run well.",
+   "style": "agent",
+   "words": [
+    {
+     "w": "Every",
+     "t": 2.0,
+     "e": 2.2404
+    },
+    {
+     "w": "business",
+     "t": 2.2404,
+     "e": 2.6851
+    },
+    {
+     "w": "deserves",
+     "t": 2.6971,
+     "e": 3.1539
+    },
+    {
+     "w": "to",
+     "t": 3.1539,
+     "e": 3.214
+    },
+    {
+     "w": "be",
+     "t": 3.214,
+     "e": 3.3342
+    },
+    {
+     "w": "found",
+     "t": 3.3462,
+     "e": 3.863
+    },
+    {
+     "w": "chosen",
+     "t": 4.1274,
+     "e": 4.6683
+    },
+    {
+     "w": "and",
+     "t": 5.0649,
+     "e": 5.1971
+    },
+    {
+     "w": "run",
+     "t": 5.1971,
+     "e": 5.4495
+    },
+    {
+     "w": "well",
+     "t": 5.4495,
+     "e": 5.8221
+    }
+   ]
+  },
+  "name": {
+   "start": 7.5612,
+   "speechStart": 7.6675,
+   "speechEnd": 9.2633,
+   "text": "This is One Prime Studio.",
+   "style": "name",
+   "words": [
+    {
+     "w": "This",
+     "t": 7.6675,
+     "e": 7.8537
+    },
+    {
+     "w": "is",
+     "t": 7.8537,
+     "e": 7.9867
+    },
+    {
+     "w": "One",
+     "t": 8.0,
+     "e": 8.3458
+    },
+    {
+     "w": "Prime",
+     "t": 8.3458,
+     "e": 8.6649
+    },
+    {
+     "w": "Studio",
+     "t": 8.6782,
+     "e": 9.2633
+    }
+   ]
+  },
+  "what1": {
+   "start": 11.9074,
+   "speechStart": 12.0,
+   "speechEnd": 14.2454,
+   "text": "Identity. Leads. Solutions.",
+   "style": "list",
+   "words": [
+    {
+     "w": "Identity",
+     "t": 12.0,
+     "e": 12.4977
+    },
+    {
+     "w": "Leads",
+     "t": 12.8681,
+     "e": 13.3426
+    },
+    {
+     "w": "Solutions",
+     "t": 13.7245,
+     "e": 14.2454
+    }
+   ]
+  },
+  "what2": {
+   "start": 14.8558,
+   "speechStart": 15.0,
+   "speechEnd": 18.4495,
+   "text": "For every business \u2014 from a single shop to a growing product.",
+   "style": "agent",
+   "words": [
+    {
+     "w": "For",
+     "t": 15.0,
+     "e": 15.2284
+    },
+    {
+     "w": "every",
+     "t": 15.3125,
+     "e": 15.613
+    },
+    {
+     "w": "business",
+     "t": 15.613,
+     "e": 16.274
+    },
+    {
+     "w": "from",
+     "t": 16.4663,
+     "e": 16.5745
+    },
+    {
+     "w": "a",
+     "t": 16.5745,
+     "e": 16.6226
+    },
+    {
+     "w": "single",
+     "t": 16.6226,
+     "e": 16.9591
+    },
+    {
+     "w": "shop",
+     "t": 16.9591,
+     "e": 17.3678
+    },
+    {
+     "w": "to",
+     "t": 17.488,
+     "e": 17.6082
+    },
+    {
+     "w": "a",
+     "t": 17.6082,
+     "e": 17.6682
+    },
+    {
+     "w": "growing",
+     "t": 17.6803,
+     "e": 17.9928
+    },
+    {
+     "w": "product",
+     "t": 17.9928,
+     "e": 18.4495
+    }
+   ]
+  },
+  "why1": {
+   "start": 19.9279,
+   "speechStart": 20.0,
+   "speechEnd": 23.714,
+   "text": "Most studios split the brand, the website, and the software.",
+   "style": "agent",
+   "words": [
+    {
+     "w": "Most",
+     "t": 20.0,
+     "e": 20.2163
+    },
+    {
+     "w": "studios",
+     "t": 20.2163,
+     "e": 20.7211
+    },
+    {
+     "w": "split",
+     "t": 20.7332,
+     "e": 21.1418
+    },
+    {
+     "w": "the",
+     "t": 21.1418,
+     "e": 21.226
+    },
+    {
+     "w": "brand",
+     "t": 21.226,
+     "e": 21.7307
+    },
+    {
+     "w": "the",
+     "t": 21.9952,
+     "e": 22.0793
+    },
+    {
+     "w": "website",
+     "t": 22.0793,
+     "e": 22.6562
+    },
+    {
+     "w": "and",
+     "t": 22.8966,
+     "e": 22.9447
+    },
+    {
+     "w": "the",
+     "t": 22.9447,
+     "e": 23.0048
+    },
+    {
+     "w": "software",
+     "t": 23.0168,
+     "e": 23.714
+    }
+   ]
+  },
+  "why2": {
+   "start": 25.2952,
+   "speechStart": 25.3883,
+   "speechEnd": 26.3723,
+   "text": "We build them as one.",
+   "style": "name",
+   "words": [
+    {
+     "w": "We",
+     "t": 25.3883,
+     "e": 25.4947
+    },
+    {
+     "w": "build",
+     "t": 25.4947,
+     "e": 25.7739
+    },
+    {
+     "w": "them",
+     "t": 25.7739,
+     "e": 25.8803
+    },
+    {
+     "w": "as",
+     "t": 25.8803,
+     "e": 25.9867
+    },
+    {
+     "w": "one",
+     "t": 26.0,
+     "e": 26.3723
+    }
+   ]
+  },
+  "w1": {
+   "start": 29.5913,
+   "speechStart": 29.6875,
+   "speechEnd": 31.5024,
+   "text": "Based in Hyderabad, India.",
+   "style": "agent",
+   "words": [
+    {
+     "w": "Based",
+     "t": 29.6875,
+     "e": 29.9279
+    },
+    {
+     "w": "in",
+     "t": 29.9399,
+     "e": 30.0
+    },
+    {
+     "w": "Hyderabad",
+     "t": 30.0,
+     "e": 30.6731
+    },
+    {
+     "w": "India",
+     "t": 31.0457,
+     "e": 31.5024
+    }
+   ]
+  },
+  "w2": {
+   "start": 32.6298,
+   "speechStart": 32.726,
+   "speechEnd": 34.637,
+   "text": "Working with businesses everywhere.",
+   "style": "agent",
+   "words": [
+    {
+     "w": "Working",
+     "t": 32.726,
+     "e": 33.0024
+    },
+    {
+     "w": "with",
+     "t": 33.0024,
+     "e": 33.1226
+    },
+    {
+     "w": "businesses",
+     "t": 33.1346,
+     "e": 33.8798
+    },
+    {
+     "w": "everywhere",
+     "t": 34.0,
+     "e": 34.637
+    }
+   ]
+  },
+  "sign": {
+   "start": 37.8913,
+   "speechStart": 38.0,
+   "speechEnd": 41.0027,
+   "text": "One Prime Studio. Average is not an option.",
+   "style": "sign",
+   "words": [
+    {
+     "w": "One",
+     "t": 38.0,
+     "e": 38.2174
+    },
+    {
+     "w": "Prime",
+     "t": 38.2174,
+     "e": 38.5163
+    },
+    {
+     "w": "Studio",
+     "t": 38.5299,
+     "e": 39.1413
+    },
+    {
+     "w": "Average",
+     "t": 39.5625,
+     "e": 39.9565
+    },
+    {
+     "w": "is",
+     "t": 40.0788,
+     "e": 40.1875
+    },
+    {
+     "w": "not",
+     "t": 40.1875,
+     "e": 40.4456
+    },
+    {
+     "w": "an",
+     "t": 40.4456,
+     "e": 40.5135
+    },
+    {
+     "w": "option",
+     "t": 40.5136,
+     "e": 41.0027
+    }
+   ]
+  }
+ },
+ "scenes": [
+  {
+   "id": "boot",
+   "title": "Boot",
+   "start": 0.0,
+   "end": 1.75
+  },
+  {
+   "id": "head",
+   "title": "Every business deserves\u2026",
+   "start": 1.75,
+   "end": 6.1675
+  },
+  {
+   "id": "reveal",
+   "title": "This is One Prime Studio",
+   "start": 6.1675,
+   "end": 11.45
+  },
+  {
+   "id": "what",
+   "title": "01 \u2014 What we do",
+   "start": 11.45,
+   "end": 19.45
+  },
+  {
+   "id": "why",
+   "title": "02 \u2014 Why we started",
+   "start": 19.45,
+   "end": 28.7875
+  },
+  {
+   "id": "where",
+   "title": "04 \u2014 Where we are",
+   "start": 28.7875,
+   "end": 37.4
+  },
+  {
+   "id": "sign",
+   "title": "Sign-off",
+   "start": 37.4,
+   "end": 44.5
+  }
+ ],
+ "marks": {
+  "reveal.open": 6.4175,
+  "reveal.seam": 10.65,
+  "where.collapse": 28.7875,
+  "where.arcs": 34.0,
+  "sign.seam": 36.6,
+  "sign.cta": 41.9027
+ },
+ "sfx": [
+  {
+   "t": 0.05,
+   "sound": "pop",
+   "gain": 0.6
+  },
+  {
+   "t": 0.5,
+   "sound": "tick",
+   "gain": 0.5
+  },
+  {
+   "t": 0.8,
+   "sound": "riser",
+   "gain": 0.4,
+   "dur": 1.2
+  },
+  {
+   "t": 1.0,
+   "sound": "tick",
+   "gain": 0.5
+  },
+  {
+   "t": 1.5,
+   "sound": "tick",
+   "gain": 0.6
+  },
+  {
+   "t": 2.0,
+   "sound": "impact",
+   "gain": 0.55
+  },
+  {
+   "t": 2.0,
+   "sound": "swoosh",
+   "gain": 0.4
+  },
+  {
+   "t": 2.6971,
+   "sound": "swoosh",
+   "gain": 0.35
+  },
+  {
+   "t": 3.3462,
+   "sound": "swoosh",
+   "gain": 0.35
+  },
+  {
+   "t": 3.3462,
+   "sound": "blip",
+   "gain": 0.25,
+   "note": 74
+  },
+  {
+   "t": 4.1274,
+   "sound": "blip",
+   "gain": 0.25,
+   "note": 77
+  },
+  {
+   "t": 5.0649,
+   "sound": "swoosh",
+   "gain": 0.35
+  },
+  {
+   "t": 5.1971,
+   "sound": "blip",
+   "gain": 0.3,
+   "note": 81
+  },
+  {
+   "t": 6.4175,
+   "sound": "whoomp",
+   "gain": 0.6
+  },
+  {
+   "t": 6.4675,
+   "sound": "swoosh",
+   "gain": 0.45
+  },
+  {
+   "t": 7.0,
+   "sound": "riser",
+   "gain": 0.5,
+   "dur": 1.0
+  },
+  {
+   "t": 8.0,
+   "sound": "drop",
+   "gain": 0.9
+  },
+  {
+   "t": 8.0,
+   "sound": "switch",
+   "gain": 0.7
+  },
+  {
+   "t": 10.65,
+   "sound": "seam",
+   "gain": 0.6
+  },
+  {
+   "t": 11.45,
+   "sound": "rule",
+   "gain": 0.4
+  },
+  {
+   "t": 12.0,
+   "sound": "slam",
+   "gain": 0.7
+  },
+  {
+   "t": 12.8681,
+   "sound": "slam",
+   "gain": 0.7
+  },
+  {
+   "t": 13.7245,
+   "sound": "slam",
+   "gain": 0.8
+  },
+  {
+   "t": 15.0,
+   "sound": "swoosh",
+   "gain": 0.45
+  },
+  {
+   "t": 16.9591,
+   "sound": "tick",
+   "gain": 0.4
+  },
+  {
+   "t": 17.9928,
+   "sound": "tick",
+   "gain": 0.4
+  },
+  {
+   "t": 21.226,
+   "sound": "snap",
+   "gain": 0.6
+  },
+  {
+   "t": 22.0793,
+   "sound": "snap",
+   "gain": 0.6
+  },
+  {
+   "t": 23.0168,
+   "sound": "snap",
+   "gain": 0.6
+  },
+  {
+   "t": 23.1668,
+   "sound": "glitch",
+   "gain": 0.5
+  },
+  {
+   "t": 25.1,
+   "sound": "suck",
+   "gain": 0.55
+  },
+  {
+   "t": 26.0,
+   "sound": "impact",
+   "gain": 0.9
+  },
+  {
+   "t": 26.0,
+   "sound": "slam",
+   "gain": 0.7
+  },
+  {
+   "t": 28.1875,
+   "sound": "suck",
+   "gain": 0.5
+  },
+  {
+   "t": 29.3375,
+   "sound": "impact",
+   "gain": 0.55
+  },
+  {
+   "t": 30.0,
+   "sound": "ping",
+   "gain": 0.5
+  },
+  {
+   "t": 33.0,
+   "sound": "riser",
+   "gain": 0.45,
+   "dur": 1.0
+  },
+  {
+   "t": 34.0,
+   "sound": "drop",
+   "gain": 0.8
+  },
+  {
+   "t": 34.0,
+   "sound": "arcs",
+   "gain": 0.5
+  },
+  {
+   "t": 36.6,
+   "sound": "seam",
+   "gain": 0.5
+  },
+  {
+   "t": 38.0,
+   "sound": "switch",
+   "gain": 0.8
+  },
+  {
+   "t": 38.0,
+   "sound": "impact",
+   "gain": 0.8
+  },
+  {
+   "t": 39.5625,
+   "sound": "swoosh",
+   "gain": 0.35
+  },
+  {
+   "t": 41.9527,
+   "sound": "ding",
+   "gain": 0.4
+  }
+ ]
+}

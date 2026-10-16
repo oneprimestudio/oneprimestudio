@@ -1,0 +1,248 @@
+{
+  "title": "One Prime Studio, launch film v2 (problem to solution)",
+  "version": 1,
+  "format": { "width": 1080, "height": 1920, "fps": 60, "aspect": "9:16", "target": "Instagram Reels, LinkedIn, site hero" },
+
+  "direction": {
+    "logline": "Every business is losing customers it never sees. One Prime Studio turns that around: a brand people remember, a website that brings leads, systems that run the business. Built as one, from Hyderabad, for everywhere.",
+    "story": [
+      "ACT 1, THE PROBLEM (dark, reverb, glitch): a website nobody finds, a brand that blends in, tools that never talk, customers walking past. It all collapses into one dot.",
+      "ACT 2, THE TURN (flash, shockwave, drop): 'Not anymore.' The dot explodes into white. The switch flips on: One Prime Studio.",
+      "ACT 3, THE SOLUTION (white, cash hits): each fix lands with a cash sound and a swinging card; enquiries, bookings and orders pour in.",
+      "ACT 4, AS ONE (absorb): design, development and software are pulled into one point, which opens into the dithered globe; arcs fire from Hyderabad to the world.",
+      "SIGN-OFF: the lockup, 'Average is not an option.', Start a project."
+    ],
+    "palette": { "paper": "#ffffff", "ink": "#08064e", "night": "#04032e", "accent": "#2f6bff", "stone": "#66657d", "graphite": "#3b3a56", "chalk": "#f7f6f2", "alarm": "#e5484d", "money": "#18a058" },
+    "type": "PP Neue Montreal only. Every heading uses the site's goo blur, run fast (0.5 s). No mono, no navbar, no cursor, no em dashes anywhere, on screen or in the voice.",
+    "motion": {
+      "easing": {
+        "prime": "cubic-bezier(0.87, 0, 0.13, 1): reveals, wipes, card lifts, the absorb",
+        "menu": "M0,0 C0.18,0 0.24,0.36 0.4,0.62 0.56,0.88 0.7,1 1,1: rules, text rises",
+        "card": "M0,0 C0.3,0 0.32,0.26 0.48,0.56 0.62,0.82 0.72,1 1,1: cards entering",
+        "back": "cubic-bezier(0.34, 1.56, 0.64, 1): the switch knob, pops"
+      },
+      "effects": [
+        "Shake: every hit kicks the camera (decaying, about 18 px), plus a slow handheld drift in Act 1.",
+        "Flash: white frames on the drops, ink frames on the hits in white scenes.",
+        "Chromatic split: red/blue offsets on glitches and hits.",
+        "Swing: cards and chips hang from a pivot and swing in on a damped pendulum.",
+        "Absorb: elements spiral into a single point with a suck, then the point blooms.",
+        "Shockwave: a ring of Bayer dither expands from the explosion.",
+        "Vignette and grain in Act 1; clean white in Act 3."
+      ]
+    },
+    "sound": {
+      "music": "Original funk / phonk at 130 BPM, written for the film (the licensed songs named in the brief can't be bundled; see deliverables). Act 1: a slowed, filtered cowbell and a sub drone with a heartbeat. 'Not anymore': the full drop, distorted 808 slides, tamborzao-style kick pattern, claps, rolling hats, phonk cowbell melody, a formant 'hey' chop. A breakdown under 'Built as one', a second drop on 'everywhere', a final hit on the sign-off.",
+      "ducking": "Music dips under every word: mids -9 dB, lows -5 dB, 30 ms look-ahead, 280 ms release.",
+      "voice": "Problem lines go dark: pitched down, long hall reverb and a dotted-eighth echo. Everything else is close and dry.",
+      "sfx": "Flash hits with reverb tails, risers, sub drops, shockwave, glitch stutters, error buzz, heartbeat and flatline, cash register and coins on every solution, notification pings, absorb suck, swooshes, the switch."
+    }
+  },
+
+  "voice": {
+    "engine": "edge-tts (Microsoft neural)",
+    "narrator": "en-US-AndrewMultilingualNeural",
+    "styles": {
+      "problem": { "rate": "-6%", "pitch": "-6Hz" },
+      "turn": { "rate": "-10%", "pitch": "-4Hz" },
+      "name": { "rate": "-6%", "pitch": "-3Hz" },
+      "sell": { "rate": "+6%", "pitch": "-1Hz" },
+      "agent": { "rate": "+4%", "pitch": "-2Hz" },
+      "sign": { "rate": "-8%", "pitch": "-3Hz" }
+    },
+    "treatment": { "problem": "hall 2.6 s at 34% wet, dotted-eighth echo 26% with feedback, low-pass 6 kHz", "default": "HPF 90 Hz, presence, 3:1 compression, faint doubler" }
+  },
+
+  "bpm": 130,
+  "endHold": 2.8,
+
+  "scenes": [
+    {
+      "id": "site",
+      "title": "A website nobody finds",
+      "start": 0.0,
+      "vo": [
+        { "id": "p1", "style": "problem", "text": "Your website looks fine.", "gap": 0.0, "land": [0, "bar"] },
+        { "id": "p2", "style": "problem", "text": "But nobody finds it.", "gap": 0.3, "land": [1, "beat"] }
+      ],
+      "picture": [
+        "Night. A clean white browser card swings down from a pivot, a nice site inside it (hero block, nav pills, image).",
+        "'Your website looks fine.' goos in above.",
+        "p2: a search bar types, a results list scrolls fast past the camera, the site is not in it; the card flickers, glitches and greys out."
+      ],
+      "sfx": [
+        { "at": "scene:site", "offset": 0.1, "sound": "riser", "gain": 0.35, "dur": 1.6 },
+        { "at": "word:p1:0", "sound": "hit", "gain": 0.7 },
+        { "at": "word:p1:0", "offset": 0.05, "sound": "swoosh", "gain": 0.45 },
+        { "at": "word:p2:0", "sound": "type", "gain": 0.4 },
+        { "at": "word:p2:3", "sound": "glitch", "gain": 0.6 },
+        { "at": "word:p2:3", "sound": "buzz", "gain": 0.45 }
+      ]
+    },
+    {
+      "id": "brand",
+      "title": "A brand that blends in",
+      "lead": 0.35,
+      "vo": [{ "id": "p3", "style": "problem", "text": "Your brand blends in.", "gap": 0.6, "land": [0, "bar"] }],
+      "picture": [
+        "A wall of 30 identical grey marks; one of them is yours, outlined in blue.",
+        "On 'blends' the wall shuffles fast (every mark swaps places twice), the blue outline fades, and yours is lost."
+      ],
+      "sfx": [
+        { "at": "scene:brand", "sound": "swoosh", "gain": 0.4 },
+        { "at": "word:p3:2", "sound": "shuffle", "gain": 0.5 },
+        { "at": "word:p3:3", "offset": 0.1, "sound": "thud", "gain": 0.5 }
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Tools that never talk",
+      "lead": 0.35,
+      "vo": [{ "id": "p4", "style": "problem", "text": "Your tools don't talk to each other.", "gap": 0.6, "land": [0, "bar"] }],
+      "picture": [
+        "Five app tiles (Sheets, Mail, Billing, Calendar, CRM) drop in and swing.",
+        "Dashed lines reach between them and snap, one by one, with a red flicker and a buzz; the tiles drift apart."
+      ],
+      "sfx": [
+        { "at": "scene:tools", "sound": "drops", "gain": 0.45 },
+        { "at": "word:p4:3", "sound": "snap", "gain": 0.6 },
+        { "at": "word:p4:4", "sound": "snap", "gain": 0.6 },
+        { "at": "word:p4:6", "sound": "snap", "gain": 0.6 },
+        { "at": "word:p4:6", "offset": 0.1, "sound": "buzz", "gain": 0.4 }
+      ]
+    },
+    {
+      "id": "walk",
+      "title": "Customers walk past",
+      "lead": 0.35,
+      "vo": [{ "id": "p5", "style": "problem", "text": "And every day, customers walk past.", "gap": 0.6, "land": [0, "bar"] }],
+      "picture": [
+        "A doorway of light in the dark. A stream of dots (people) flows left to right past it; none turns in.",
+        "A heartbeat line runs under it and flattens. Everything darkens and collapses to one dot in the centre."
+      ],
+      "sfx": [
+        { "at": "scene:walk", "sound": "heartbeat", "gain": 0.6 },
+        { "at": "end:p5", "offset": 0.2, "sound": "flatline", "gain": 0.4 },
+        { "at": "mark:turn.collapse", "sound": "absorb", "gain": 0.6 }
+      ]
+    },
+    {
+      "id": "turn",
+      "title": "Not anymore",
+      "lead": 0.5,
+      "vo": [
+        { "id": "turn", "style": "turn", "text": "Not anymore.", "gap": 1.0, "land": [0, "bar"] },
+        { "id": "name", "style": "name", "text": "This is One Prime Studio.", "gap": 0.35, "land": [2, "bar"] }
+      ],
+      "picture": [
+        "'Not': the dot explodes, a white flash, a dither shockwave rings out, heavy shake; the world turns white.",
+        "'Not anymore.' huge, gooing in, swinging on its baseline.",
+        "'One': the switch flips on with a blue bloom; 'Prime Studio' forms; the lockup swings to rest."
+      ],
+      "sfx": [
+        { "at": "word:turn:0", "offset": -1.4, "sound": "riser", "gain": 0.55, "dur": 1.4 },
+        { "at": "word:turn:0", "sound": "drop", "gain": 1.0 },
+        { "at": "word:turn:0", "sound": "hit", "gain": 0.9 },
+        { "at": "word:turn:0", "sound": "shock", "gain": 0.7 },
+        { "at": "word:name:2", "sound": "switch", "gain": 0.8 },
+        { "at": "word:name:2", "sound": "hit", "gain": 0.6 }
+      ]
+    },
+    {
+      "id": "sol",
+      "title": "The solution",
+      "lead": 0.5,
+      "vo": [
+        { "id": "s1", "style": "sell", "text": "A brand people remember.", "gap": 0.9, "land": [0, "bar"] },
+        { "id": "s2", "style": "sell", "text": "A website that brings in leads.", "gap": 0.35, "land": [0, "beat"] },
+        { "id": "s3", "style": "sell", "text": "Systems that run your business for you.", "gap": 0.35, "land": [0, "beat"] }
+      ],
+      "picture": [
+        "s1: the wall of grey marks returns, and yours lifts out of it in ink and blue, swings forward and grows; the rest fall away. Cash hit.",
+        "s2: the browser card from Act 1 swings back in, alive; notifications stack onto it on the beat: New enquiry, New booking, New order. Cash hit and a coin on each.",
+        "s3: the five tools return and lock into one hub (the switch) with solid lines; pulses flow along them; checks cascade. Cash hit."
+      ],
+      "sfx": [
+        { "at": "word:s1:3", "sound": "cash", "gain": 0.75 },
+        { "at": "word:s1:3", "sound": "hit", "gain": 0.45 },
+        { "at": "word:s2:5", "sound": "cash", "gain": 0.75 },
+        { "at": "mark:sol.notes", "sound": "notes", "gain": 0.55 },
+        { "at": "word:s3:0", "sound": "lock", "gain": 0.6 },
+        { "at": "word:s3:4", "sound": "cash", "gain": 0.75 },
+        { "at": "word:s3:4", "offset": 0.25, "sound": "coins", "gain": 0.5 }
+      ]
+    },
+    {
+      "id": "one",
+      "title": "Built as one",
+      "lead": 0.45,
+      "vo": [
+        { "id": "o1", "style": "agent", "text": "Design, development and software.", "gap": 0.8, "land": [0, "bar"] },
+        { "id": "o2", "style": "name", "text": "Built as one.", "gap": 0.3, "land": [2, "bar"] }
+      ],
+      "picture": [
+        "Three ink 4:5 cards swing in on their words: Design, Development, Software.",
+        "'Built as': they start to orbit a centre point, faster and smaller (absorb).",
+        "'one': they vanish into the point with a flash; the point blooms into the dithered globe."
+      ],
+      "sfx": [
+        { "at": "word:o1:0", "sound": "slam", "gain": 0.6 },
+        { "at": "word:o1:1", "sound": "slam", "gain": 0.6 },
+        { "at": "word:o1:3", "sound": "slam", "gain": 0.7 },
+        { "at": "word:o2:0", "sound": "absorb", "gain": 0.7 },
+        { "at": "word:o2:2", "sound": "hit", "gain": 0.9 },
+        { "at": "word:o2:2", "sound": "shock", "gain": 0.5 }
+      ]
+    },
+    {
+      "id": "where",
+      "title": "Hyderabad to everywhere",
+      "lead": 1.25,
+      "vo": [
+        { "id": "w1", "style": "agent", "text": "Based in Hyderabad.", "gap": 0.9, "land": [2, "beat"] },
+        { "id": "w2", "style": "agent", "text": "Working with businesses everywhere.", "gap": 0.35, "land": [3, "bar"] }
+      ],
+      "picture": [
+        "The globe (2 px Bayer land grain) spins and swings to India; the Hyderabad node lands with rings.",
+        "'everywhere': zoom punch, the globe spins west, arcs fire to seven cities on 16ths with flashes on each landing."
+      ],
+      "sfx": [
+        { "at": "word:w1:2", "sound": "ping", "gain": 0.5 },
+        { "at": "word:w2:3", "offset": -1.2, "sound": "riser", "gain": 0.5, "dur": 1.2 },
+        { "at": "word:w2:3", "sound": "drop", "gain": 0.85 },
+        { "at": "mark:where.arcs", "sound": "arcs", "gain": 0.55 }
+      ]
+    },
+    {
+      "id": "sign",
+      "title": "Sign-off",
+      "lead": 0.6,
+      "vo": [{ "id": "sign", "style": "sign", "text": "One Prime Studio. Average is not an option.", "gap": 1.6, "land": [0, "bar"] }],
+      "picture": [
+        "Seam train to white. The lockup swings in and the switch flips on with 'One'.",
+        "'Average is not an option.' word by word.",
+        "'Start a project' fills with ink on PRIME, a final cash hit, hello@oneprimestudio.com gooing in under it."
+      ],
+      "sfx": [
+        { "at": "mark:sign.seam", "sound": "seam", "gain": 0.55 },
+        { "at": "word:sign:0", "sound": "switch", "gain": 0.8 },
+        { "at": "word:sign:0", "sound": "hit", "gain": 0.8 },
+        { "at": "mark:sign.cta", "sound": "cash", "gain": 0.6 }
+      ]
+    }
+  ],
+
+  "marks": {
+    "turn.collapse": { "at": "word:turn:0", "offset": -0.9 },
+    "sol.notes": { "at": "word:s2:5", "offset": 0.3 },
+    "where.arcs": { "at": "word:w2:3", "offset": 0.0 },
+    "sign.seam": { "at": "scene:sign", "offset": -0.8 },
+    "sign.cta": { "at": "end:sign", "offset": 0.7 }
+  },
+
+  "deliverables": [
+    "out/oneprime-about-v2.mp4: full mix with the original funk score",
+    "out/oneprime-about-v2-nomusic.mp4: voice + effects only, so a licensed track (Timeless, an automotivo or aura-farming sound) can be added inside Instagram, where those songs are licensed",
+    "Drop a licensed WAV at public/about2/music.wav and run npm run about2:mix to have it ducked under the voice automatically"
+  ]
+}
