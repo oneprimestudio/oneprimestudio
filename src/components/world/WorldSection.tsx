@@ -10,8 +10,12 @@ import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, S
  * Where we are — one screen, on home and /about. The globe owns the middle; the words keep to the corners:
  *
  *   top left      the label and one small sentence: Hyderabad, remote for everywhere
- *   top right     Hyderabad's clock and coordinates
- *   bottom left   what the line means once there is one: how far, how many hours apart, their 9 to 6 in ours
+ *   top centre    a small hook: Hyderabad · Remote · Worldwide
+ *   top right     Hyderabad's clock, in a slim frosted pill
+ *   either side   a micro line level with the globe: the coordinates at the left, at the right where every
+ *                 line starts (wide screens)
+ *   bottom left   a micro line inviting a place; once there is one, what the line means: how far, how
+ *                 many hours apart, their 9 to 6 in ours
  *   bottom right  "Where are you from?"
  *
  * The screen pins for a while: the scroll carries the globe from small and centred to large and settled on
@@ -22,6 +26,10 @@ import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, S
  */
 
 const label = "font-mono text-[10px] uppercase md:text-[11px]";
+/** a small uppercase line that hooks the reader, as the About page's */
+const hook = "text-[11px] font-medium uppercase leading-[1.35] tracking-[0.02em] md:text-[12px]";
+/** the white that feathers out behind words laid over the globe */
+const feather = "bg-white shadow-[0_0_28px_20px_#fff]";
 const top = "top-[calc(var(--nav-top)+var(--nav-h)+28px)]";
 
 // an area's second line: how far and which way from the centre, since every one is in Hyderabad
@@ -130,30 +138,56 @@ export default function WorldSection({ index }: { index: string }) {
       {/* the corners sit on white that feathers out, so they read over the globe once it has zoomed in */}
       <div
         data-corner
-        className={`absolute left-[var(--gutter)] ${top} max-w-[30ch] bg-white shadow-[0_0_32px_24px_#fff] md:max-w-[34ch]`}
+        className={`absolute left-[var(--gutter)] ${top} max-w-[30ch] bg-white shadow-[0_0_32px_24px_#fff] p-3 md:max-w-[34ch]`}
       >
         <p data-hover-scramble className={`${label} text-stone`}>
-          {index} — Where we are
+          {index} Where we are
         </p>
-        <p className="mt-4 text-[15px] leading-[1.45] tracking-[-0.005em] text-graphite md:text-[16px]">
+        <p className="mt-4 text-[15px] leading-[1.05] tracking-[-0.005em] text-graphite md:text-[16px]">
           We&rsquo;re based in Hyderabad, India, and work remotely with businesses all over the world. Tell us where
-          you are — we&rsquo;ll draw the line.
+          you are, and we&rsquo;ll draw the line.
         </p>
       </div>
 
-      {/* top right: our clock */}
+      {/* top centre: the hook */}
+      <p data-corner className={`${hook} absolute left-1/2 ${top} hidden -translate-x-1/2 text-center text-ink md:block`}>
+        Hyderabad · Remote · Worldwide
+      </p>
+
+      {/* top right: our clock, in a slim frosted pill */}
       <p
         data-corner
-        className={`${label} absolute right-[var(--gutter)] ${top} hidden bg-white text-right text-stone shadow-[0_0_28px_20px_#fff] md:block`}
+        className={`absolute right-[var(--gutter)] ${top} hidden items-center gap-2 rounded-full bg-white/85 px-3 py-[4px] text-[12px] font-medium leading-[1.2] text-ink ring-1 ring-inset ring-ink/15 backdrop-blur-sm md:inline-flex md:text-[13px]`}
       >
-        Hyderabad <span className="tabular-nums text-ink">{homeTime ?? "--:--:--"}</span> IST
-        <br />
+        <span className="text-stone">Hyderabad</span>
+        <span className="tabular-nums">{homeTime ?? "--:--:--"}</span>
+        <span className="text-stone">IST</span>
+      </p>
+
+      {/* either side of the globe: a micro line */}
+      <p data-corner className={`${hook} ${feather} absolute left-[var(--gutter)] top-1/2 hidden max-w-[18ch] -translate-y-1/2 text-ink md:block`}>
         17.38° N · 78.49° E
+        <br />
+        <span className="text-stone">Hyderabad, India</span>
+      </p>
+      <p
+        data-corner
+        className={`${hook} ${feather} absolute right-[var(--gutter)] top-1/2 hidden max-w-[20ch] -translate-y-1/2 text-right text-ink md:block`}
+      >
+        <span aria-hidden>✦ </span>Every line starts here, in our studio.
       </p>
 
       {/* bottom left: what the line means — only once there is a line (the globe has lifted to the centre by
           then, so the settled globe's shoulder never runs under it) */}
       <div data-corner className="absolute bottom-[calc(var(--gutter)+8px)] left-[var(--gutter)] hidden w-[280px] md:block">
+        <p
+          aria-hidden={!!facts}
+          className={`${hook} ${feather} absolute bottom-0 left-0 max-w-[30ch] text-ink transition-[opacity,transform] duration-700 ease-prime ${
+            facts ? "translate-y-3 opacity-0" : "opacity-100"
+          }`}
+        >
+          <span aria-hidden>✦ </span>Pick a place to see the distance, the hours apart and your working day in ours.
+        </p>
         <dl
           aria-live="polite"
           className={`bg-white text-[14px] shadow-[0_0_32px_24px_#fff] transition-[opacity,transform] duration-700 ease-prime ${
@@ -167,7 +201,7 @@ export default function WorldSection({ index }: { index: string }) {
           ].map(([k, v]) => (
             <div key={k} className="grid grid-cols-[6.5rem_1fr] border-t border-ink/10 py-2.5">
               <dt className={`${label} pt-0.5 text-stone`}>{k}</dt>
-              <dd className="tabular-nums text-ink">{v ?? "—"}</dd>
+              <dd className="tabular-nums text-ink">{v ?? "-"}</dd>
             </div>
           ))}
         </dl>
@@ -177,7 +211,7 @@ export default function WorldSection({ index }: { index: string }) {
           which reaches this corner on narrower screens */}
       <div
         data-corner
-        className="absolute bottom-[calc(var(--gutter)+8px)] left-[var(--gutter)] right-[var(--gutter)] bg-white pt-4 shadow-[0_0_36px_28px_#fff] md:left-auto md:w-[280px] md:pt-0 xl:w-[320px]"
+        className="absolute bottom-[calc(var(--gutter)+8px)] left-[var(--gutter)] right-[var(--gutter)] z-10 bg-white pt-4 p-4 shadow-[0_0_36px_28px_#fff] md:left-auto md:w-[280px] md:pt-0 xl:w-[320px]"
       >
         <PlacePicker
           value={place}

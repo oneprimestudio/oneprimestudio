@@ -39,7 +39,7 @@ const LEAVE_AFTER = 48;
 const ARRIVE_AT = 0.85;
 
 /** the pill's shape: the hero's tags — the site's pill height (--pill-h), fully round; solid navy, no edge */
-const PILL = "rounded-[calc(var(--pill-h)/2)]";
+const PILL = "rounded-[calc(var(--pill-h)/2)] border-ink/80 border-2 ";
 /** a toggle's circle, concentric with the pill's round end: 4px in from the top, the foot and the end */
 const DOT = "grid h-[calc(var(--pill-h)-8px)] w-[calc(var(--pill-h)-8px)] place-items-center rounded-full";
 

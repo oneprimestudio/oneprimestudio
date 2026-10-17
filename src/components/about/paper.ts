@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 /*
- * A sheet of navy paper in three.js, for the founder drawer to arrive on, rolled in like paper fed up
+ * A sheet of white paper in three.js, for the founder drawer to arrive on, rolled in like paper fed up
  * over a roller just under the screen's edge: it rises straight up from fully below the screen, and while
  * it passes the lower third of the screen it leans gently back, the more the nearer the edge — a slight,
  * smooth bend. Its top edge carries a small curl. Both fade as it lands, flat in the drawer's place.
@@ -15,7 +15,7 @@ import * as THREE from "three";
  *   curl     the top edge bends toward you a little, ∝ (1 − p)
  *   light    shaded by its own curvature, a sheen along the bend, a fine grain
  *
- * The real drawer (DOM, navy, the same rect) takes over the moment the sheet is in place.
+ * The real drawer (DOM, white, the same rect) takes over the moment the sheet is in place.
  */
 
 const VERT = /* glsl */ `
@@ -61,7 +61,7 @@ const FRAG = /* glsl */ `
     float diffuse = clamp(dot(n, l), 0.0, 1.0);
     float sheen = pow(clamp(dot(reflect(-l, n), normalize(-vView)), 0.0, 1.0), 14.0) * vBend;
     float grain = (hash(floor(gl_FragCoord.xy)) - 0.5) * 0.03;
-    // flat and facing the viewer, diffuse = 0.688 and the shade comes to exactly 1: the drawer's own navy
+    // flat and facing the viewer, diffuse = 0.688 and the shade comes to exactly 1: the drawer's own white
     vec3 c = uColor * (0.312 + diffuse);
     gl_FragColor = vec4(c + vec3(0.6, 0.65, 1.0) * sheen * 0.3 + grain, 1.0);
   }
@@ -94,7 +94,7 @@ export function makePaper(canvas: HTMLCanvasElement): Paper | null {
     uLean: { value: 0 },
     uCurl: { value: 1 },
     uTime: { value: 0 },
-    uColor: { value: new THREE.Vector3(8 / 255, 6 / 255, 78 / 255) }, // ink, #08064e
+    uColor: { value: new THREE.Vector3(1, 1, 1) }, // white: the drawer's own sheet
   };
   const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms, side: THREE.DoubleSide });
   let geometry = new THREE.PlaneGeometry(1, 1);

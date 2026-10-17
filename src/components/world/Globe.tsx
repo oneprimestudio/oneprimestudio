@@ -469,7 +469,7 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       const pill = g.querySelector<SVGRectElement>("[data-pill]");
       if (!text || !pill) return;
       const w = text.textContent ? text.getComputedTextLength() : 0;
-      pill.setAttribute("width", String(w ? w + 14 : 0));
+      pill.setAttribute("width", String(w ? w + 18 : 0));
     };
     fitPill(homeNode);
     // and again once the mono face has loaded, which sets the text's real width
@@ -704,7 +704,7 @@ export default function Globe({ place, progress }: { place: Place | null; progre
         <circle data-pulse-glow r={9} fill="#2f6bff" fillOpacity={0.18} style={{ opacity: 0 }} />
         <circle data-pulse r={3.5} fill="#2f6bff" stroke="#ffffff" strokeWidth={1.5} style={{ opacity: 0 }} />
 
-        {/* Hyderabad: two rings breathing out from a blue core, and its name in a pill on a leader line */}
+        {/* Hyderabad: two rings breathing out from a blue core, and its name in a round pill on a leader line */}
         <g data-home>
           {[0, 1.2].map((begin) => (
             <circle key={begin} r={5} fill="none" stroke="#2f6bff" strokeWidth={1.25} opacity={0}>
@@ -716,8 +716,8 @@ export default function Globe({ place, progress }: { place: Place | null; progre
           <circle r={1.6} fill="#ffffff" />
           <path d="M5 -5L14 -14" stroke="#08064e" strokeOpacity={0.5} strokeWidth={1} />
           <g transform="translate(14 -24)">
-            <rect data-pill height={18} rx={2} fill="#ffffff" stroke="#08064e" strokeOpacity={0.15} />
-            <text x={7} y={12.5} className="fill-ink font-mono text-[10px] uppercase tracking-[0.14em]">
+            <rect data-pill height={18} rx={9} fill="#ffffff" stroke="#08064e" strokeOpacity={0.15} />
+            <text x={9} y={12.5} className="fill-ink font-mono text-[10px] uppercase tracking-[0.14em]">
               Hyderabad
             </text>
           </g>
@@ -729,8 +729,8 @@ export default function Globe({ place, progress }: { place: Place | null; progre
           <circle r={1.8} fill="#08064e" />
           <path d="M5 -5L14 -14" stroke="#08064e" strokeOpacity={0.5} strokeWidth={1} />
           <g transform="translate(14 -24)">
-            <rect data-pill height={18} rx={2} fill="#ffffff" stroke="#08064e" strokeOpacity={0.15} />
-            <text data-place-label x={7} y={12.5} className="fill-ink font-mono text-[10px] uppercase tracking-[0.14em]" />
+            <rect data-pill height={18} rx={9} fill="#ffffff" stroke="#08064e" strokeOpacity={0.15} />
+            <text data-place-label x={9} y={12.5} className="fill-ink font-mono text-[10px] uppercase tracking-[0.14em]" />
           </g>
         </g>
       </svg>

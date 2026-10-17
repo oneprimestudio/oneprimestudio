@@ -4,11 +4,13 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { PLACES, guessPlace, offsetMinutes, type Place } from "@/lib/geo/places";
 
 /*
- * "Where are you from?" — a searchable list in place of the native select. Closed, it is one line of type
- * on a hairline with an ink button; open, a white sheet rises from the field (clip-path on the prime
- * curve) with a search box and a compact list: one line a place, its UTC offset (or, for an area, how far
- * and which way from the centre) in mono at the right, no scrollbar — the list's edges fade instead. The
- * row under the cursor or the arrow keys turns ink, the chosen one carries the blue square.
+ * "Where are you from?" — a searchable list in place of the native select, kept minimal. Closed, it is one
+ * line of type on a hairline with a thin ring "+"; open, a plain white sheet fades in just above the field
+ * (no clip, only a short fade and lift): a search row on a hairline, then the list — one row a place
+ * between hairlines, a mono number at the left, the name with its city in grey, its UTC offset (or, for an
+ * area, how far and which way from the centre) in mono at the right; no scrollbar, the list's edges fade
+ * instead. The row under the cursor or the arrow keys takes a faint tint and a small arrow and steps in a
+ * little; the chosen one carries a small ink dot.
  *
  * The same picker asks the second question once Hyderabad is chosen: which part of it (`places`, `title`…).
  *
@@ -145,14 +147,12 @@ export default function PlacePicker({
       {/* the sheet */}
       <div
         // visible at once on open (a box mid-way through a visibility transition can't take focus), and
-        // only hidden once the clip has closed
-        className={`absolute bottom-full left-0 right-0 mb-3 p-5 bg-white text-ink shadow-[0_40px_80px_-40px_rgba(8,6,78,0.45)] ring-1 ring-ink/10 duration-700 ease-prime ${
-          open
-            ? "visible transition-[clip-path] [clip-path:inset(0_0_0_0)]"
-            : "invisible transition-[clip-path,visibility] [clip-path:inset(100%_0_0_0)]"
+        // only hidden once it has faded out
+        className={`absolute bottom-full left-0 right-0 mb-3 bg-white text-ink shadow-[0_24px_48px_-32px_rgba(8,6,78,0.35)] ring-1 ring-ink/10 transition-[opacity,transform,visibility] duration-300 ease-out ${
+          open ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"
         }`}
       >
-        <div className="flex items-center gap-2.5 border-b border-ink/10 px-4">
+        <div className="flex h-10 items-center gap-2.5 border-b border-ink/10 px-4">
           <svg aria-hidden viewBox="0 0 16 16" className="h-3 w-3 shrink-0 text-stone" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <circle cx="7" cy="7" r="5" />
             <path d="M11 11l3.5 3.5" />
@@ -173,7 +173,7 @@ export default function PlacePicker({
             onKeyDown={onKey}
             placeholder={search}
             tabIndex={open ? 0 : -1}
-            className="w-full bg-transparent py-3 text-[15px] tracking-[-0.01em] text-ink outline-none placeholder:text-mist"
+            className="w-full bg-transparent  text-[15px] tracking-[-0.01em] text-ink outline-none placeholder:text-mist"
           />
         </div>
         {/* no scrollbar: the list fades out at its edges instead, which says there is more */}
@@ -183,7 +183,7 @@ export default function PlacePicker({
           role="listbox"
           aria-label={noun}
           data-own-scroll
-          className="relative max-h-[min(36vh,288px)] overflow-y-auto overscroll-contain py-1 [mask-image:linear-gradient(to_bottom,transparent,#000_14px,#000_calc(100%-22px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="relative max-h-[min(36vh,280px)] overflow-y-auto overscroll-contain [mask-image:linear-gradient(to_bottom,transparent,#000_10px,#000_calc(100%-18px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {shown.map((p, i) => {
             const on = i === active;
@@ -197,24 +197,35 @@ export default function PlacePicker({
                 onPointerMove={() => setActive(i)}
                 onPointerDown={(e) => e.preventDefault()}
                 onClick={() => pick(p)}
-                className={`grid cursor-pointer grid-cols-[5px_1fr_auto] items-center gap-2.5 px-4 py-[7px] transition-colors duration-200 ${
-                  on ? "bg-ink text-white" : "text-ink"
+                className={`grid cursor-pointer grid-cols-[1.75rem_1fr_auto] items-center gap-2 border-b border-ink/[0.06] px-4 py-2 text-ink transition-colors duration-200 last:border-b-0 ${
+                  on ? "bg-ink/[0.04]" : ""
                 }`}
               >
-                <span
-                  aria-hidden
-                  className={`h-[5px] w-[5px] ${chosen ? "bg-accent" : on ? "bg-white" : "bg-transparent"}`}
-                />
-                <span className="truncate text-[14px] font-medium leading-[1.2] tracking-[-0.015em]">
-                  {primary(p)} <span className={`font-normal ${on ? "text-white/60" : "text-stone"}`}>{secondary(p)}</span>
+                <span className="flex items-center font-mono text-[9.5px] tabular-nums tracking-[0.06em] text-stone">
+                  {chosen ? <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-ink" /> : String(i + 1).padStart(2, "0")}
                 </span>
-                <span className={`font-mono text-[9.5px] tabular-nums tracking-[0.06em] ${on ? "text-white/70" : "text-stone"}`}>
+                <span
+                  className={`truncate text-[13px] font-medium leading-[1.25] tracking-[-0.01em] transition-transform duration-300 ease-out ${
+                    on ? "translate-x-1" : ""
+                  }`}
+                >
+                  {primary(p)} <span className="font-normal text-stone">{secondary(p)}</span>
+                </span>
+                <span className="flex items-center gap-2 font-mono text-[9.5px] tabular-nums tracking-[0.06em] text-stone">
                   {metas?.get(p.id)}
+                  <span
+                    aria-hidden
+                    className={`text-[11px] text-ink transition-[opacity,transform] duration-300 ease-out ${
+                      on ? "translate-x-0 opacity-100" : "-translate-x-1 opacity-0"
+                    }`}
+                  >
+                    →
+                  </span>
                 </span>
               </li>
             );
           })}
-          {!shown.length && <li className="px-4 py-3 text-[14px] text-stone">No match — try another spelling.</li>}
+          {!shown.length && <li className="px-4 py-3 text-[13px] text-stone">No match. Try another spelling.</li>}
         </ul>
         <p className={`${label} flex justify-between border-t border-ink/10 px-4 py-2 text-stone`}>
           <span>↑↓ Move · ↵ Choose</span>
@@ -239,18 +250,18 @@ export default function PlacePicker({
         className="group relative mt-2.5 flex w-full items-end justify-between gap-4 pb-2.5 text-left outline-none"
       >
         <span id={`${id}-value`} className="min-w-0">
-          <span className="block truncate text-[clamp(1.25rem,1.6vw,1.625rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
+          <span className="block truncate text-[clamp(1.125rem,1.35vw,1.375rem)] font-medium leading-[1.15] tracking-[-0.03em] text-ink">
             {value ? primary(value) : empty}
           </span>
           <span className={`${label} mt-1.5 block text-stone`}>{value ? secondary(value) : hint}</span>
         </span>
         <span
           aria-hidden
-          className={`grid h-5 w-5 shrink-0 place-items-center rounded-full bg-ink text-white transition-transform duration-700 ease-prime group-hover:rotate-90 ${
+          className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-ink ring-1 ring-inset ring-ink/20 transition-[transform,background-color,color] duration-700 ease-prime group-hover:rotate-90 group-hover:bg-ink group-hover:text-white ${
             open ? "rotate-45 group-hover:rotate-45" : ""
           }`}
         >
-          <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={1.5}>
+          <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <path d="M6 1v10M1 6h10" />
           </svg>
         </span>
@@ -261,7 +272,7 @@ export default function PlacePicker({
         />
       </button>
       {(guess || value) && (
-        <p className={`${label} mt-2.5 flex justify-between gap-4`}>
+        <p className={`${label} mt-3 flex items-center justify-between gap-4`}>
           {guess ? (
             <button
               type="button"
@@ -270,9 +281,9 @@ export default function PlacePicker({
                 setMissed(!g);
                 if (g) onChange(g);
               }}
-              className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors hover:decoration-ink"
+              className="rounded-full px-2.5 py-[3px] text-ink ring-1 ring-inset ring-ink/20 transition-colors duration-500 ease-prime hover:bg-ink hover:text-white"
             >
-              {missed ? "Couldn’t tell — pick from the list" : "Guess from my time zone"}
+              {missed ? "Couldn’t tell. Pick from the list" : "Guess from my time zone"}
             </button>
           ) : (
             <span />
