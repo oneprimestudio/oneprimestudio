@@ -6,6 +6,7 @@ import { PillLink } from "@/components/Pill";
 import { ensureSmoother, gsap, HOVER_EASE, MENU_EASE, prefersReducedMotion, PRIME, SplitText, useGSAP } from "@/lib/gsap";
 import { gooIn } from "@/lib/goo";
 import HeroBloom from "./HeroBloom";
+import Text from "../Text";
 
 /*
  * The hero: two flowers on an open ground — the large one at the right, a small mirrored one rising from
@@ -22,7 +23,8 @@ import HeroBloom from "./HeroBloom";
  * The headline arrives as ink, as the Intro's headings do (lib/goo): each line starts as a few liquid blobs
  * that pull together into crisp letters, the second line just after the first. Hovering a letter then
  * "switches" it: its box becomes a window onto a short reel of glyphs that spins and lands on it again. The pills open from their middles, the hairline draws
- * out from the left, the description rises line by line.
+ * out from the left, the description rises line by line (through <Text>, which keeps its indent), all on
+ * one clock: everything starts when the fonts are in.
  *
  * The photograph (an x-ray cosmos, 9:16) is a 2160 × 3840 master whose ground was flattened to exactly
  * `bloom` (#f9f9f7), so its edges vanish into the section and it never has to cover the screen. It is
@@ -41,7 +43,7 @@ const PHOTO = "/images/hero-bloom-4k.webp";
 
 /** a pill that isn't a control — the site's pill (--pill-h, as the navbar's), frosted to read over the petals */
 const pill =
-  "inline-flex h-[var(--pill-h)] items-center gap-2 whitespace-nowrap rounded-full bg-bloom/80 px-3.5 text-[13px] font-medium normal-case leading-none tracking-[-0.01em] text-ink ring-1 ring-inset ring-ink/15 backdrop-blur-sm md:text-[14px]";
+  "inline-flex h-[var(--pill-h)] items-center gap-2 whitespace-nowrap rounded-full  px-3.5 text-[13px] font-medium normal-case leading-none tracking-[-0.01em] text-ink ring-1 ring-inset ring-ink/15 backdrop-blur-sm md:text-[14px]";
 /** the shared control pill (Pill.tsx), at the same size as the hero's tags */
 const big = "h-[var(--pill-h)] px-3.5! py-0! leading-none! md:text-[14px]!";
 
@@ -148,10 +150,9 @@ export default function Hero() {
       let alive = true;
       const splits: SplitText[] = [];
       const intro = contextSafe(() => {
-        const desc = hero.querySelector<HTMLElement>("[data-hero-desc]");
         const rule = hero.querySelector<HTMLElement>("[data-hero-rule]");
         const blooms = Array.from(hero.querySelectorAll<HTMLElement>("[data-hero-bloom]"));
-        if (!alive || !title || !desc || !rule || !blooms.length) return;
+        if (!alive || !title || !rule || !blooms.length) return;
 
         // the flowers are uncovered from the stem up — a clip, so their pixels are never resampled. With
         // WebGL the shader develops each instead, through a dithered front (HeroBloom)
@@ -202,16 +203,8 @@ export default function Hero() {
             clearProps: "clipPath",
           },
         );
-        // the description rises line by line out of its masks
-        splits.push(
-          SplitText.create(desc, {
-            type: "lines",
-            mask: "lines",
-            linesClass: "split-line",
-            autoSplit: true,
-            onSplit: (self) => gsap.from(self.lines, { yPercent: 110, duration: 1.1, ease, stagger: 0.07, delay: 0.95 }),
-          }),
-        );
+        // (the description rises line by line through <Text>, which keeps its indent: it starts on the same
+        // fonts-ready as this intro, so its delay is on the same clock)
         gsap.set(hero.querySelectorAll("[data-intro]:not([data-hero-bloom])"), { visibility: "visible" });
         gsap.delayedCall(2.9, () => {
           ready = true;
@@ -327,17 +320,19 @@ export default function Hero() {
 
         {/* beside the second line at the left: the description, and the ways in under it */}
         <div className="mt-8 flex flex-col gap-6 lg:col-start-1 lg:row-start-4 lg:mb-[0.4em] lg:mt-0 lg:self-end">
-          <p
-            data-intro
-            data-hero-desc
-            className="group max-w-[34ch] text-[15px] font-medium leading-[1.4] text-graphite md:text-[17px] lg:max-w-[36ch]"
-          >
-            A design &amp; development studio built on one belief —{" "}
-            <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_100%] bg-no-repeat text-ink transition-[background-size] duration-700 ease-prime group-hover:bg-[length:100%_1px]">
-              average is not an option.
-            </span>{" "}
-            We take ideas from zero and push them to their most refined, most premium form.
-          </p>
+          <Text justify animateOnScroll={false} delay={0.9} duration={1.1} stagger={0.07}>
+            <p
+              data-intro
+              className="group max-w-[34ch] text-[12.5px] font-medium indent-[25%] leading-[1.15] text-graphite md:text-[17px] lg:max-w-[36ch]"
+            >
+              A design &amp; development studio built on one belief{" "}
+              <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_100%] bg-no-repeat text-ink transition-[background-size] duration-700 ease-prime group-hover:bg-[length:100%_1px]">
+                average is not an option.
+              </span>{" "}
+              We take ideas from zero and push them to their most refined, most premium form.
+            </p>
+          </Text>
+
           <div data-intro className="flex flex-wrap gap-2">
             <span data-hero-pill>
               <PillLink href="#contact" active icon={arrow} className={big}>

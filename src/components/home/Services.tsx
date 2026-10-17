@@ -282,7 +282,7 @@ export default function Services() {
       {/* the pinned frame sits inside the section, so the section's own height spans the whole pin */}
       <div
         data-pin
-        className="relative flex flex-col overflow-hidden pb-10 pt-[calc(var(--nav-top)+var(--nav-h)+28px)] md:h-svh md:min-h-[720px] md:pb-[max(28px,4svh)]"
+        className="relative flex flex-col overflow-hidden pb-1 md:pb-10 pt-[calc(var(--nav-top)+var(--nav-h)+28px)] md:h-svh md:min-h-[720px] md:pb-[max(28px,4svh)]"
       >
         {/* the bloom, rebuilt at 4K from service.jpg: a 16:9 window on wide screens, the whole portrait on phones */}
         {/* raised a little on wide screens, so the flower's head clears the row of cards */}
@@ -332,7 +332,7 @@ export default function Services() {
         <div
           data-hint
           aria-hidden
-          className="absolute bottom-[max(28px,4svh)] left-[var(--gutter)] hidden items-center gap-3 md:flex"
+          className="absolute bottom-[max(12px,2svh)] md:bottom-[max(28px,4svh)] left-[var(--gutter)] hidden items-center gap-3 md:flex"
         >
           <span className={`${label} text-chalk/60`}>({String(SERVICES.length).padStart(2, "0")})</span>
           <span className="relative block h-px w-14 overflow-hidden bg-chalk/20">
@@ -346,12 +346,12 @@ export default function Services() {
           data-scroller
           className="relative mt-12 snap-x  overflow-x-auto overscroll-x-contain [scrollbar-width:none] md:mt-auto [&::-webkit-scrollbar]:hidden"
         >
-          <ul data-track className="flex w-max gap-2 px-[var(--gutter)] will-change-transform md:gap-4">
+          <ul data-track className="flex w-max gap-2 py-[2rem] mb-0 pb-0 px-[var(--gutter)] will-change-transform md:gap-4">
             {SERVICES.map((s) => (
               <li key={s.title} data-item className="snap-start scroll-ml-[var(--gutter)] will-change-transform">
                 <article
                   data-card
-                  className="group relative flex aspect-[4/5] w-[58vw] max-w-[350px] flex-col bg-[#ffffff] p-6 text-ink md:h-[min(43svh,350px)] md:w-auto md:max-w-none md:p-8"
+                  className="group relative flex aspect-[4/5] w-[58vw] max-w-[350px] flex-col bg-[#ffffff] p-6 text-ink md:h-[min(43svh,350px)] md:w-auto md:max-w-none md:p-4"
                 >
                   {/* a soft resting shadow, and a deeper one that fades in as the card lifts */}
                   <span
