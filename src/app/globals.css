@@ -37,16 +37,18 @@
 
 :root {
     --gutter: 20px;
-    /* the floating navbar pill: its gap from the top, and its closed height */
+    /* one pill for the whole site: the hero's tags and both navbar pills are this tall, fully round */
+    --pill-h: 30px;
+    /* the floating navbar: its gap from the top, and its closed height — a pill's */
     --nav-top: 12px;
-    --nav-h: 48px;
+    --nav-h: var(--pill-h);
 }
 
 @media (min-width: 768px) {
     :root {
         --gutter: 32px;
+        --pill-h: 32px;
         --nav-top: 16px;
-        --nav-h: 52px;
     }
 }
 
@@ -93,6 +95,30 @@ body {
 .split-char-mask {
     padding-bottom: 0.16em;
     margin-bottom: -0.16em;
+}
+
+/* The hero's headline letters, each a little window onto a reel of glyphs that spins and lands on its
+   own letter (Hero). The window is taller than the 0.86 leading by 0.1em above and below, and gives that
+   back in margins, so the line sits exactly where plain text would; its width is the letter's own. */
+
+.hero-char {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    height: 1.06em;
+    line-height: 1.06;
+    margin-block: -0.1em;
+}
+
+.hero-reel {
+    display: block;
+    will-change: transform;
+}
+
+.hero-reel > span {
+    display: block;
+    height: 1.06em;
+    text-align: center;
 }
 
 

@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother, SplitText, ScrambleTextPlugin, CustomEase);
-gsap.ticker.lagSmoothing(0); if (typeof window !== "undefined") Object.assign(window, { gsap, ScrollTrigger, ScrollSmoother }); // TEMP-VERIFY
 // a phone's address bar showing or hiding is not a resize worth recalculating every trigger for
 ScrollTrigger.config({ ignoreMobileResize: true });
 

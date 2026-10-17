@@ -14,10 +14,17 @@ import { BAYER, NOISE } from "@/lib/glsl";
  *           edge wandering and grained as a seam's is
  *   life    the whole flower sways a fraction of a degree about its stem, and the petals (not the
  *           stem) breathe on slow noise
+ *   wind    on a loop, a gust comes in from the left every few seconds: it rises quickly and dies slowly,
+ *           with a flutter on top and a faint breeze between gusts. It drives a loose spring (it swings
+ *           back past rest before settling), which leans the flower about its root and carries its head
+ *           further along x than its stem, and stirs the petals while it blows
  *   pointer the flower leans toward the cursor about its stem and its head drifts after it, the upper
  *           stem bending to follow; moving quickly stirs the petals like a gust. All three run on
  *           springs (slightly under-damped, so they settle with a little give), integrated at 240 Hz
  *           inside every frame, so the motion is just as smooth at 60 or 120 fps
+ *
+ * `mirror` draws the photograph flipped (the small flower at the hero's left); its wind still blows the
+ * same way on screen. `lag` delays the wind for it, in seconds, as if the gust reached it later.
  *
  * The <img> stays underneath as the fallback (no WebGL2, reduced motion, a failed load) and for its alt
  * text; the texture is that same <img>, so nothing is downloaded twice. One draw per frame, only while the
@@ -34,6 +41,18 @@ const LEAN_MAX = 0.045; // radians (~2.6°) the flower leans toward the cursor
 const PULL_MAX = 0.025; // box heights the head drifts toward the cursor (~20px on a laptop)
 const STEP = 1 / 240; // spring integration step, s
 const SPILL = 0.1; // the canvas reaches this share of the box's width past each side (see the host's classes)
+const WIND_LEAN = 0.04; // radians the flower leans at a gust's height (~2.3°)
+const WIND_DRIFT = 0.028; // box widths its head travels further along x
+const GUST_EVERY = 6.5; // s between gusts
+
+/** the wind's strength at time t (s): 0 at rest, ~1 at a gust's height — looping */
+const windAt = (t: number) => {
+  const phase = (((t % GUST_EVERY) + GUST_EVERY) % GUST_EVERY) / GUST_EVERY;
+  // quick to rise (the first 18% of the loop), slow to die away
+  const gust = phase < 0.18 ? Math.sin(((phase / 0.18) * Math.PI) / 2) : Math.exp(-(phase - 0.18) * 6);
+  const flutter = 1 + 0.4 * (Math.sin(t * 2.3) * 0.6 + Math.sin(t * 3.7 + 1) * 0.4);
+  return gust * flutter + 0.15 * (0.5 + 0.5 * Math.sin(t * 0.4));
+};
 
 type Spring = { x: number; v: number };
 /** one semi-implicit Euler step of a damped spring: stiffness k (1/s²), damping ratio zeta */
@@ -60,6 +79,7 @@ const FRAG = /* glsl */ `
   uniform vec2  uPull;    // box uv, the head's drift toward the cursor
   uniform float uGust;    // 0..1, from the pointer's speed
   uniform vec3  uGround;
+  uniform float uMirror;  // 1: the photograph drawn flipped
   varying vec2 vUv;
 
   ${BAYER}
@@ -108,7 +128,8 @@ const FRAG = /* glsl */ `
       if (v <= bayer4(sub)) { gl_FragColor = vec4(uGround, 1.0); return; }
     }
     // the canvas is wider than the box, so a leaning petal is never cut off at the box's edge
-    vec2 uv = living(vec2(vUv.x * (1.0 + 2.0 * SPILL) - SPILL, vUv.y));
+    vec2 at = vec2(uMirror > 0.5 ? 1.0 - vUv.x : vUv.x, vUv.y);
+    vec2 uv = living(vec2(at.x * (1.0 + 2.0 * SPILL) - SPILL, at.y));
     if (uv.x < 0.0 || uv.x > 1.0 || uv.y > 1.0) { gl_FragColor = vec4(uGround, 1.0); return; }
     gl_FragColor = vec4(texture2D(uTex, uv).rgb, 1.0);
   }
@@ -126,7 +147,7 @@ export function heroGL() {
   return support;
 }
 
-export default function HeroBloom() {
+export default function HeroBloom({ mirror = false, lag = 0 }: { mirror?: boolean; lag?: number }) {
   const host = useRef<HTMLDivElement>(null);
 
   // a layout effect, so the box is marked before the hero's intro (which waits on the fonts) can run
@@ -136,7 +157,7 @@ export default function HeroBloom() {
     const img = box?.querySelector("img");
     const section = box?.closest("section");
     if (!el || !box || !img || !section || !heroGL()) return;
-
+    if (getComputedStyle(box).display === "none") return; // a flower this screen doesn't show
     box.dataset.gl = "on"; // hides the <img> (globals.css) and tells the hero to skip its clip reveal
     const fallback = () => delete box.dataset.gl;
 
@@ -161,6 +182,7 @@ export default function HeroBloom() {
       uPull: { value: new THREE.Vector2() },
       uGust: { value: 0 },
       uGround: { value: GROUND },
+      uMirror: { value: mirror ? 1 : 0 },
     };
     const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms });
     const geometry = new THREE.PlaneGeometry(2, 2);
@@ -196,7 +218,9 @@ export default function HeroBloom() {
       rect = box.getBoundingClientRect(); // the hero is pinned, so its box only moves on resize
     };
     const onMove = (e: PointerEvent) => {
-      aim.x = (e.clientX - rect.left) / rect.width;
+      // in the photograph's own terms, so a mirrored flower still leans toward the cursor
+      const x = (e.clientX - rect.left) / rect.width;
+      aim.x = mirror ? 1 - x : x;
       aim.y = 1 - (e.clientY - rect.top) / rect.height;
       aim.on = true;
       const now = performance.now();
@@ -219,6 +243,10 @@ export default function HeroBloom() {
     const pullX: Spring = { x: 0, v: 0 };
     const pullY: Spring = { x: 0, v: 0 };
     const gust: Spring = { x: 0, v: 0 };
+    const wind: Spring = { x: 0, v: 0 };
+    // the wind blows toward +x on screen: in a mirrored photograph's own terms that is the other way
+    const side = mirror ? 1 : -1;
+    let clock = 0;
 
     /** advance the springs by dt seconds, in fixed 240 Hz steps */
     const settle = (dt: number) => {
@@ -231,15 +259,17 @@ export default function HeroBloom() {
       const steps = Math.max(1, Math.ceil(dt / STEP));
       const h = dt / steps;
       for (let i = 0; i < steps; i++) {
+        clock += h;
+        spring(wind, windAt(clock - lag), 9, 0.32, h); // loose: it swings back past rest
         spring(lean, leanAim, 26, 0.7, h); // heavy and slow: the whole flower
         spring(pullX, (dx * reach) / ASPECT, 42, 0.68, h); // lighter: the head
         spring(pullY, dy * reach, 42, 0.68, h);
         spring(gust, gustAim, 30, 1, h);
         gustAim *= Math.exp(-h * 2.5); // the gust dies down once the pointer slows
       }
-      uniforms.uLean.value = lean.x;
-      uniforms.uPull.value.set(pullX.x, pullY.x);
-      uniforms.uGust.value = Math.max(0, gust.x);
+      uniforms.uLean.value = lean.x + side * wind.x * WIND_LEAN;
+      uniforms.uPull.value.set(pullX.x - side * wind.x * WIND_DRIFT, pullY.x);
+      uniforms.uGust.value = Math.max(0, gust.x, wind.x * 0.6);
     };
 
     // ---- scroll: once the next section has covered the pinned hero, stop drawing it ----
@@ -330,7 +360,7 @@ export default function HeroBloom() {
       renderer.domElement.remove();
       fallback();
     };
-  }, []);
+  }, [mirror, lag]);
 
   // 10% wider than the box on each side: SPILL
   return <div ref={host} aria-hidden className="pointer-events-none absolute inset-y-0 -left-[10%] w-[120%]" />;

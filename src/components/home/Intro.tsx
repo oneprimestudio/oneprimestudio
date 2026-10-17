@@ -3,11 +3,11 @@
 import { useRef } from "react";
 import { ensureSmoother, gsap, hoverScramble, liven, MENU_EASE, prefersReducedMotion, SplitText, useGSAP } from "@/lib/gsap";
 import { gooHeadings } from "@/lib/goo";
+import Text from "../Text";
 
 const FACTS = [
   { label: "Studio", value: "Design & Development" },
   { label: "Focus", value: "Websites, Apps, CRM, ERP, SaaS" },
-  { label: "Established", value: "2026" },
 ];
 
 const SERVICES = [
@@ -20,7 +20,7 @@ const SERVICES = [
   "Logo Identity",
 ];
 
-const label = "font-mono text-[10px] uppercase tracking-[0.14em] text-stone md:text-[11px]";
+const label = "font-mono text-[10px] uppercase tracking-tight text-stone md:text-[11px]";
 
 /**
  * The studio, minimal: a statement and its lede, one hairline, then the facts, the services and a
@@ -96,18 +96,18 @@ export default function Intro() {
       data-nav-message="The studio"
       className="relative z-10 bg-chalk px-[var(--gutter)] pb-24 pt-5 text-ink shadow-[0_-24px_60px_-30px_rgba(8,6,78,0.25)] md:pb-36 md:pt-5"
     >
-      <div className="grid grid-cols-2 md:grid-cols-12 md:gap-x-6">
-        <p data-hover-scramble className={`${label} md:col-span-3`}>
+      <div className="grid grid-cols-4 mb-2 md:grid-cols-12 md:gap-x-6">
+        <p data-hover-scramble className={`${label} md:col-span-3 col-span-1`}>
           [001] — Studio
         </p>
-        <p className={`${label} justify-self-end text-right md:col-span-4 md:col-start-9`}>One Prime Studio® · Est. 2026</p>
+        <p className={`${label} justify-self-end text-right md:col-span-4 md:col-start-9 col-span-3 `}>One Prime Studio® · Est. 2026</p>
       </div>
 
       {/* the three lines trail the scroll by different amounts, so the statement breathes as it passes */}
       <h2
         data-goo
-        data-lag="0.04"
-        className="max-w-[7.4em] text-[clamp(2.75rem,12.2vw,16.25rem)] text-center font-medium leading-[0.8] tracking-[-0.05em] md:col-span-6"
+
+        className="max-w-[7.4em] text-[clamp(4.75rem,9.2vw,16.25rem)] text-center font-medium leading-[0.8] tracking-[-0.05em] md:col-span-6"
       >
         {/* "an option." never splits (SplitText folds &nbsp; into a space, so nowrap does it), and 7.4em never
               holds the whole line: it breaks after "not" at every size */}
@@ -115,17 +115,17 @@ export default function Intro() {
       </h2>
       <h2
         data-goo
-        data-lag="0.09"
-        className="max-w-[7.4em] text-[clamp(2.75rem,10.2vw,12.25rem)] indent-[15%] text-center  font-medium leading-[0.75] tracking-[-0.05em] md:col-span-6"
+
+        className="max-w-[7.4em] text-[clamp(2.75rem,8.2vw,12.25rem)] md:indent-[15%] text-center  font-medium leading-[0.75] tracking-[-0.05em] md:col-span-6"
       >
         {/* "an option." never splits (SplitText folds &nbsp; into a space, so nowrap does it), and 7.4em never
               holds the whole line: it breaks after "not" at every size */}
-        is <span className="text-black  " >not</span> 
+        <span className="text-black  " >was never</span>
       </h2>
       <h2
         data-goo
-        data-lag="0.14"
-        className="max-w-[7.4em] text-[clamp(2.75rem,9.2vw,12.25rem)] text-center indent-[33%] font-medium leading-[0.75] tracking-[-0.05em] md:col-span-6"
+
+        className="max-w-[7.4em] text-[clamp(3.75rem,9.2vw,12.25rem)] text-center md:indent-[33%] font-medium leading-[0.75] tracking-[-0.05em] md:col-span-6"
       >
         {/* "an option." never splits (SplitText folds &nbsp; into a space, so nowrap does it), and 7.4em never
               holds the whole line: it breaks after "not" at every size */}
@@ -135,13 +135,16 @@ export default function Intro() {
       {/* the statement, and its lede */}
       <div className="mt-14 grid gap-y-8 md:mt-20 md:grid-cols-12 md:gap-x-6">
 
-        <p
-          data-lines
-          className="max-w-[26ch] text-[clamp(1.375rem,2.15vw,2.5rem)] leading-[1.12] tracking-[-0.025em] font-medium text-graphite md:col-span-6 md:col-start-7 md:max-w-none"
-        >
-          We take ideas from zero and push them to their most refined, most premium form websites, apps and systems
-          that people don&rsquo;t just use, but feel.
-        </p>
+        <Text>
+          <p
+            data-lines
+            className="max-w-[26ch] text-[clamp(1.175rem,2.15vw,2.5rem)] indent-[15%] leading-[1.05] tracking-[-0.025em] font-medium text-graphite md:col-span-6 md:col-start-7 md:max-w-none"
+          >
+            We take ideas from zero and push them to their most refined, most premium form websites, apps and systems
+            that people don&rsquo;t just use, but feel.
+          </p>
+        </Text>
+
       </div>
 
       {/* one hairline, then the facts, the services and the description */}
@@ -157,11 +160,16 @@ export default function Intro() {
             </div>
           ))}
 
+          <div className="flex flex-col col-start-1 items-start leading-tight font-medium text-[2.5rem] " >
+            <span className="text-[14px]" >Estd.</span>
+            <p className="text-[2.5rem] md:text-[3.5rem] " >2025</p>
+          </div>
+
           <div data-reveal className="col-span-2 md:col-span-6 md:col-start-7">
             <p data-hover-scramble className={label}>
               Services
             </p>
-            <ul className="mt-2 grid grid-cols-2 gap-x-6 text-[15px] leading-[1.35] md:text-[16px]">
+            <ul className="mt-2 grid grid-cols-2 gap-x-6 text-[15px] leading-[1.05] md:text-[16px]">
               {SERVICES.map((s) => (
                 <li
                   key={s}
@@ -179,18 +187,23 @@ export default function Intro() {
           </div>
 
           <div
-            
-            
-            className="col-span-2 mt-6 max-w-[52ch] space-y-5 text-[15px] leading-[1.5] text-graphite md:col-span-6 md:col-start-7 md:mt-14 md:text-[17px]"
+
+
+            className="col-span-2 mt-6 max-w-[52ch] space-y-5 text-[12px] leading-[1.5] text-graphite md:col-span-6 md:col-start-7 md:mt-14 md:text-[17px]"
           >
-            <p data-lines className="text-ink">
-              Most software works — but nobody enjoys using it. We start with the problem, not a template, and shape
-              every screen around the people who use it every day: fewer clicks, clearer flows, nothing generic.
-            </p>
-            <p data-lines >
-              From the first sketch to launch, design and development happen in one place, so the brand, the product
-              and the code feel like one thing. Built to perform, to scale, and to stand apart.
-            </p>
+            <Text>
+              <p data-lines className="text-ink indent-[10%] pr-[25%] ">
+                Most software works but nobody enjoys using it. We start with the problem, not a template, and shape
+                every screen around the people who use it every day: fewer clicks, clearer flows, nothing generic.
+              </p>
+            </Text>
+            <Text>
+              <p data-lines className="pl-[25%] indent-[10%] " >
+                From the first sketch to launch, design and development happen in one place, so the brand, the product
+                and the code feel like one thing. Built to perform, to scale, and to stand apart.
+              </p>
+            </Text>
+
           </div>
         </div>
       </div>

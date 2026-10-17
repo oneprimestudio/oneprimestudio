@@ -35,7 +35,7 @@ const SERVICES: Service[] = [
     title: "Custom Shopify.",
     tag: "Commerce",
     items: ["Themes", "Liquid", "Apps"],
-    body: "Storefronts built from a blank file — never from a theme store.",
+    body: "Storefronts built from a blank file never from a theme store.",
   },
   {
     title: "E-Commerce.",
@@ -310,7 +310,7 @@ export default function Services() {
         <div className="relative px-[var(--gutter)]">
 
 
-          <div className="mt-8 grid items-end gap-y-6 md:mt-2 md:grid-cols-12 md:gap-x-6">
+          <div className="mt-8 grid items-end gap-y-2 md:mt-0.5 md:grid-cols-12 md:gap-x-6">
             <h2
               data-goo
               className="text-[clamp(2.75rem,6.4vw,7rem)] font-medium leading-[0.86] tracking-[-0.05em] md:col-span-5"
@@ -321,9 +321,9 @@ export default function Services() {
             </h2>
             <p
               data-reveal
-              className="max-w-[34ch] text-[15px] leading-[1.5] text-chalk/75 md:col-span-3 md:col-start-10 md:text-[16px]"
+              className="max-w-[34ch] text-[12px] leading-[1.2] text-chalk/75 md:col-span-3 md:col-start-10 md:text-[16px]"
             >
-              Design and engineering under one roof — the brand, the product and the code made by the same hands.
+              Design and engineering under one roof the brand, the product and the code made by the same hands.
             </p>
           </div>
         </div>
@@ -344,14 +344,14 @@ export default function Services() {
         {/* the row: native swipe on phones, slid by the pinned scroll on wide screens */}
         <div
           data-scroller
-          className="relative mt-12 snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] md:mt-auto [&::-webkit-scrollbar]:hidden"
+          className="relative mt-12 snap-x  overflow-x-auto overscroll-x-contain [scrollbar-width:none] md:mt-auto [&::-webkit-scrollbar]:hidden"
         >
-          <ul data-track className="flex w-max gap-3 px-[var(--gutter)] will-change-transform md:gap-4">
+          <ul data-track className="flex w-max gap-2 px-[var(--gutter)] will-change-transform md:gap-4">
             {SERVICES.map((s) => (
               <li key={s.title} data-item className="snap-start scroll-ml-[var(--gutter)] will-change-transform">
                 <article
                   data-card
-                  className="group relative flex aspect-[4/5] w-[78vw] max-w-[320px] flex-col bg-[#fbf8f2] p-6 text-ink md:h-[min(58svh,600px)] md:w-auto md:max-w-none md:p-8"
+                  className="group relative flex aspect-[4/5] w-[58vw] max-w-[350px] flex-col bg-[#ffffff] p-6 text-ink md:h-[min(43svh,350px)] md:w-auto md:max-w-none md:p-8"
                 >
                   {/* a soft resting shadow, and a deeper one that fades in as the card lifts */}
                   <span
@@ -363,9 +363,8 @@ export default function Services() {
                     data-shadow
                     className="pointer-events-none absolute inset-0 opacity-0 shadow-[0_50px_90px_-30px_rgba(0,0,0,0.5)]"
                   />
-                  <Logo markOnly className="text-[22px] text-ink" />
 
-                  <h3 className="relative text-[clamp(2.25rem,3.3vw,3.5rem)] font-medium leading-[0.9] tracking-[-0.055em]">
+                  <h3 className="relative text-[clamp(2.25rem,2.3vw,3.5rem)] font-medium leading-[0.9] tracking-[-0.055em]">
                     {s.title}
                   </h3>
 
@@ -375,27 +374,26 @@ export default function Services() {
                   {/* the mark, which throws on as the card is hovered, over the paragraph */}
 
                   <div className="relative mt-auto">
-                    <div className="relative mt-auto">
-                      <p data-body className="mt-3 max-w-[32ch] text-[14px] font-medium leading-[1.35] text-ink/80 md:text-[15px]">
-                        {s.body}
-                      </p>
-                    </div>
-                    <p className="text-[11px] mt-3 font-semibold text-end uppercase tracking-[0.06em]">{s.tag}</p>
-                    <ul className=" text-[14px] leading-none flex items-end justify-end flex-col  md:text-[15px]">
+
+                    <p className="text-[11px] mt-3 font-light text-start uppercase tracking-[0.06em]">{s.tag}</p>
+                    <ul className=" text-[14px] leading-none flex items-start justify-start flex-col  md:text-[15px]">
                       {s.items.map((item, k) => (
                         <li key={item} className="overflow-hidden mt-2 ">
                           <span
                             data-li
-                            data-h
-                            data-hx="6"
-                            data-hd={k * 0.04}
-                            className="flex items-baseline gap-1"
+                            data-h  
+                            className="flex items-baseline font-semibold "
                           >
                             {item}
                           </span>
                         </li>
                       ))}
                     </ul>
+                    <div className="relative mt-auto">
+                      <p data-body className="mt-3 max-w-[32ch] text-[11px] mt-2 md:mt-[2rem] font-medium leading-[1.01] text-ink/80 md:text-[15px]">
+                        {s.body}
+                      </p>
+                    </div>
                   </div>
                 </article>
               </li>
