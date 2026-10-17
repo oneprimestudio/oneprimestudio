@@ -27,7 +27,7 @@ export const FOUNDERS: Founder[] = [
     photo: "/images/ruthwik founder.jpeg",
     focus: "50% 82%",
     name: "M. Nagaruthwik",
-    role: "Co-founder · Full-stack engineer & creative designer",
+    role: "founder · Full-stack engineer & creative designer",
     line: "Shapes the identity and the interface, then builds them end to end.",
     quote: "A brand isn’t finished until it works, and software isn’t finished until it feels like the brand.",
     about: [
@@ -51,7 +51,7 @@ export const FOUNDERS: Founder[] = [
     photo: "/images/vinith co founder.jpeg",
     focus: "50% 22%",
     name: "A. Vinith",
-    role: "Co-founder · Senior backend engineer & database administrator",
+    role: "founder · Senior backend engineer & database administrator",
     line: "Builds the systems underneath: the APIs, the data and the databases that hold it.",
     quote: "The best backend is the one nobody notices: fast on the first day, and still fast a million rows later.",
     about: [

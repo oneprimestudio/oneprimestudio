@@ -189,7 +189,7 @@ export default function FounderDrawer({
         >
           {/* ---- the head, centred: a hook, the name, the role; the portrait with a micro line either side ---- */}
           <p data-sheet-item className={`${hook} text-center text-ink`}>
-            <span className="px-[4px] md:text-[14px] rounded-full border border-ink " >Co-founder</span> · One Prime Studio
+            <span className="px-[4px] md:text-[14px] rounded-full border border-ink " >founder</span> · One Prime Studio
           </p>
           <h2
             id={`founder-${founder.slug}`}
@@ -198,7 +198,7 @@ export default function FounderDrawer({
           >
             {founder.name}
           </h2>
-          <p data-lines className={`${label} mt-4 text-center text-stone`}>
+          <p data-lines className={`${label} mt-1 text-center text-stone`}>
             {role}
           </p>
 
