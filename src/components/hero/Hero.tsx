@@ -113,10 +113,20 @@ export default function Hero() {
       if (prefersReducedMotion()) return;
       const ease = MENU_EASE;
 
-      // pinned while the next section slides over it; the type drifts up and fades on the way out
+      // pinned while the next section slides over it; the type drifts up and fades on the way out. Once
+      // it is covered, the "open" dot's ping holds still: a loop under the page would repaint every frame
+      const ping = hero.querySelector<HTMLElement>("[data-ping]");
       gsap
         .timeline({
-          scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", pin: true, pinSpacing: false, scrub: true },
+          scrollTrigger: {
+            trigger: hero,
+            start: "top top",
+            end: "bottom top",
+            pin: true,
+            pinSpacing: false,
+            scrub: true,
+            onToggle: (self) => ping && (ping.style.animationPlayState = self.isActive ? "running" : "paused"),
+          },
         })
         .to("[data-hero-copy]", { yPercent: -10, opacity: 0, ease: "none" }, 0);
 
@@ -268,7 +278,7 @@ export default function Hero() {
       >
         <span data-hero-pill className={pill}>
           <span aria-hidden className="relative grid h-2 w-2 place-items-center">
-            <span className="absolute inset-0 animate-ping rounded-full bg-ink/40 motion-reduce:animate-none" />
+            <span data-ping className="absolute inset-0 animate-ping rounded-full bg-ink/40 motion-reduce:animate-none" />
             <span className="h-1.5 w-1.5 rounded-full bg-ink" />
           </span>
           Open for new projects

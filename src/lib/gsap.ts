@@ -39,6 +39,15 @@ export const MASK_EASE = CustomEase.create("mask", "0.33,0,0.1,1");
 export const MENU_OPEN = 1;
 export const MENU_CLOSE = 0.85;
 
+/**
+ * For a reveal's scrollTrigger: its animation plays the first time the trigger is reached, or passed (a page
+ * loaded further down), and never reverses. It replaces `once: true`, which does the same but has the
+ * trigger kill itself the moment it is passed: on a page reloaded part way down, that happens to dozens of
+ * triggers inside ScrollTrigger's own setup loop, and removing them from its list mid-loop crashed it
+ * ("Cannot read properties of undefined (reading 'end')"). These triggers stay alive instead, idle.
+ */
+export const ONCE = { toggleActions: "play play none none" } as const;
+
 export const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

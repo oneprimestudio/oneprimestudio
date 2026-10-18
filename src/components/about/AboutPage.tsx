@@ -7,7 +7,7 @@ import GlobeMark from "@/components/GlobeMark";
 import WorldSection from "@/components/world/WorldSection";
 import { FOUNDERS, type Founder } from "@/lib/founders";
 import { gooHeadings } from "@/lib/goo";
-import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { ensureSmoother, gsap, hoverScramble, MENU_EASE, ONCE, prefersReducedMotion, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 /*
  * About the studio, laid out after trionn.com/about: large regular-weight headings, small type, and every
@@ -21,7 +21,8 @@ import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, S
  *             globe and the year | one claim) at the left, two short paragraphs and the way in at the right
  *   01        what we do: the heading and its lede, then the three pillars as rows — name | what it means
  *   02        why we started: the stepped statement, a micro line, the two paragraphs side by side
- *   03        how we work: a small label, the heading, four steps in columns
+ *   03        how we work: a small label, the heading and a line, then four steps across the page on a
+ *             hairline; wide screens pin it and the scroll reveals the steps one by one, left to right
  *   04        the founders: the heading at the left; two small cards side by side at the right, each a
  *             portrait (the same 4:5) with the name and role under it in small type; a card opens the drawer
  *   05        where we are: the globe stage shared with the home page (WorldSection)
@@ -154,7 +155,7 @@ export default function AboutPage() {
           autoAlpha: 0,
           duration: 1,
           ease: MENU_EASE,
-          scrollTrigger: { trigger: node, start: "top 92%", once: true },
+          scrollTrigger: { trigger: node, start: "top 92%", ...ONCE },
         }),
       );
       el.querySelectorAll<HTMLElement>("[data-rule]").forEach((node) =>
@@ -163,18 +164,74 @@ export default function AboutPage() {
           transformOrigin: "0% 50%",
           duration: 1.4,
           ease: MENU_EASE,
-          scrollTrigger: { trigger: node, start: "top 94%", once: true },
+          scrollTrigger: { trigger: node, start: "top 94%", ...ONCE },
         }),
       );
+
+      // ---- how we work: wide screens pin the section and the scroll walks the steps from left to right. The
+      // hairline draws itself under them (linear with the scroll), a "×" riding its end; as it reaches a
+      // step's "+", that step comes up in full ink, and the next one shows faintly, waiting ----
+      const stepsEl = el.querySelector<HTMLElement>("[data-steps]");
+      if (stepsEl) {
+        const items = Array.from(stepsEl.querySelectorAll<HTMLElement>("[data-step]"));
+        const parts = items.map((li) => Array.from(li.children) as HTMLElement[]);
+        const line = stepsEl.querySelector<HTMLElement>("[data-steps-line]");
+        const tip = stepsEl.querySelector<HTMLElement>("[data-steps-tip]");
+        const crosses = Array.from(stepsEl.querySelectorAll<HTMLElement>("[data-steps-cross]"));
+        const mm = gsap.matchMedia();
+        mm.add("(min-width: 768px)", () => {
+          const n = items.length;
+          const FAINT = 0.18; // the waiting step's ink
+          gsap.set(parts.flat(), { autoAlpha: 0, y: 24 });
+          gsap.set(crosses, { scale: 0, autoAlpha: 0 });
+          const tl = gsap.timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: stepsEl,
+              start: "top top",
+              end: () => `+=${Math.round(window.innerHeight * (n * 0.7 + 0.3))}`,
+              pin: true,
+              scrub: true,
+              invalidateOnRefresh: true,
+              // above the globe's pin, which is made first (child sections set up before the page does)
+              refreshPriority: 2,
+            },
+          });
+          // the line takes the whole walk: it reaches step j's "+" at t = j, the end of the last step at t = n
+          tl.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: n }, 0);
+          tl.fromTo(tip, { xPercent: 0 }, { xPercent: 100, duration: n }, 0);
+          parts.forEach((p, j) => {
+            tl.to(crosses[j], { scale: 1, autoAlpha: 1, duration: 0.15, ease: "back.out(2)" }, j);
+            // waiting: faint, a little low, as the line comes up to it
+            if (j > 0) tl.to(p, { autoAlpha: FAINT, y: 12, duration: 0.4, stagger: 0.05, ease: MENU_EASE }, j - 0.6);
+            // current: full ink, in place
+            tl.to(p, { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.06, ease: MENU_EASE }, j);
+          });
+          tl.to({}, { duration: 0.3 }); // a short hold on the finished row before the page moves on
+        });
+        mm.add("(max-width: 767px)", () => {
+          items.forEach((li) =>
+            gsap.from(li, {
+              y: 24,
+              autoAlpha: 0,
+              duration: 1,
+              ease: MENU_EASE,
+              scrollTrigger: { trigger: li, start: "top 90%", ...ONCE },
+            }),
+          );
+        });
+      }
 
       // the words run across the foot of the head on a loop; scrolling pushes them faster, and the way it goes
       const track = el.querySelector<HTMLElement>("[data-marquee]");
       if (track) {
-        const run = gsap.to(track, { xPercent: -50, ease: "none", duration: 32, repeat: -1 });
+        const run = gsap.to(track, { xPercent: -50, ease: "none", duration: 32, repeat: -1, paused: true });
         ScrollTrigger.create({
           trigger: track,
           start: "top bottom",
           end: "bottom top",
+          // it runs only while it can be seen: off screen the loop would repaint every frame for nothing
+          onToggle: (self) => (self.isActive ? run.resume() : run.pause()),
           onUpdate: (self) => {
             const v = self.getVelocity();
             const dir = v < 0 ? -1 : 1;
@@ -250,7 +307,7 @@ export default function AboutPage() {
 
         <h1
           data-goo
-          className="mx-auto mt-[14vh] max-w-[17em] px-[var(--gutter)] text-center text-[clamp(2.125rem,5.2vw,6rem)] font-normal leading-[1.02] tracking-[-0.045em] md:mt-[16vh]"
+          className="mx-auto mt-[14vh] max-w-[17em] px-[var(--gutter)] text-center text-[clamp(2.125rem,5.2vw,6rem)] font-medium leading-[0.95] tracking-[-0.045em] md:mt-[16vh]"
         >
           We are a design &amp; development studio built on sharp identity, honest craft and software that runs well.
         </h1>
@@ -263,7 +320,7 @@ export default function AboutPage() {
           <p data-reveal className={`${hook} order-2 max-w-[24ch] text-ink md:order-none md:col-span-3 md:col-start-2`}>
             We design and build identities, websites and systems that last.
           </p>
-          <div data-reveal className="col-span-2 mx-auto w-[min(72vw,480px)] md:col-span-4 md:col-start-5 md:w-full">
+          <div data-reveal className="col-span-2 mx-auto w-[min(46vw,350px)] md:col-span-4 md:col-start-5 md:w-full">
             <Strips src="/images/about.jpg" alt="A figure resting on a dune under a huge pale moon, in black and white" />
           </div>
           <p
@@ -278,7 +335,7 @@ export default function AboutPage() {
         <div aria-hidden className="mt-[10vh] overflow-hidden pb-[2vh]">
           <div data-marquee className="flex w-max">
             {[0, 1].map((copy) => (
-              <div key={copy} className="flex shrink-0 items-center">
+              <div key={copy} className="flex gap-[5rem] shrink-0 items-center">
                 {[...WORDS, ...WORDS].map((w, i) => (
                   <span
                     key={`${w}-${i}`}
@@ -431,27 +488,63 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ---- 03 how we work: a label, the heading, the steps in columns ---- */}
-      <section data-nav-message="How we work" className="px-[var(--gutter)] pb-[20vh]">
+      {/* ---- 03 how we work: a label, the heading, then the steps across the page. Wide screens pin it and
+           the scroll reveals them one by one, left to right, along a hairline that draws itself ---- */}
+      <section data-steps data-nav-message="How we work" className="px-[var(--gutter)] pb-[20vh] md:flex md:h-svh md:flex-col md:pb-0">
         <span data-rule aria-hidden className="block h-px bg-ink/12" />
         <div className="mt-8 grid gap-y-6 md:grid-cols-12 md:gap-x-6">
           <p data-reveal className={`${label} pt-3 text-stone md:col-span-2`}>
             ( 03 ) Our process
           </p>
-          <h2 data-goo className={`${heading} md:col-span-9 md:col-start-3`}>
-            How we work
-          </h2>
+          <div className="md:col-span-9 md:col-start-3">
+            <h2 data-goo className={heading}>
+              How we work
+            </h2>
+            <p data-reveal className={`${body} mt-5 max-w-[26ch]`}>
+              One method, repeated for every project, from the first call to the launch.
+            </p>
+          </div>
         </div>
-        <ol className="mt-[10vh] grid gap-y-12 sm:grid-cols-2 md:grid-cols-12 md:gap-x-6">
-          {STEPS.map((s, i) => (
-            <li key={s.name} data-reveal className="md:col-span-2 md:first:col-start-3">
-              <p className={`${hook} text-stone`}>Step {pad(i + 1)}</p>
-              <p className={`${title} mt-4`}>{s.name}</p>
-              <p className={`${body} mt-4 max-w-[30ch]`}>{s.text}</p>
-            </li>
-          ))}
-        </ol>
-        <Micro className="mt-[8vh] md:ml-[calc((100%-11*1.5rem)/12*2+2*1.5rem)]">
+
+        <div className="mt-[10vh] md:mt-[12vh] md:ml-[calc((100%-11*1.5rem)/12*2+2*1.5rem)]">
+          <ol className="grid gap-y-12 sm:grid-cols-2 md:grid-cols-4 md:gap-x-6">
+            {STEPS.map((s, i) => (
+              <li key={s.name} data-step className="border-t border-ink/12 pt-5 md:border-0 md:pt-0">
+                <p className={`${hook} text-stone`}>Step {pad(i + 1)}</p>
+                <p className={`${title} mt-4 md:mt-6`}>{s.name}</p>
+                <p className={`${body} mt-4 max-w-[30ch]`}>{s.text}</p>
+              </li>
+            ))}
+          </ol>
+
+          {/* the hairline the steps stand on: a "+" at each step's start, a "×" riding its drawn end */}
+          <div aria-hidden className="relative -ml-2 mt-10 hidden overflow-x-clip pl-2 md:block">
+            <div className="relative mr-2 h-4">
+              <span className="absolute inset-x-0 top-1/2 h-px bg-ink/10" />
+              <span data-steps-line className="absolute inset-x-0 top-1/2 h-px origin-left bg-ink" />
+              <div className="absolute inset-0 grid grid-cols-4 gap-x-6">
+                {STEPS.map((s) => (
+                  <span key={s.name} className="relative">
+                    <span data-steps-cross className="absolute left-0 top-1/2 -ml-[6px] -mt-[6px] block h-3 w-3 text-ink">
+                      <svg viewBox="0 0 12 12" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth={1.2}>
+                        <path d="M6 0v12M0 6h12" />
+                      </svg>
+                    </span>
+                  </span>
+                ))}
+              </div>
+              <div data-steps-tip className="absolute inset-0 motion-reduce:hidden">
+                <span className="absolute left-0 top-1/2 -ml-[5px] -mt-[5px] block h-2.5 w-2.5 text-ink">
+                  <svg viewBox="0 0 10 10" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth={1.2}>
+                    <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Micro className="mt-[8vh] md:mt-auto md:mb-[8vh] md:ml-[calc((100%-11*1.5rem)/12*2+2*1.5rem)]">
           The same two people, from the first call to the launch.
         </Micro>
       </section>

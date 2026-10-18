@@ -2,6 +2,7 @@
 
 import { type RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
+import { quiet } from "@/lib/renderer";
 import { BAYER } from "@/lib/glsl";
 import { LAND_DOTS } from "@/lib/geo/land";
 import { HOME, HYDERABAD_AREAS, isHyderabad, PLACES, type Place } from "@/lib/geo/places";
@@ -77,18 +78,34 @@ const toVec = (lat: number, lon: number, r = RADIUS) => {
   return new THREE.Vector3(r * Math.cos(φ) * Math.sin(λ), r * Math.sin(φ), r * Math.cos(φ) * Math.cos(λ));
 };
 
-/** the land as an equirectangular mask (white on black), painted from the land dots and softened */
+/** the error function, to 1.5e-7 (Abramowitz & Stegun 7.1.26) */
+const erf = (x: number) => {
+  const s = x < 0 ? -1 : 1;
+  const a = Math.abs(x);
+  const q = 1 / (1 + 0.3275911 * a);
+  return s * (1 - ((((1.061405429 * q - 1.453152027) * q + 1.421413741) * q - 0.284496736) * q + 0.254829592) * q * Math.exp(-a * a));
+};
+
+/**
+ * The land as an equirectangular mask (white on black), painted from the land dots and softened: each dot
+ * a small rectangle, blurred by 1.6px and laid over the others.
+ *
+ * It used to be painted on a 2D canvas with `filter: blur(1.6px)` on every one of its ~5,500 rectangles,
+ * which the browser runs as as many separate blur passes on the GPU: seconds of GPU time while the page
+ * first loads, during which the whole browser stutters. The same picture is computed here directly — a
+ * rectangle blurred by a Gaussian is the product of two differences of its error function along x and y,
+ * and laid white over the ground, each one keeps (1 − its coverage) of what was there — in a few
+ * milliseconds (it differs from the canvas's by under 1/255 on average, only along the soft coasts).
+ */
 function landMask() {
   const W = 1024;
   const H = 512;
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext("2d")!;
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, W, H);
-  ctx.filter = "blur(1.6px)";
-  ctx.fillStyle = "#fff";
+  const SIGMA = 1.6;
+  const REACH = Math.ceil(3 * SIGMA); // the blur's reach, px: past it the Gaussian is nothing
+  const cdf = (x: number) => 0.5 * (1 + erf(x / (SIGMA * Math.SQRT2)));
+  const cover = new Float32Array(W * H);
+  const gx = new Float32Array(W / 8 + 2 * REACH + 4);
+  const gy = new Float32Array(64);
   const bytes = Uint8Array.from(atob(LAND_DOTS), (c) => c.charCodeAt(0));
   const pairs = new Int16Array(bytes.buffer);
   for (let i = 0; i < pairs.length / 2; i++) {
@@ -97,12 +114,35 @@ function landMask() {
     // each dot stands for ~1.4° of land: a square that much wider near the poles, where rows are sparser
     const h = (1.6 / 180) * H;
     const w = Math.min(W / 8, h / Math.max(0.2, Math.cos((lat * Math.PI) / 180)));
-    ctx.fillRect(((lon + 180) / 360) * W - w / 2, ((90 - lat) / 180) * H - h / 2, w, h);
+    const x0 = ((lon + 180) / 360) * W - w / 2;
+    const y0 = ((90 - lat) / 180) * H - h / 2;
+    const ax = Math.max(0, Math.floor(x0 - REACH));
+    const bx = Math.min(W - 1, Math.ceil(x0 + w + REACH));
+    const ay = Math.max(0, Math.floor(y0 - REACH));
+    const by = Math.min(H - 1, Math.ceil(y0 + h + REACH));
+    // the blurred rectangle's coverage at each pixel's centre, separably
+    for (let x = ax; x <= bx; x++) gx[x - ax] = cdf(x + 0.5 - x0) - cdf(x + 0.5 - x0 - w);
+    for (let y = ay; y <= by; y++) gy[y - ay] = cdf(y + 0.5 - y0) - cdf(y + 0.5 - y0 - h);
+    for (let y = ay; y <= by; y++) {
+      const fy = gy[y - ay];
+      const row = y * W;
+      for (let x = ax; x <= bx; x++) {
+        const b = fy * gx[x - ax];
+        cover[row + x] += b - cover[row + x] * b; // white over: 1 − (1 − c)(1 − b)
+      }
+    }
   }
-  const texture = new THREE.CanvasTexture(canvas);
+  // rows from the south up, as the canvas texture was flipped on upload
+  const data = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) data[(H - 1 - y) * W + x] = Math.round(cover[y * W + x] * 255);
+  const texture = new THREE.DataTexture(data, W, H, THREE.RedFormat, THREE.UnsignedByteType);
   texture.colorSpace = THREE.NoColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.unpackAlignment = 1; // rows of 1024 single bytes
+  texture.needsUpdate = true;
   return texture;
 }
 
@@ -193,7 +233,7 @@ export default function Globe({ place, progress }: { place: Place | null; progre
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer = quiet(new THREE.WebGLRenderer({ alpha: true, antialias: true }));
     } catch {
       return;
     }
@@ -247,12 +287,22 @@ export default function Globe({ place, progress }: { place: Place | null; progre
     let r0 = 1; // the silhouette's radius in px with the projection unshifted
     let stage = frames(W, H);
     const baseProjection = new THREE.Matrix4();
+    let sized = "";
+    let compiled = false; // the shaders are ready (below)
+    let bufferAt = 0; // a pixel ratio to size the drawing buffer at before the next frame, or 0
     const resize = () => {
-      W = Math.max(1, el.clientWidth);
-      H = Math.max(1, el.clientHeight);
+      const w = Math.max(1, el.clientWidth);
+      const h = Math.max(1, el.clientHeight);
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      renderer.setPixelRatio(dpr);
-      renderer.setSize(W, H, false);
+      // resizing a WebGL canvas reallocates its buffers and waits on the GPU, even at the same size (the
+      // observer's first report repeats the mount's): only a real change is applied, and in one step
+      if (`${w}x${h}@${dpr}` === sized) return;
+      sized = `${w}x${h}@${dpr}`;
+      W = w;
+      H = h;
+      // the buffer itself is sized at the next frame drawn: the globe sits far down the page, and sizing it
+      // while the page first loads would wait on a GPU still busy drawing everything else
+      bufferAt = dpr;
       camera.aspect = W / H;
       camera.updateProjectionMatrix();
       baseProjection.copy(camera.projectionMatrix);
@@ -559,7 +609,12 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       // (India, up close, keeps a mid grain; the city thins to a few dots, nearly white)
       landMat.uniforms.uNear.value = 0.72 - 0.34 * smoothstep(1.2, 5, zr) - 0.28 * smoothstep(12, 60, zr);
       outline.style.opacity = String(1 - smoothstep(2, 6, zr));
-      renderer.render(scene, camera);
+      // drawn once the shaders are ready, and only on screen (the first call, at mount, is not)
+      if (compiled && running) {
+        if (bufferAt) renderer.setDrawingBufferSize(W, H, bufferAt);
+        bufferAt = 0;
+        renderer.render(scene, camera);
+      }
 
       setNode(homeNode, homeLocal);
       setNode(placeNode, placeLocal);
@@ -612,21 +667,32 @@ export default function Globe({ place, progress }: { place: Place | null; progre
       } else pulse.style.opacity = "0";
     };
 
-    // drawn only while on screen
+    // drawn only while on screen; the home node's rings (SVG <animate>, which repaints every frame it
+    // runs) hold still off screen too, and carry on from where they stopped
     let running = false;
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting && !running) {
         gsap.ticker.add(tick);
+        svg.unpauseAnimations();
         running = true;
       } else if (!e.isIntersecting && running) {
         gsap.ticker.remove(tick);
+        svg.pauseAnimations();
         running = false;
       }
     });
+    svg.pauseAnimations(); // until the observer's first report says it is on screen
     io.observe(el);
+    // the shaders compile in the background (KHR_parallel_shader_compile): the first frame waits for them,
+    // so the page never stops while the GPU finishes them. Until then the tick keeps the overlay in step
+    let alive = true;
+    renderer.compileAsync(scene, camera).then(() => {
+      if (alive) compiled = true;
+    });
     tick(0, 16);
 
     return () => {
+      alive = false;
       io.disconnect();
       gsap.ticker.remove(tick);
       gsap.killTweensOf([aim, dragged, mode, zoom, state]);

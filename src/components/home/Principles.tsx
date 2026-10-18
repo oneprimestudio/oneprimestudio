@@ -1,7 +1,7 @@
 "use client";
 
-import { type KeyboardEvent, useCallback, useRef, useState } from "react";
-import { ensureSmoother, gsap, hoverScramble, MENU_EASE, prefersReducedMotion, SplitText, useGSAP } from "@/lib/gsap";
+import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ensureSmoother, gsap, hoverScramble, MENU_EASE, ONCE, prefersReducedMotion, SplitText, useGSAP } from "@/lib/gsap";
 
 // The studio's four principles, from its "Why One Prime" post.
 const PRINCIPLES = [
@@ -58,7 +58,7 @@ export default function Principles() {
           duration: 1,
           ease: MENU_EASE,
           delay: i * 0.06,
-          scrollTrigger: { trigger: el, start: "top 75%", once: true },
+          scrollTrigger: { trigger: el, start: "top 75%", ...ONCE },
         });
       });
       return unScramble;
@@ -78,7 +78,18 @@ export default function Principles() {
     { dependencies: [active], scope: root, revertOnUpdate: true },
   );
 
-  const running = auto && !held;
+  // the beat only runs while the section is on screen: the ring is a paint animation, and off screen it
+  // would repaint every frame (and turn the principles over) with nobody watching
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const running = auto && !held && seen;
 
   return (
     <section

@@ -7,6 +7,7 @@ import {
   gsap,
   hoverScramble,
   MENU_EASE,
+  ONCE,
   prefersReducedMotion,
   ScrollTrigger,
   SplitText,
@@ -229,7 +230,7 @@ export default function Process() {
         duration: 1,
         ease: MENU_EASE,
         stagger: 0.04,
-        scrollTrigger: { trigger: el, start: "top 70%", once: true },
+        scrollTrigger: { trigger: el, start: "top 70%", ...ONCE },
       });
       gsap.from(lines[0], {
         yPercent: 110,
@@ -237,7 +238,7 @@ export default function Process() {
         ease: MENU_EASE,
         stagger: 0.06,
         delay: 0.15,
-        scrollTrigger: { trigger: el, start: "top 70%", once: true },
+        scrollTrigger: { trigger: el, start: "top 70%", ...ONCE },
       });
       gsap.from(dots, {
         scale: 0,
@@ -245,7 +246,7 @@ export default function Process() {
         duration: 0.7,
         ease: CARD_EASE,
         stagger: 0.03,
-        scrollTrigger: { trigger: el, start: "top 70%", once: true },
+        scrollTrigger: { trigger: el, start: "top 70%", ...ONCE },
       });
 
       return unScramble;

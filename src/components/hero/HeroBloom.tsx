@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
+import { quiet } from "@/lib/renderer";
 import { gsap, MENU_EASE, prefersReducedMotion, ScrollTrigger } from "@/lib/gsap";
 import { BAYER, NOISE } from "@/lib/glsl";
 
@@ -135,16 +136,16 @@ const FRAG = /* glsl */ `
   }
 `;
 
-let support: boolean | undefined;
-/** WebGL2 and motion allowed: checked once, with a throwaway context. */
+// false once a renderer could not be made: the other flower doesn't try again
+let support = true;
+/**
+ * WebGL2 and motion allowed. Not probed with a throwaway context, which costs a whole context's creation
+ * (and a wait on the GPU) during the page's load: the renderer itself throws where there is no WebGL2,
+ * and the flower falls back to its <img> then, before the hero's intro has run.
+ */
 export function heroGL() {
   if (typeof window === "undefined" || prefersReducedMotion()) return false;
-  if (support === undefined) {
-    const gl = document.createElement("canvas").getContext("webgl2");
-    support = !!gl;
-    gl?.getExtension("WEBGL_lose_context")?.loseContext();
-  }
-  return support;
+  return support && typeof WebGL2RenderingContext !== "undefined";
 }
 
 export default function HeroBloom({ mirror = false, lag = 0 }: { mirror?: boolean; lag?: number }) {
@@ -163,12 +164,16 @@ export default function HeroBloom({ mirror = false, lag = 0 }: { mirror?: boolea
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance" });
+      renderer = quiet(new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance" }));
     } catch {
+      support = false;
       fallback();
       return;
     }
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // the shader works in sRGB, as the CSS does
+    // asked now, while the GPU is idle: it is a round trip to the GPU, and asked when the texture arrives it
+    // waited (over half a second) behind the page's first paint
+    const anisotropy = renderer.capabilities.getMaxAnisotropy();
     renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%;display:block";
     el.appendChild(renderer.domElement);
 
@@ -190,13 +195,17 @@ export default function HeroBloom({ mirror = false, lag = 0 }: { mirror?: boolea
     scene.add(new THREE.Mesh(geometry, material));
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
+    let sized = "";
     const resize = () => {
       // 1.5× is past what the photograph's grain can show, and spares a retina screen ~45% of the pixels
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const w = Math.max(1, el.clientWidth);
       const h = Math.max(1, el.clientHeight);
-      renderer.setPixelRatio(dpr);
-      renderer.setSize(w, h, false);
+      // resizing a WebGL canvas reallocates its buffer and waits on the GPU, even at the same size (the
+      // observer's first report repeats the mount's): only a real change is applied, and in one step
+      if (`${w}x${h}@${dpr}` === sized) return;
+      sized = `${w}x${h}@${dpr}`;
+      renderer.setDrawingBufferSize(w, h, dpr);
       uniforms.uRes.value.set(Math.round(w * dpr), Math.round(h * dpr));
       // a sub-pixel is a whole number of device pixels, or the 2px dots would come out uneven
       uniforms.uSub.value = Math.max(1, Math.round(SUB * dpr));
@@ -322,9 +331,12 @@ export default function HeroBloom({ mirror = false, lag = 0 }: { mirror?: boolea
             copy.getContext("2d")?.drawImage(img, 0, 0);
             return new THREE.CanvasTexture(copy);
           });
+    // the shader compiles in the background meanwhile (KHR_parallel_shader_compile), so the first frame
+    // never stops the page waiting for the GPU to finish it
+    const compiled = renderer.compileAsync(scene, camera);
     loaded
-      .then(bitmap)
-      .then((made) => {
+      .then(() => Promise.all([bitmap(), compiled]))
+      .then(([made]) => {
         if (!alive) {
           made.dispose();
           return;
@@ -332,7 +344,7 @@ export default function HeroBloom({ mirror = false, lag = 0 }: { mirror?: boolea
         texture = made;
         texture.colorSpace = THREE.NoColorSpace;
         texture.minFilter = THREE.LinearMipmapLinearFilter;
-        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        texture.anisotropy = anisotropy;
         texture.needsUpdate = true;
         uniforms.uTex.value = texture;
         ready = true;

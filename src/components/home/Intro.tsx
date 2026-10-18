@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import GlobeMark from "@/components/GlobeMark";
-import { ensureSmoother, gsap, hoverScramble, liven, MENU_EASE, prefersReducedMotion, useGSAP } from "@/lib/gsap";
+import { ensureSmoother, gsap, hoverScramble, liven, MENU_EASE, ONCE, prefersReducedMotion, useGSAP } from "@/lib/gsap";
 import { gooHeadings } from "@/lib/goo";
 import Text from "../Text";
 
@@ -57,7 +57,7 @@ export default function Intro() {
         gsap.fromTo(
           rule,
           { scaleX: 0 },
-          { scaleX: 1, duration: 1.4, ease, scrollTrigger: { trigger: rule, start: "top 90%", once: true } },
+          { scaleX: 1, duration: 1.4, ease, scrollTrigger: { trigger: rule, start: "top 90%", ...ONCE } },
         );
       }
 
@@ -69,7 +69,7 @@ export default function Intro() {
           duration: 1,
           ease,
           delay: (i % 4) * 0.08,
-          scrollTrigger: { trigger: node, start: "top 90%", once: true },
+          scrollTrigger: { trigger: node, start: "top 90%", ...ONCE },
         });
       });
 
@@ -111,7 +111,7 @@ export default function Intro() {
         <span className="block whitespace-nowrap pl-[0.6em] text-black md:pl-[1.1em]">was never</span>
         <span className="block whitespace-nowrap pl-[1.2em] md:pl-[2.2em]">
           an{" "}
-          <span className="-mb-[0.14em] -mt-[0.04em] inline-block rounded-full px-[0.24em] pb-[0.14em] pt-[0.04em] ring-[0.045em] ring-inset ring-current">
+          <span className="-mb-[0.14em] -mt-[0.04em] text-[clamp(2.75rem,11.5vw,5.5rem)] inline-block rounded-full px-[0.24em] pb-[0.14em] pt-[0.04em] ring-[0.045em] ring-inset ring-current">
             option.
           </span>
         </span>
@@ -151,7 +151,9 @@ export default function Intro() {
               <dt data-hover-scramble className={label}>
                 {f.label}
               </dt>
-              <dd className="mt-1.5 text-[14px] leading-[1.4] md:text-[15px]">{f.value}</dd>
+              <Text>
+                <dd className="mt-1.5 text-[14px] leading-[1.4] md:text-[15px]">{f.value}</dd>
+              </Text>
             </div>
           ))}
         </dl>
@@ -165,7 +167,9 @@ export default function Intro() {
             {SERVICES.map((s, i) => (
               <li key={s} className="group flex items-baseline gap-3 py-[3px] text-[14px] leading-[1.15] font-semibold text-graphite transition-colors duration-500 ease-prime hover:text-ink md:text-[15px]">
                 <span className="font-mono text-[10px] tracking-[0.08em] text-stone">{pad(i + 1)}</span>
-                <span className="transition-transform duration-500 ease-prime group-hover:translate-x-1">{s}</span>
+                <Text>
+                  <span className="transition-transform duration-500 ease-prime group-hover:translate-x-1">{s}</span>
+                </Text>
               </li>
             ))}
           </ul>

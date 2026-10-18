@@ -2,6 +2,7 @@
 
 import { type RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
+import { quiet } from "@/lib/renderer";
 import { gsap, PRIME } from "@/lib/gsap";
 import { cardSrc } from "@/components/work/parts";
 import { WORK } from "@/lib/work";
@@ -77,7 +78,7 @@ export default function WorkWheel({ pos, onFail }: { pos: RefObject<WheelPos>; o
     if (!el) return;
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: true });
+      renderer = quiet(new THREE.WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: true }));
     } catch {
       onFail();
       return;

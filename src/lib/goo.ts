@@ -1,4 +1,4 @@
-import { gsap, prefersReducedMotion, SplitText } from "./gsap";
+import { gsap, ONCE, prefersReducedMotion, SplitText } from "./gsap";
 
 /*
  * Headings that arrive as ink, after bleibtgleich.dev: each line starts as a heavy blur run through an
@@ -68,7 +68,7 @@ export function gooIn(el: HTMLElement, { from = 0.2, duration = 1.25, delay = 0 
 /** a heading's lines come in one after another as it scrolls into view */
 const play = (node: HTMLElement, lines: HTMLElement[]) => {
   gsap.set(lines, { autoAlpha: 0 });
-  const tl = gsap.timeline({ scrollTrigger: { trigger: node, start: "top 86%", once: true } });
+  const tl = gsap.timeline({ scrollTrigger: { trigger: node, start: "top 86%", ...ONCE } });
   lines.forEach((line, i) => tl.add(gooIn(line), i * 0.12));
   return tl;
 };

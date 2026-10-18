@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { quiet } from "@/lib/renderer";
 
 /*
  * A sheet of white paper in three.js, for the founder drawer to arrive on, rolled in like paper fed up
@@ -78,7 +79,7 @@ export type Paper = {
 export function makePaper(canvas: HTMLCanvasElement): Paper | null {
   let renderer: THREE.WebGLRenderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer = quiet(new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true }));
   } catch {
     return null;
   }
@@ -103,12 +104,18 @@ export function makePaper(canvas: HTMLCanvasElement): Paper | null {
   let landedY = 0;
   let drop = 0;
   let edge = 0; // the screen's bottom edge, in world y
+  let sized = "";
 
   const fit = (rect: DOMRect) => {
     const W = window.innerWidth;
     const H = window.innerHeight;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(W, H, false);
+    // resizing the canvas reallocates its buffers and waits on the GPU, even at the same size: only a
+    // real change is applied (each opening of the drawer fits again), and in one step
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (`${W}x${H}@${dpr}` !== sized) {
+      sized = `${W}x${H}@${dpr}`;
+      renderer.setDrawingBufferSize(W, H, dpr);
+    }
     camera.aspect = W / H;
     // one unit = one CSS pixel at z = 0
     camera.position.set(0, 0, H / 2 / Math.tan(((FOV / 2) * Math.PI) / 180));

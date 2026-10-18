@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
+import { ONCE } from "@/lib/gsap";
 import React, { useRef } from "react";
 
 /**
@@ -256,7 +257,7 @@ const Text: React.FC<TextYProps> = ({
         if (animateOnScroll) {
           gsap.to(lines.current, {
             ...toVars,
-            scrollTrigger: { trigger: container, start: scrollStart, once: true },
+            scrollTrigger: { trigger: container, start: scrollStart, ...ONCE },
           });
         } else {
           gsap.to(lines.current, toVars);

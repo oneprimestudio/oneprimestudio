@@ -7,6 +7,7 @@ import {
   HOVER_EASE,
   hoverScramble,
   MENU_EASE,
+  ONCE,
   prefersReducedMotion,
   ScrollSmoother,
   ScrollTrigger,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/gsap";
 import { gooHeadings } from "@/lib/goo";
 import LocalTime from "../LocalTime";
+import DitherWord from "../DitherWord";
 import { EMAIL, SOCIALS } from "@/lib/studio";
 
 const NAV = [
@@ -99,7 +101,7 @@ export default function Footer() {
               duration: 1.1,
               ease: MENU_EASE,
               stagger: 0.08,
-              scrollTrigger: { trigger: node, start: "top 90%", once: true },
+              scrollTrigger: { trigger: node, start: "top 90%", ...ONCE },
             }),
         });
       });
@@ -110,7 +112,7 @@ export default function Footer() {
           scaleX: 1,
           duration: 1.4,
           ease: MENU_EASE,
-          scrollTrigger: { trigger: q("[data-rule]"), start: "top 95%", once: true },
+          scrollTrigger: { trigger: q("[data-rule]"), start: "top 95%", ...ONCE },
         },
       );
       qa("[data-reveal]").forEach((node, i) => {
@@ -120,7 +122,7 @@ export default function Footer() {
           duration: 1,
           ease: MENU_EASE,
           delay: (i % 4) * 0.06,
-          scrollTrigger: { trigger: node, start: "top 95%", once: true },
+          scrollTrigger: { trigger: node, start: "top 95%", ...ONCE },
         });
       });
 
@@ -246,71 +248,79 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* the statement, stepped like the Intro's */}
-        <div className="mt-10 md:mt-14">
-          <h2 data-goo className={`text-[clamp(2.75rem,10.4vw,13.5rem)] leading-[0.82] ${line}`}>
-            Got an idea?
-          </h2>
-          <h2 data-goo className={`indent-[15%] text-[clamp(2.75rem,8.8vw,11.5rem)] leading-[0.8] ${line}`}>
-            Let&rsquo;s make
-          </h2>
-          <h2 data-goo className={`indent-[33%] text-[clamp(2.75rem,8vw,10.5rem)] leading-[0.82] ${line}`}>
-            <span className="whitespace-nowrap">
-              it <span className="text-accent">prime.</span>
-            </span>
-          </h2>
-        </div>
-
-        {/* the way in: a line of copy and the address */}
-        <div className="mt-14 grid gap-y-8 md:mt-20 md:grid-cols-12 md:gap-x-6">
-          <p
-            data-reveal
-            className="max-w-[30ch] text-[clamp(1.125rem,1.6vw,1.625rem)] font-medium leading-[1.15] tracking-[-0.02em] text-graphite md:col-span-4 md:col-start-2"
-          >
-            Tell us what you&rsquo;re building. The first conversation is where it gets good.
-          </p>
-          <div data-reveal className="md:col-span-6 md:col-start-7">
-            <p data-hover-scramble className={label}>
-              Start a project
-            </p>
-            <a
-              data-email
-              href={`mailto:${EMAIL}`}
-              className="mt-3 flex items-center justify-between gap-4 text-[clamp(1.375rem,3.1vw,3.25rem)] font-medium leading-[1.15] tracking-[-0.035em]"
-            >
-              <span className="relative min-w-0">
-                <span className="relative block overflow-hidden">
-                  <span data-roll className="block whitespace-nowrap">
-                    {EMAIL}
-                  </span>
-                  <span data-roll aria-hidden className="absolute left-0 top-full block whitespace-nowrap">
-                    {EMAIL}
-                  </span>
+        {/* the statement and the way in, over "SAY HI" in the transition's dither (DitherWord): absolute, as
+            wide as the page, behind them; a lamp of solid dots follows the cursor anywhere over this block */}
+        <div className="relative">
+          <DitherWord text="SAY HI" className="pointer-events-none absolute inset-x-0 top-1/2 z-0 -translate-y-1/2" />
+          <div className="relative z-10">
+            {/* the statement, stepped like the Intro's */}
+            <div className="mt-10 md:mt-14">
+              <h2 data-goo className={`text-[clamp(2.75rem,10.4vw,13.5rem)] leading-[0.82] ${line}`}>
+                Got an idea?
+              </h2>
+              <h2 data-goo className={`indent-[15%] text-[clamp(2.75rem,8.8vw,11.5rem)] leading-[0.8] ${line}`}>
+                Let&rsquo;s make
+              </h2>
+              <h2 data-goo className={`indent-[33%] text-[clamp(2.75rem,8vw,10.5rem)] leading-[0.82] ${line}`}>
+                <span className="whitespace-nowrap">
+                  it <span className="text-accent">prime.</span>
                 </span>
-                <span aria-hidden className="absolute inset-x-0 -bottom-1 h-px bg-ink/15" />
-                <span
-                  data-under
-                  aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-ink"
-                />
-              </span>
-              <span
-                data-arrow
-                aria-hidden
-                className="grid h-[1.5em] w-[1.5em] shrink-0 place-items-center rounded-full bg-ink text-chalk md:h-[1.6em] md:w-[1.6em]"
+              </h2>
+            </div>
+
+            {/* the way in: a line of copy and the address */}
+            <div className="mt-14 grid gap-y-8 md:mt-20 md:grid-cols-12 md:gap-x-6">
+              <p
+                data-reveal
+                className="max-w-[30ch] text-[clamp(1.125rem,1.6vw,1.625rem)] font-medium leading-[1.15] tracking-[-0.02em] text-graphite md:col-span-4 md:col-start-2"
               >
-                <svg
-                  data-glyph
-                  viewBox="0 0 12 12"
-                  className="h-[0.42em] w-[0.42em]"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.25}
+                Tell us what you&rsquo;re building. The first conversation is where it gets good.
+              </p>
+              <div data-reveal className="md:col-span-6 md:col-start-7">
+                <p data-hover-scramble className={label}>
+                  Start a project
+                </p>
+                <a
+                  data-email
+                  href={`mailto:${EMAIL}`}
+                  className="mt-3 flex items-center justify-between gap-4 text-[clamp(1.375rem,3.1vw,3.25rem)] font-medium leading-[1.15] tracking-[-0.035em]"
                 >
-                  <path d="M2.5 9.5l7-7M4 2.5h5.5V8" />
-                </svg>
-              </span>
-            </a>
+                  <span className="relative min-w-0">
+                    <span className="relative block overflow-hidden">
+                      <span data-roll className="block whitespace-nowrap">
+                        {EMAIL}
+                      </span>
+                      <span data-roll aria-hidden className="absolute left-0 top-full block whitespace-nowrap">
+                        {EMAIL}
+                      </span>
+                    </span>
+                    <span aria-hidden className="absolute inset-x-0 -bottom-1 h-px bg-ink/15" />
+                    <span
+                      data-under
+                      aria-hidden
+                      className="absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-ink"
+                    />
+                  </span>
+                  <span
+                    data-arrow
+                    aria-hidden
+                    className="grid h-[1.5em] w-[1.5em] shrink-0 place-items-center rounded-full bg-ink text-chalk md:h-[1.6em] md:w-[1.6em]"
+                  >
+                    <svg
+                      data-glyph
+                      viewBox="0 0 12 12"
+                      className="h-[0.42em] w-[0.42em]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.25}
+                    >
+                      <path d="M2.5 9.5l7-7M4 2.5h5.5V8" />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
 

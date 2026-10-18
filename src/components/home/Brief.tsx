@@ -3,7 +3,7 @@
 import { type ChangeEvent, useRef, useState } from "react";
 import LocalTime from "@/components/LocalTime";
 import { gooHeadings, gooIn } from "@/lib/goo";
-import { ensureSmoother, gsap, hoverScramble, liven, MENU_EASE, prefersReducedMotion, useGSAP } from "@/lib/gsap";
+import { ensureSmoother, gsap, hoverScramble, liven, MENU_EASE, ONCE, prefersReducedMotion, useGSAP } from "@/lib/gsap";
 import { EMAIL } from "@/lib/studio";
 
 /*
@@ -64,7 +64,7 @@ export default function Brief() {
           duration: 1,
           ease: MENU_EASE,
           delay: (i % 3) * 0.06,
-          scrollTrigger: { trigger: node, start: "top 92%", once: true },
+          scrollTrigger: { trigger: node, start: "top 92%", ...ONCE },
         }),
       );
       return () => {

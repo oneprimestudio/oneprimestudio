@@ -11,6 +11,7 @@ import {
   hoverScramble,
   MASK_EASE,
   MENU_EASE,
+  ONCE,
   prefersReducedMotion,
   SplitText,
   useGSAP,
@@ -82,7 +83,7 @@ export default function Projects() {
               duration: 1.1,
               ease: MENU_EASE,
               stagger: 0.08,
-              scrollTrigger: { trigger: node, start: "top 85%", once: true },
+              scrollTrigger: { trigger: node, start: "top 85%", ...ONCE },
             }),
         });
       });
@@ -92,7 +93,7 @@ export default function Projects() {
         duration: 1,
         ease: MENU_EASE,
         stagger: 0.08,
-        scrollTrigger: { trigger: el, start: "top 70%", once: true },
+        scrollTrigger: { trigger: el, start: "top 70%", ...ONCE },
       });
 
       // ---- the wall: each frame opens from its centre as it comes in, the picture settling inside ----
@@ -122,7 +123,7 @@ export default function Projects() {
           v: to,
           duration: 1.6,
           ease: CARD_EASE,
-          scrollTrigger: { trigger: node, start: "top 92%", once: true },
+          scrollTrigger: { trigger: node, start: "top 92%", ...ONCE },
           onUpdate: () => {
             node.textContent = pad(Math.round(n.v), width);
           },
@@ -136,7 +137,7 @@ export default function Projects() {
           duration: 1.1,
           ease: CARD_EASE,
           stagger: 0.08,
-          scrollTrigger: { trigger: el.querySelector("[data-facts]"), start: "top 92%", once: true },
+          scrollTrigger: { trigger: el.querySelector("[data-facts]"), start: "top 92%", ...ONCE },
         },
       );
       return unScramble;

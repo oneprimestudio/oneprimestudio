@@ -8,8 +8,10 @@ import {
   gsap,
   hoverScramble,
   MENU_EASE,
+  ONCE,
   prefersReducedMotion,
   PRIME,
+  ScrollTrigger,
   SplitText,
   useGSAP,
 } from "@/lib/gsap";
@@ -111,7 +113,7 @@ export default function Services() {
               duration: 1.1,
               ease: MENU_EASE,
               stagger: 0.08,
-              scrollTrigger: { trigger: node, start: "top 85%", once: true },
+              scrollTrigger: { trigger: node, start: "top 85%", ...ONCE },
             }),
         });
       });
@@ -122,26 +124,40 @@ export default function Services() {
         duration: 1,
         ease: MENU_EASE,
         stagger: 0.08,
-        scrollTrigger: { trigger: el, start: "top 70%", once: true },
+        scrollTrigger: { trigger: el, start: "top 70%", ...ONCE },
       });
 
       // the row rises in card by card, then each card's list settles in, row by row
-      const arrive = gsap.timeline({ scrollTrigger: { trigger: track, start: "top 92%", once: true } });
+      const arrive = gsap.timeline({ scrollTrigger: { trigger: track, start: "top 92%", ...ONCE } });
       arrive.from(items, { y: 90, autoAlpha: 0, duration: 1.2, ease: PRIME, stagger: 0.1 }, 0);
       cards.forEach((card, i) =>
         arrive.from(card.querySelectorAll("[data-li]"), { yPercent: 100, duration: 1, ease: PRIME, stagger: 0.06 }, 0.45 + i * 0.1),
       );
 
-      // the hint's runner: a short dash that slides along its rail, over and over
-      gsap.fromTo(
-        el.querySelector("[data-runner]"),
-        { xPercent: -100 },
-        { xPercent: 300, duration: 1.6, ease: CARD_EASE, repeat: -1, repeatDelay: 0.4 },
-      );
-
       // wide screens: the row starts in the right 40%, then the pinned scroll carries it through
       const mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
+        // the hint's runner (the hint only shows on wide screens): a short dash that slides along its rail,
+        // over and over — but only while the hint can be seen, the section on screen and the hint not yet
+        // faded by the pin: a loop left running unseen would repaint the page on every frame for nothing
+        const runner = gsap.fromTo(
+          el.querySelector("[data-runner]"),
+          { xPercent: -100 },
+          { xPercent: 300, duration: 1.6, ease: CARD_EASE, repeat: -1, repeatDelay: 0.4, paused: true },
+        );
+        let onScreen = false;
+        let hinted = true;
+        const run = () => (onScreen && hinted ? runner.resume() : runner.pause());
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) => {
+            onScreen = self.isActive;
+            run();
+          },
+        });
+
         gsap.set(scroller, { overflow: "visible" });
         const pad = () => parseFloat(getComputedStyle(track).paddingLeft) || 0;
         const from = () => scroller.clientWidth * 0.6 - pad();
@@ -157,6 +173,12 @@ export default function Services() {
               invalidateOnRefresh: true,
               // the navbar's section triggers exist before this pin: its spacer has to be laid out first
               refreshPriority: 1,
+              // the hint is gone once the first 12% of the pin has passed (below)
+              onUpdate: (self) => {
+                if (hinted === self.progress < 0.12) return;
+                hinted = !hinted;
+                run();
+              },
             },
           })
           .fromTo(track, { x: from }, { x: to, ease: "none", duration: 1 }, 0)

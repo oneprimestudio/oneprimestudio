@@ -20,7 +20,7 @@ const gtMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "One Prime Studio — Getting ready for prime",
+  title: "One Prime Studio | Getting ready for prime",
   description:
     "A design & development studio built on one belief: average is not an option. The full site is under construction.",
 };

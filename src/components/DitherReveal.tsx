@@ -75,7 +75,15 @@ export default function DitherReveal({
       };
 
       if (replay === undefined) {
-        ScrollTrigger.create({ trigger: el, start: "top 88%", once: true, onEnter: () => play.current() });
+        // played the first time it is reached or passed; not `once`, whose self-kill on a page loaded part way
+        // down can crash ScrollTrigger's setup (see ONCE in lib/gsap)
+        let played = false;
+        const go = () => {
+          if (played) return;
+          played = true;
+          play.current();
+        };
+        ScrollTrigger.create({ trigger: el, start: "top 88%", onEnter: go, onLeave: go });
       }
       return () => ro.disconnect();
     },

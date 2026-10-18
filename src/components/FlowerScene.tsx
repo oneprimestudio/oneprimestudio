@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import * as THREE from "three";
+import { quiet } from "@/lib/renderer";
 import { BAYER, DOT, FULLSCREEN_VERT } from "@/lib/glsl";
 import { gsap, prefersReducedMotion, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
@@ -81,7 +82,7 @@ export default function FlowerScene({ className = "" }: { className?: string }) 
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+      renderer = quiet(new THREE.WebGLRenderer({ alpha: true, antialias: false }));
     } catch {
       return;
     }

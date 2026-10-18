@@ -17,9 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const work = WORK.find((w) => w.slug === slug);
   if (!work) return {};
   return {
-    // not "<title> — One Prime Studio": one of the cases is the studio itself
-    title: `Case study — ${work.title}`,
-    description: `${work.line} ${work.summary}`,
+    // not "<title> | One Prime Studio": one of the cases is the studio itself
+    title: `Case study: ${work.title}`,
+    // the copy's em dashes read as commas here: metadata carries none
+    description: `${work.line} ${work.summary}`.replace(/\s*—\s*/g, ", "),
   };
 }
 

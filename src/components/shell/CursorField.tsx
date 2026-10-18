@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { quiet } from "@/lib/renderer";
 import { BAYER } from "@/lib/glsl";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 
@@ -89,7 +90,7 @@ export default function CursorField() {
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+      renderer = quiet(new THREE.WebGLRenderer({ alpha: true, antialias: false }));
     } catch {
       return;
     }
@@ -136,6 +137,18 @@ export default function CursorField() {
     const scene = new THREE.Scene();
     scene.add(quad);
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    // the three programs are compiled now, while the page settles, rather than on the first move of the
+    // pointer — where the wait for the GPU to finish them showed as a hitch in the trail's first stroke.
+    // Each against the target it will draw into, which is part of what makes the program
+    const warm = (material: THREE.ShaderMaterial, into: THREE.WebGLRenderTarget | null) => {
+      quad.material = material;
+      renderer.setRenderTarget(into);
+      renderer.compile(scene, camera);
+    };
+    warm(splat, write);
+    warm(decay, write);
+    warm(draw, null);
+    quad.material = splat;
 
     // run one full-screen pass into the write buffer, then swap
     const step = (material: THREE.ShaderMaterial) => {

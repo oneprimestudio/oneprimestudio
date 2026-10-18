@@ -1,13 +1,31 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 /*
  * A small globe, drawn on a 32 × 32 grid in the current colour: the outline, the equator and two
  * parallels, and two meridians that sweep across it on a loop, so it reads as turning.
  *
  * Stand-in for the studio's own globe SVG (same 32 × 32 viewBox): paste its paths in place of the
  * drawing below and keep the <svg> as it is.
+ *
+ * The sweep is SVG's own <animate>, which restyles, lays out and repaints the page on every frame it
+ * runs, so it is paused while the mark is off screen and picks up where it left off when it returns.
  */
 export default function GlobeMark({ className = "", weight = 1.25 }: { className?: string; weight?: number }) {
+  const ref = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const svg = ref.current;
+    if (!svg) return;
+    const io = new IntersectionObserver(([e]) => (e.isIntersecting ? svg.unpauseAnimations() : svg.pauseAnimations()));
+    io.observe(svg);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <svg
+      ref={ref}
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
