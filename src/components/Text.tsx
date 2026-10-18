@@ -252,7 +252,11 @@ const Text: React.FC<TextYProps> = ({
           return;
         }
 
-        gsap.set(lines.current, config.from);
+        // each line on its own layer while it rises (and, for the cascade, while its blur clears), so the page
+        // around it isn't repainted every frame; back to normal once it has landed
+        const promote = "filter" in config.from ? "transform, opacity, filter" : "transform, opacity";
+        gsap.set(lines.current, { ...config.from, willChange: promote });
+        toVars.onComplete = () => gsap.set(lines.current, { willChange: "auto" });
 
         if (animateOnScroll) {
           gsap.to(lines.current, {
