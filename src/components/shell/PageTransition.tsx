@@ -2,10 +2,9 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { BAYER, NOISE } from "@/lib/glsl";
-import { BAND, SUB } from "@/lib/dither";
 import { gsap, holdScroll, prefersReducedMotion, ScrollSmoother, ScrollTrigger } from "@/lib/gsap";
 import { WORK } from "@/lib/work";
+import { makeGL, RISE, STAGGER, Train, type Fronts } from "./bands";
 
 /*
  * Moving between pages through a train of seams that never stops. Four fronts rise from the foot of the
@@ -24,71 +23,10 @@ import { WORK } from "@/lib/work";
  *
  * It owns every same-origin link click: a link to a section of this page glides there; a link to a
  * section another page has goes through the seams to that page and section; browser back / forward join
- * the train midway. One fragment shader on a full-screen canvas, drawn every frame while it runs.
+ * the train midway. One fragment shader on a full-screen canvas, drawn every frame while it runs, in a worker
+ * (bands.worker.ts) where the browser allows: the page mounting under the bands can no longer stall them.
  */
 
-const VERT = /* glsl */ `#version 300 es
-  void main() {
-    vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
-    gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
-  }
-`;
-
-const FRAG = /* glsl */ `#version 300 es
-  precision highp float;
-  uniform vec2  uRes;    // device px
-  uniform float uSub;    // device px per sub-pixel
-  uniform float uTime;   // s: the fronts' drift and ripple
-  uniform vec4  uFront;  // 0..1 per front (white, grey, black, the new page): how far it has risen
-  out vec4 color;
-
-  ${BAYER}
-  ${NOISE}
-
-  const float BAND = ${BAND.toFixed(2)};
-
-  // a front at progress p: 1 below it, a band of thinning dots, 0 above (y: 1 at the foot, 0 at the top).
-  // It starts a little below the foot and ends a little above the top, so the ripple never leaves dots
-  // at either edge before it starts or after it is done
-  float band(float y, float p, float jitter) {
-    float ramp = clamp((y - 1.05 + p * (1.1 + BAND)) / BAND, 0.0, 1.0);
-    return pow(ramp, 1.6) + jitter * 4.0 * ramp * (1.0 - ramp);
-  }
-
-  // each level's edge: a wander that drifts sideways as it climbs, its grain, and a slow ripple
-  float edge(vec2 cell, float level, float seed) {
-    float drift = uTime * (0.22 + 0.1 * level);
-    float wander = valueNoise(vec3(cell.x / (12.0 + 4.0 * level) + drift, cell.y / 14.0, seed + level * 3.1)) - 0.5;
-    float grain = hash3(vec3(cell, seed * 7.0 + level)) - 0.5;
-    return wander * 0.36 + grain * 0.1;
-  }
-
-  void main() {
-    vec2 sub = floor(gl_FragCoord.xy / uSub);
-    vec2 cell = floor(sub / 4.0);
-    float rows = max(ceil(uRes.y / (uSub * 4.0)) - 1.0, 1.0);
-    float th = bayer4(sub);
-    // which front has passed here last decides what shows: nothing, white, grey, black, the new page
-    int passed = -1;
-    for (int i = 0; i < 4; i++) {
-      float level = float(i);
-      // the ripple: each front rises a little unevenly across the width, and the unevenness travels
-      float ripple = sin(cell.x * 0.035 + uTime * 1.1 + level * 2.1) * 0.018
-                   + sin(cell.x * 0.011 - uTime * 0.6 + level) * 0.022;
-      float y = 1.0 - cell.y / rows + ripple;
-      if (band(y, uFront[i], edge(cell, level, 1.0)) > th) passed = i;
-    }
-    // grey is half the dots black, in Bayer order
-    if (passed == 0) color = vec4(1.0);
-    else if (passed == 1) color = th < 0.5 ? vec4(0.0, 0.0, 0.0, 1.0) : vec4(1.0);
-    else if (passed == 2) color = vec4(0.0, 0.0, 0.0, 1.0);
-    else color = vec4(0.0);
-  }
-`;
-
-const RISE = 1.8; // s, each front's climb: slow
-const STAGGER = 0.46; // s between one front and the next
-const EASE = "sine.inOut";
 const NAMES: Record<string, string> = {
   "/": "Home",
   "/projects": "Projects",
@@ -97,54 +35,126 @@ const NAMES: Record<string, string> = {
   ...Object.fromEntries(WORK.map((w) => [`/projects/${w.slug}`, w.title])),
 };
 
-type Fronts = [number, number, number, number];
-type GL = { draw: (f: Fronts, time: number) => void; resize: () => void; dispose: () => void };
+/** the bands, wherever they are drawn: each call resolves at its moment in the train */
+type Bands = {
+  /** white, grey and black set off from `from`; resolves once the white is up */
+  enter: (from: Fronts) => Promise<void>;
+  /** ease the train's clock (a crawl while the next page is slow to arrive, and back) */
+  pace: (to: number, dur: number, ease: "in" | "out") => void;
+  /** the new page rises in behind the black; resolves once everything is put away */
+  exit: () => Promise<void>;
+  resize: () => void;
+  dispose: () => void;
+};
 
-/** the shader on a WebGL2 canvas, or null where there is none (a plain fade stands in) */
-function makeGL(canvas: HTMLCanvasElement): GL | null {
-  const gl = canvas.getContext("webgl2", { alpha: true, premultipliedAlpha: true, antialias: false });
-  if (!gl) return null;
-  const shader = (type: number, src: string) => {
-    const s = gl.createShader(type)!;
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
-    return s;
-  };
-  const program = gl.createProgram()!;
-  gl.attachShader(program, shader(gl.VERTEX_SHADER, VERT));
-  gl.attachShader(program, shader(gl.FRAGMENT_SHADER, FRAG));
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
-  const vao = gl.createVertexArray();
-  const U = Object.fromEntries(
-    ["uRes", "uSub", "uTime", "uFront"].map((n) => [n, gl.getUniformLocation(program, n)]),
-  );
-
-  const resize = () => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    canvas.width = Math.round(window.innerWidth * dpr);
-    canvas.height = Math.round(window.innerHeight * dpr);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.useProgram(program);
-    gl.uniform2f(U.uRes, canvas.width, canvas.height);
-    gl.uniform1f(U.uSub, Math.max(1, Math.round(SUB * dpr)));
-  };
-  resize();
+/** a pair of one-shot waits, for the train's two moments */
+function moments() {
+  let white: (() => void) | null = null;
+  let done: (() => void) | null = null;
   return {
-    resize,
-    draw: (f, time) => {
-      gl.useProgram(program);
-      gl.bindVertexArray(vao);
-      gl.uniform1f(U.uTime, time);
-      gl.uniform4f(U.uFront, ...f);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    onWhite: () => new Promise<void>((r) => (white = r)),
+    onDone: () => new Promise<void>((r) => (done = r)),
+    white: () => {
+      white?.();
+      white = null;
     },
-    // the context stays: a remount (React's development double-run) asks the same canvas for it again
+    done: () => {
+      done?.();
+      done = null;
+    },
+  };
+}
+
+/**
+ * Drawn on the main thread, on the gsap ticker: where the browser can't hand a canvas to a worker. Without
+ * WebGL (or with reduced motion) the canvas is a flat white sheet that fades in and out.
+ */
+function mainBands(canvas: HTMLCanvasElement, still: boolean, gl = still ? null : makeGL(canvas)): Bands {
+  const train = new Train(still ? 0.25 : RISE, still ? 0.05 : STAGGER);
+  const at = moments();
+  if (!gl) canvas.style.background = "#fff";
+  const size = () => gl?.resize(window.innerWidth, window.innerHeight, window.devicePixelRatio);
+  size();
+  const now = () => performance.now() / 1000;
+  const render = () => {
+    if (gl) gl.draw(train.fronts, now());
+    else canvas.style.opacity = String(train.fronts[0] * (1 - train.fronts[3]));
+  };
+  const frame = () => {
+    const { white, done } = train.tick(now());
+    render();
+    if (white) at.white();
+    if (done) {
+      gsap.ticker.remove(frame);
+      at.done();
+    }
+  };
+  return {
+    enter: (from) => {
+      const w = at.onWhite();
+      train.enter(from, now());
+      render();
+      gsap.ticker.add(frame);
+      return w;
+    },
+    pace: (to, dur, ease) => train.pace(to, dur, ease, now()),
+    exit: () => {
+      const d = at.onDone();
+      train.exit(now(), still ? 0 : 0.1);
+      return d;
+    },
+    resize: size,
     dispose: () => {
-      gl.deleteVertexArray(vao);
-      gl.deleteProgram(program);
+      gsap.ticker.remove(frame);
+      gl?.dispose();
+    },
+  };
+}
+
+// a canvas can be handed to a worker only once: a remount (React's development double-run) finds its worker here
+const workers = new WeakMap<HTMLCanvasElement, Worker>();
+
+/**
+ * Drawn in a worker, on an OffscreenCanvas: the train keeps its pace while the main thread mounts the next
+ * page under it. Falls back to the flat sheet if the worker can't get WebGL2.
+ */
+function workerBands(canvas: HTMLCanvasElement): Bands {
+  const size = () => ({ w: window.innerWidth, h: window.innerHeight, dpr: window.devicePixelRatio });
+  let worker = workers.get(canvas);
+  if (!worker) {
+    worker = new Worker(new URL("./bands.worker.ts", import.meta.url), { type: "module" });
+    const offscreen = canvas.transferControlToOffscreen();
+    worker.postMessage({ type: "init", canvas: offscreen, ...size() }, [offscreen]);
+    workers.set(canvas, worker);
+  }
+  const w = worker;
+  const at = moments();
+  let flat: Bands | null = null; // the fallback, once the worker has said it has no WebGL2
+  w.onmessage = (e: MessageEvent) => {
+    const m = e.data;
+    if (m.type === "ready" && !m.gl) flat = mainBands(canvas, false, null);
+    else if (m.type === "white") at.white();
+    else if (m.type === "done") at.done();
+  };
+  const onResize = () => w.postMessage({ type: "resize", ...size() });
+  return {
+    enter: (from) => {
+      if (flat) return flat.enter(from);
+      const p = at.onWhite();
+      w.postMessage({ type: "enter", from });
+      return p;
+    },
+    pace: (to, dur, ease) => (flat ? flat.pace(to, dur, ease) : w.postMessage({ type: "pace", to, dur, ease })),
+    exit: () => {
+      if (flat) return flat.exit();
+      const p = at.onDone();
+      w.postMessage({ type: "exit" });
+      return p;
+    },
+    resize: () => (flat ? flat.resize() : onResize()),
+    dispose: () => {
+      w.onmessage = null;
+      flat?.dispose();
     },
   };
 }
@@ -182,67 +192,29 @@ export default function PageTransition() {
     const label = labelRef.current;
     if (!canvas || !label) return;
     const still = prefersReducedMotion();
-    const gl = still ? null : makeGL(canvas);
-    const fronts: Fronts = [0, 0, 0, 0];
-    // no WebGL (or reduced motion): the canvas is a flat white sheet that fades in and out
-    if (!gl) canvas.style.background = "#fff";
-    const render = (time = gsap.ticker.time) => {
-      if (gl) gl.draw(fronts, time);
-      else canvas.style.opacity = String(fronts[0] * (1 - fronts[3]));
-    };
-    const onResize = () => gl?.resize();
+    // in a worker where the browser can hand it the canvas, so the train never waits on the page mounting
+    // under it; on the main thread otherwise
+    const bands =
+      !still && typeof Worker !== "undefined" && "transferControlToOffscreen" in canvas
+        ? workerBands(canvas)
+        : mainBands(canvas, still);
+    const onResize = () => bands.resize();
     window.addEventListener("resize", onResize);
-    // drawn every frame while it runs, so the fronts keep drifting even while the route loads
-    const frame = (time: number) => render(time);
 
     let busy = false;
     let pending: { path: string; resolve: () => void } | null = null;
     const show = (on: boolean) => {
       canvas.style.visibility = on ? "visible" : "hidden";
       canvas.style.pointerEvents = on ? "auto" : "none";
-      if (on) gsap.ticker.add(frame);
-      else gsap.ticker.remove(frame);
     };
-    const rise = still ? 0.25 : RISE;
-    const stagger = still ? 0.05 : STAGGER;
-    let train: gsap.core.Timeline | null = null;
-
-    /** white, grey and black set off one after another from `from`; resolves once the white is up */
-    const enter = (from: Fronts = [0, 0, 0, 0]) =>
-      new Promise<void>((resolve) => {
-        fronts.splice(0, 4, ...from);
-        show(true);
-        render();
-        train?.kill();
-        train = gsap.timeline();
-        [0, 1, 2].forEach((i) => {
-          const left = 1 - fronts[i]; // a train joined midway (back / forward) runs only what is left
-          if (left <= 0) return;
-          train!.to(fronts, { [i]: 1, duration: rise * left, ease: EASE }, Math.max(0, i * stagger - (rise - rise * left)));
-        });
-        if (fronts[0] >= 1) resolve();
-        else train.call(resolve, undefined, rise * (1 - from[0]));
-      });
-
-    /** the new page rises in behind the black; then everything is put away */
-    const exit = () =>
-      new Promise<void>((resolve) => {
-        gsap.to(fronts, {
-          3: 1,
-          duration: rise,
-          // a beat behind the black, so it never overtakes a band still picking up its pace
-          delay: still ? 0 : 0.1,
-          ease: EASE,
-          onComplete: () => {
-            train?.kill();
-            train = null;
-            fronts.splice(0, 4, 0, 0, 0, 0);
-            render();
-            show(false);
-            resolve();
-          },
-        });
-      });
+    const enter = (from: Fronts = [0, 0, 0, 0]) => {
+      show(true);
+      return bands.enter(from);
+    };
+    const exit = async () => {
+      await bands.exit();
+      show(false);
+    };
 
     /** the new page is in: settle its scroll and triggers under the bands, then let it rise */
     const land = async (hash: string) => {
@@ -281,11 +253,11 @@ export default function PageTransition() {
       let waited = false;
       const crawl = window.setTimeout(() => {
         waited = true;
-        if (train) gsap.to(train, { timeScale: 0.12, duration: 0.5, ease: "sine.out", overwrite: true });
+        bands.pace(0.12, 0.5, "out");
       }, 60);
       await arrived;
       window.clearTimeout(crawl);
-      if (waited && train) gsap.to(train, { timeScale: 1, duration: 0.5, ease: "sine.in", overwrite: true });
+      if (waited) bands.pace(1, 0.5, "in");
       pending = null;
       await land(url.hash);
     };
@@ -341,10 +313,8 @@ export default function PageTransition() {
     return () => {
       window.removeEventListener("click", onClick, true);
       window.removeEventListener("resize", onResize);
-      gsap.ticker.remove(frame);
-      train?.kill();
       window.clearTimeout(idle);
-      gl?.dispose();
+      bands.dispose();
       holdScroll("transition", false);
     };
   }, [router]);
