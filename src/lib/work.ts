@@ -10,7 +10,7 @@ export type Shot = {
   src: string;
   alt: string;
   /** the frame it is shown in */
-  ratio: "16/10" | "4/5" | "900/580";
+  ratio: "4/5" | "900/580";
   caption: string;
   /** a film rather than a still (src is then its poster) */
   video?: string;
@@ -91,15 +91,15 @@ export const WORK: Work[] = [
     slug: "maera",
     kind: "Web",
     title: "Maéra Makeover & Academy",
-    line: "An aesthetic website, and the CRM behind a women-only studio and academy.",
-    tag: "Website · CRM",
+    line: "An aesthetic website for a women-only studio and academy.",
+    tag: "Website",
     year: "2026",
     client: "Maéra Makeover & Academy",
     place: "Uppal, Hyderabad",
     url: "https://www.maeraacademy.com/",
-    scope: ["Website", "CRM", "Booking", "Billing"],
+    scope: ["Website", "Website design", "Engineering"],
     summary:
-      "Two things for one studio: an aesthetic website for Maéra's bridal, salon and academy work in Uppal, Hyderabad — and the CRM that runs the floor behind it, from the day's bookings to the invoice.",
+      "An aesthetic website for Maéra's bridal, salon and academy work in Uppal, Hyderabad: the studio's makeovers and rituals, and the academy's certified courses, with admissions a tap away.",
     story: [
       {
         title: "The website",
@@ -109,9 +109,32 @@ export const WORK: Work[] = [
         title: "The academy",
         text: "Forty-five-day courses taught on live models, weekday and weekend batches, and a free career-counselling call a tap away: admissions are the site's other job.",
       },
+    ],
+    shots: [
+      { src: `${C}/maera-1.webp`, alt: "Maéra's site: “Welcome to Maéra — become a certified makeup artist in 45 days”", ratio: "16/10", caption: "Welcome to Maéra" },
+      { src: `${C}/maera-2.webp`, alt: "Maéra's site on a phone: the studio's welcome and its booking button", ratio: "4/5", caption: "The studio, on a phone" },
+      { src: `${C}/maera-3.webp`, alt: "Maéra's site: “Become a certified makeup artist”, the academy's offer", ratio: "16/10", caption: "The academy" },
+      { src: `${C}/maera-4.webp`, alt: "Maéra's academy on a phone: 45 days, live-model practice, certification", ratio: "4/5", caption: "Admissions" },
+      { src: `${C}/maera-5.webp`, alt: "Maéra's courses: makeup artistry, bridal makeup, skin and medi-facials", ratio: "16/10", caption: "Learn the craft, hands-on" },
+    ],
+    canvas: "#2a2227",
+  },
+  {
+    slug: "maera-crm",
+    kind: "Software",
+    title: "Maéra CRM",
+    line: "The CRM that runs Maéra's studio floor, from the day's bookings to the invoice.",
+    tag: "CRM",
+    year: "2026",
+    client: "Maéra Makeover & Academy",
+    place: "Uppal, Hyderabad",
+    scope: ["CRM", "Booking", "Billing", "Product design"],
+    summary:
+      "The system behind Maéra's studio and academy in Uppal, Hyderabad: every artist's day and every chair in one view, the day's takings, and tax invoices raised from the appointment itself.",
+    story: [
       {
         title: "The day",
-        text: "In the CRM, a day calendar for every artist and every chair: who is in, when, and for what — the whole floor in one view.",
+        text: "A day calendar for every artist and every chair: who is in, when, and for what — the whole floor in one view.",
       },
       {
         title: "The money",
@@ -119,16 +142,11 @@ export const WORK: Work[] = [
       },
     ],
     shots: [
-      { src: `${C}/maera-1.webp`, alt: "Maéra's site: “Welcome to Maéra — become a certified makeup artist in 45 days”", ratio: "16/10", caption: "Welcome to Maéra" },
-      { src: `${C}/maera-2.webp`, alt: "Maéra's site on a phone: the studio's welcome and its booking button", ratio: "4/5", caption: "The studio, on a phone" },
-      { src: `${C}/maera-3.webp`, alt: "Maéra's site: “Become a certified makeup artist”, the academy's offer", ratio: "16/10", caption: "The academy" },
-      { src: `${C}/maera-4.webp`, alt: "Maéra's academy on a phone: 45 days, live-model practice, certification", ratio: "4/5", caption: "Admissions" },
-      { src: "/images/work/maera-dash.jpg", alt: "Maéra's CRM dashboard: today's takings, the chairs in use and the appointments", ratio: "900/580", caption: "CRM — the day's takings" },
-      { src: "/images/work/maera-cal.jpg", alt: "Maéra's CRM calendar: each artist's day", ratio: "900/580", caption: "CRM — the calendar" },
-      { src: "/images/work/maera-bill.jpg", alt: "A Maéra tax invoice beside the appointment reminder sent to the client", ratio: "900/580", caption: "CRM — invoice & reminder" },
-      { src: `${C}/maera-5.webp`, alt: "Maéra's courses: makeup artistry, bridal makeup, skin and medi-facials", ratio: "16/10", caption: "Learn the craft, hands-on" },
+      { src: "/images/work/maera-crm.png", alt: "Maéra's CRM dashboard: today's takings, the chairs in use and the appointments", ratio: "900/580", caption: "The day's takings" },
+      { src: "/images/work/maera-client.png", alt: "Maéra's CRM calendar: each artist's day", ratio: "900/580", caption: "The calendar" },
+      { src: "/images/work/maera-bill.jpg", alt: "A Maéra tax invoice beside the appointment reminder sent to the client", ratio: "900/580", caption: "Invoice & reminder" },
     ],
-    canvas: "#2a2227",
+    canvas: "#1c1d22",
   },
   {
     slug: "maera-app",

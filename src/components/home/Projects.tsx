@@ -29,8 +29,8 @@ import { WORK } from "@/lib/work";
  * Inside, the picture drifts against its crop as the page moves. Four facts between hairlines close it.
  */
 
-// six of the work — everything with screens to show — in the wall's order
-const PROJECTS = ["jeeva", "netha", "maera", "site", "identity", "films"].map((slug) => WORK.find((w) => w.slug === slug)!);
+// seven of the work — everything with screens to show — in the wall's order
+const PROJECTS = ["jeeva", "netha", "maera", "maera-crm", "site", "identity", "films"].map((slug) => WORK.find((w) => w.slug === slug)!);
 
 /* where each card hangs on the wide grid: column start, columns wide, how far it drops down its row (vw).
    Narrow screens alternate the cards between two columns instead, every other one dropped. */
@@ -41,6 +41,7 @@ const HUNG = [
   { cs: 3, cw: 2, dy: 8 },
   { cs: 7, cw: 3, dy: 2 },
   { cs: 11, cw: 2, dy: 14 },
+  { cs: 5, cw: 3, dy: 6 },
 ];
 
 // the mask's two ends, spelled out in full so all four edges and the radius move together
@@ -55,7 +56,7 @@ const FACTS = [
   { value: 2026, pad: 0, suffix: "", label: "Established, Hyderabad" },
 ];
 
-const label = "font-mono text-[10px] uppercase tracking-[0.14em] text-stone md:text-[11px]";
+const label = "font-mono text-[10px] uppercase tracking-[-0.014em] text-stone md:text-[11px]";
 const pad = (n: number, w = 2) => String(n).padStart(w, "0");
 
 export default function Projects() {
@@ -151,9 +152,9 @@ export default function Projects() {
       ref={root}
       data-cursor="light"
       data-nav-message="Selected work"
-      className="relative z-10 overflow-hidden bg-chalk px-[var(--gutter)] pb-28 pt-6 text-ink md:pb-40 md:pt-10"
+      className="relative z-10 overflow-hidden bg-chalk px-[var(--gutter)] pb-28 pt-6 text-ink md:pb-40 md:pt-4"
     >
-      <div className="grid grid-cols-2 border-t border-ink/10 pt-6 md:grid-cols-12 md:gap-x-6">
+      <div className="grid grid-cols-2  md:grid-cols-12 md:gap-x-6">
         <p data-hover-scramble className={`${label} md:col-span-3`}>
           [004] — Selected work
         </p>
@@ -163,7 +164,7 @@ export default function Projects() {
       </div>
 
       {/* the statement at the left; the lede and the way in at the right, on its baseline */}
-      <div className="mt-20 grid items-end gap-y-10 md:mt-28 md:grid-cols-12 md:gap-x-6">
+      <div className="mt-20 grid items-end gap-y-5 md:mt-8 md:grid-cols-12 md:gap-x-6">
         <h2
           data-goo="blocks"
           className="text-[clamp(2.5rem,5.6vw,6.25rem)] font-medium leading-[0.95] tracking-[-0.05em] md:col-span-7"
@@ -173,28 +174,22 @@ export default function Projects() {
         </h2>
         <div className="md:col-span-4 md:col-start-9">
           <p data-lines className="max-w-[38ch] text-[15px] leading-[1.55] text-graphite">
-            Products, identities and films — for clients and for ourselves, each designed and engineered in one place.
+            Products, identities and films for clients and for ourselves, each designed and engineered in one place.
           </p>
           <div data-reveal className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
             <a
               href="#contact"
-              className="group inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pl-5 pr-1.5 text-[13px] font-medium text-chalk"
+              className="group inline-flex items-center gap-3 rounded-full bg-ink px-[8px] py-[2px] text-[13px] font-medium text-chalk"
             >
               Start a project
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-chalk text-ink transition-transform duration-500 ease-prime group-hover:rotate-45">
-                <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path d="M2.5 9.5l7-7M4 2.5h5.5V8" />
-                </svg>
-              </span>
+
             </a>
             {/* the way into the full index, through the seam */}
-            <Link href="/projects" className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink">
+            <Link href="/projects" className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[-0.014em] text-ink">
               <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:100%_1px] bg-[position:0_100%] bg-no-repeat pb-0.5 transition-[background-size] duration-700 ease-prime group-hover:bg-[length:0%_1px]">
                 All work
               </span>
-              <span aria-hidden className="transition-transform duration-500 ease-prime group-hover:translate-x-1">
-                →
-              </span>
+            
             </Link>
           </div>
         </div>
@@ -222,7 +217,7 @@ export default function Projects() {
               <Link href={`/projects/${p.slug}`} className="block outline-none">
                 {/* the frame opens from its centre point; inside it the picture drifts against its crop */}
                 <div data-mask className="relative aspect-[4/5] overflow-hidden" style={{ background: p.canvas }}>
-                  <div data-drift className="absolute inset-x-0 -top-[8%] h-[116%] will-change-transform">
+                  <div data-drift className="absolute inset-x-0 top-[2px] w-full h-[102%] will-change-transform">
                     <div data-settle className="absolute inset-0 transition-transform duration-[1200ms] ease-prime group-hover:scale-[1.05] group-focus-visible:scale-[1.05]">
                       <CardMedia work={p} sizes="(min-width: 1024px) 22vw, (min-width: 768px) 46vw, 46vw" />
                     </div>
@@ -231,12 +226,12 @@ export default function Projects() {
                 </div>
                 <div className="mt-3 flex items-baseline justify-between gap-3">
                   <h3 className="text-[14px] font-medium leading-[1.2] tracking-[-0.015em] md:text-[15px]">{p.title}</h3>
-                  <span aria-hidden className="text-[13px] transition-transform duration-700 ease-prime group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-                    ↗
+                  <span aria-hidden className="text-[13px] font-semibold transition-transform duration-700 ease-prime group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                    {p.year}
                   </span>
                 </div>
-                <p className={`${label} mt-1`}>
-                  {p.kind} · {p.year}
+                <p className={`${label}`}>
+                  {p.kind} · 
                 </p>
               </Link>
             </li>

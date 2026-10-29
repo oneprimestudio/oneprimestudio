@@ -1,0 +1,80 @@
+import { C } from "../lib/core";
+
+/*
+ * One entry per poster. Positions are on the golden grid of Poster.jsx (x 413/667, y 516/834, margin 54);
+ * callouts point (`to`) at a spot in the photograph. Facts are from src/lib/work.ts.
+ * Photos: Jeeva, Aideal Hwa on Unsplash (dbwuE1t6T7o); Netha, Bella Pon Fruitsia on Unsplash (wcgCFUi_Zws).
+ * Both are mood pictures under the Unsplash licence, not the clients' own building or products.
+ */
+export default [
+  {
+    id: "jeeva",
+    photo: "jeeva-photo.jpg",
+    focus: "22% 50%",
+    ink: C.ink,
+    tone: "light",
+    dot: "#1f9d63",
+    label: "Case 01 · Software",
+    count: "[ 01 / 03 ]",
+    kicker: "Hospital software · Website",
+    title: ["One record", "per patient."],
+    titleX: 413,
+    titleY: 150,
+    titleW: 613,
+    client: "Jeeva Multispeciality Hospital",
+    body: "The system behind a multispeciality hospital in Hanamkonda, and the website patients book through.",
+    bodyW: 560,
+    callouts: [
+      { text: "16 departments", x: 54, y: 600, to: [300, 560] },
+      { text: "19+ consultants", x: 54, y: 700, to: [250, 760] },
+      { text: "One hospital ID", x: 54, y: 800, to: [330, 860] },
+    ],
+    stats: [],
+    statsY: 0,
+    screen: "jeeva-1.webp",
+    url: "jeevamultispecialityhospital.com",
+    scope: "Hospital software · Website",
+    cardX: 413,
+    cardY: 744,
+    cardW: 613,
+    foot: "Hanamkonda, Warangal · 2026",
+  },
+  {
+    id: "netha",
+    photo: "netha-photo.jpg",
+    focus: "0% 18%",
+    zoom: 1.34,
+    ink: C.ink,
+    tone: "light",
+    dot: "#b8862b",
+    label: "Case 03 · Commerce",
+    count: "[ 03 / 03 ]",
+    kicker: "Online store · Since 1987",
+    title: ["Loom to", "doorstep."],
+    titleX: 54,
+    titleY: 150,
+    titleW: 440,
+    titleSize: 60,
+    client: "Netha Silks & Co.",
+    body: "The online store for handloom weavers in Bhoodan Pochampally. Every saree woven by hand, now bought online.",
+    bodyW: 400,
+    callouts: [
+      { text: "Handwoven", x: 54, y: 560, to: [800, 700] },
+      { text: "8 silk series", x: 54, y: 640, to: [700, 1000] },
+    ],
+    stats: [
+      ["1987", "Weaving since"],
+      ["8", "Silk series"],
+    ],
+    statsRow: true,
+    statsX: 54,
+    statsY: 732,
+    screen: "netha-1.webp",
+    url: "nethasilksandco.com",
+    scope: "Online store",
+    cardX: 54,
+    cardY: 900,
+    cardW: 450,
+    foot: "Pochampally · 2026",
+  },
+];

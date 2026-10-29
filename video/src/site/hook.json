@@ -1,0 +1,164 @@
+{
+  "fps": 60,
+  "beats": [
+    {
+      "dur": 2.97,
+      "src": "home-raw.mp4",
+      "from": 1.2,
+      "fit": "full",
+      "focus": 0.66,
+      "text": [
+        "Your website gets",
+        "50 milliseconds."
+      ],
+      "now": true,
+      "vo": "Your website gets fifty milliseconds.",
+      "min": 2.4
+    },
+    {
+      "dur": 2.0,
+      "bg": "ink",
+      "text": [
+        "That's how fast",
+        "people judge it."
+      ],
+      "vo": "That's how fast people judge it.",
+      "min": 2.0
+    },
+    {
+      "dur": 2.21,
+      "bg": "sand",
+      "text": [
+        "Most sites",
+        "are templates."
+      ],
+      "vo": "And most sites? Templates.",
+      "min": 2.0
+    },
+    {
+      "dur": 1.9,
+      "src": "home-raw.mp4",
+      "from": 3.6,
+      "fit": "band",
+      "text": [
+        "We start from",
+        "a blank file."
+      ],
+      "vo": "We start from a blank file.",
+      "min": 1.9
+    },
+    {
+      "dur": 1.9,
+      "src": "home-raw.mp4",
+      "from": 6.3,
+      "fit": "band",
+      "text": [
+        "Every letter",
+        "reacts."
+      ],
+      "vo": "Every letter reacts.",
+      "min": 1.9
+    },
+    {
+      "dur": 1.8,
+      "src": "home-raw.mp4",
+      "from": 10.5,
+      "fit": "band",
+      "text": [
+        "Headlines",
+        "that form."
+      ],
+      "vo": "Headlines that form.",
+      "min": 1.8
+    },
+    {
+      "dur": 1.9,
+      "src": "home-raw.mp4",
+      "from": 15.0,
+      "fit": "band",
+      "text": [
+        "Scroll that",
+        "feels alive."
+      ],
+      "vo": "Scroll that feels alive.",
+      "min": 1.9
+    },
+    {
+      "dur": 2.1,
+      "src": "tour-raw2.mp4",
+      "from": 9.8,
+      "fit": "band",
+      "text": [
+        "Pages that",
+        "flow."
+      ],
+      "vo": "Pages that flow.",
+      "min": 2.1
+    },
+    {
+      "dur": 2.2,
+      "src": "tour-raw2.mp4",
+      "from": 25.0,
+      "fit": "full",
+      "focus": 0.74,
+      "text": [
+        "Hospital software",
+        "for Jeeva."
+      ],
+      "dark": true,
+      "vo": "Hospital software, for Jeeva.",
+      "min": 2.0
+    },
+    {
+      "dur": 2.57,
+      "src": "tour-raw2.mp4",
+      "from": 14.8,
+      "fit": "band",
+      "text": [
+        "Website + CRM",
+        "for Maéra."
+      ],
+      "vo": "A website and CRM, for Maera.",
+      "min": 1.7,
+      "rate": 0.58
+    },
+    {
+      "dur": 2.22,
+      "src": "tour-raw2.mp4",
+      "from": 17.0,
+      "fit": "band",
+      "text": [
+        "Online store",
+        "for Netha Silks."
+      ],
+      "vo": "An online store, for Netha Silks.",
+      "min": 1.5,
+      "rate": 0.65
+    },
+    {
+      "dur": 2.0,
+      "src": "home-raw.mp4",
+      "from": 35.4,
+      "fit": "full",
+      "focus": 0.5,
+      "text": [
+        "Hyderabad →",
+        "worldwide."
+      ],
+      "vo": "From Hyderabad, to the world.",
+      "min": 2.0
+    }
+  ],
+  "end": {
+    "sec": 4.67,
+    "title": [
+      "One Prime Studio"
+    ],
+    "lines": [
+      "Design + code, one studio.",
+      "Websites · Shopify · CRM & ERP"
+    ],
+    "cta": "DM “PRIME” to start",
+    "vo": "One Prime Studio. DM PRIME, and let's start your project."
+  }
+}

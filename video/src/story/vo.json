@@ -1,0 +1,890 @@
+{
+ "fps": 60,
+ "total": 57.87,
+ "lines": [
+  {
+   "id": "hook",
+   "start": 0.3,
+   "end": 2.716,
+   "show": "Most businesses get sold one of two things.",
+   "words": [
+    {
+     "w": "Most",
+     "t": 0.3,
+     "d": 0.268,
+     "show": "Most"
+    },
+    {
+     "w": "businesses",
+     "t": 0.546,
+     "d": 0.599,
+     "show": "businesses"
+    },
+    {
+     "w": "get",
+     "t": 1.146,
+     "d": 0.153,
+     "show": "get"
+    },
+    {
+     "w": "sold",
+     "t": 1.299,
+     "d": 0.306,
+     "show": "sold"
+    },
+    {
+     "w": "one",
+     "t": 1.605,
+     "d": 0.102,
+     "show": "one"
+    },
+    {
+     "w": "of",
+     "t": 1.707,
+     "d": 0.064,
+     "show": "of"
+    },
+    {
+     "w": "two",
+     "t": 1.783,
+     "d": 0.242,
+     "show": "two"
+    },
+    {
+     "w": "things",
+     "t": 2.026,
+     "d": 0.65,
+     "show": "things."
+    }
+   ]
+  },
+  {
+   "id": "template",
+   "start": 3.166,
+   "end": 5.529,
+   "show": "A template that looks like everyone else's.",
+   "words": [
+    {
+     "w": "A",
+     "t": 3.166,
+     "d": 0.051,
+     "show": "A"
+    },
+    {
+     "w": "template",
+     "t": 3.192,
+     "d": 0.434,
+     "show": "template"
+    },
+    {
+     "w": "that",
+     "t": 3.741,
+     "d": 0.14,
+     "show": "that"
+    },
+    {
+     "w": "looks",
+     "t": 3.881,
+     "d": 0.255,
+     "show": "looks"
+    },
+    {
+     "w": "like",
+     "t": 4.136,
+     "d": 0.242,
+     "show": "like"
+    },
+    {
+     "w": "everyone",
+     "t": 4.532,
+     "d": 0.37,
+     "show": "everyone"
+    },
+    {
+     "w": "else's",
+     "t": 4.914,
+     "d": 0.561,
+     "show": "else's."
+    }
+   ]
+  },
+  {
+   "id": "agency",
+   "start": 5.929,
+   "end": 11.82,
+   "show": "Or an agency where the brand goes one way, the website another, and the software a third.",
+   "words": [
+    {
+     "w": "Or",
+     "t": 5.929,
+     "d": 0.102,
+     "show": "Or"
+    },
+    {
+     "w": "an",
+     "t": 5.989,
+     "d": 0.102,
+     "show": "an"
+    },
+    {
+     "w": "agency",
+     "t": 6.104,
+     "d": 0.574,
+     "show": "agency"
+    },
+    {
+     "w": "where",
+     "t": 6.69,
+     "d": 0.115,
+     "show": "where"
+    },
+    {
+     "w": "the",
+     "t": 6.818,
+     "d": 0.102,
+     "show": "the"
+    },
+    {
+     "w": "brand",
+     "t": 6.933,
+     "d": 0.485,
+     "show": "brand"
+    },
+    {
+     "w": "goes",
+     "t": 7.43,
+     "d": 0.332,
+     "show": "goes"
+    },
+    {
+     "w": "one",
+     "t": 7.762,
+     "d": 0.332,
+     "show": "one"
+    },
+    {
+     "w": "way",
+     "t": 8.093,
+     "d": 0.446,
+     "show": "way,"
+    },
+    {
+     "w": "the",
+     "t": 9.024,
+     "d": 0.102,
+     "show": "the"
+    },
+    {
+     "w": "website",
+     "t": 9.127,
+     "d": 0.548,
+     "show": "website"
+    },
+    {
+     "w": "another",
+     "t": 9.675,
+     "d": 0.459,
+     "show": "another,"
+    },
+    {
+     "w": "and",
+     "t": 10.606,
+     "d": 0.038,
+     "show": "and"
+    },
+    {
+     "w": "the",
+     "t": 10.644,
+     "d": 0.064,
+     "show": "the"
+    },
+    {
+     "w": "software",
+     "t": 10.721,
+     "d": 0.523,
+     "show": "software"
+    },
+    {
+     "w": "a",
+     "t": 11.244,
+     "d": 0.038,
+     "show": "a"
+    },
+    {
+     "w": "third",
+     "t": 11.295,
+     "d": 0.459,
+     "show": "third."
+    }
+   ]
+  },
+  {
+   "id": "gap",
+   "start": 12.32,
+   "end": 15.051,
+   "show": "We started One Prime Studio to close that gap.",
+   "words": [
+    {
+     "w": "We",
+     "t": 12.32,
+     "d": 0.077,
+     "show": "We"
+    },
+    {
+     "w": "started",
+     "t": 12.361,
+     "d": 0.357,
+     "show": "started"
+    },
+    {
+     "w": "One",
+     "t": 12.731,
+     "d": 0.306,
+     "show": "One"
+    },
+    {
+     "w": "Prime",
+     "t": 13.05,
+     "d": 0.306,
+     "show": "Prime"
+    },
+    {
+     "w": "Studio",
+     "t": 13.369,
+     "d": 0.574,
+     "show": "Studio"
+    },
+    {
+     "w": "to",
+     "t": 13.956,
+     "d": 0.115,
+     "show": "to"
+    },
+    {
+     "w": "close",
+     "t": 14.071,
+     "d": 0.434,
+     "show": "close"
+    },
+    {
+     "w": "that",
+     "t": 14.504,
+     "d": 0.204,
+     "show": "that"
+    },
+    {
+     "w": "gap",
+     "t": 14.708,
+     "d": 0.37,
+     "show": "gap."
+    }
+   ]
+  },
+  {
+   "id": "two",
+   "start": 15.751,
+   "end": 18.913,
+   "show": "Two engineers. One studio. In Hyderabad.",
+   "words": [
+    {
+     "w": "Two",
+     "t": 15.751,
+     "d": 0.179,
+     "show": "Two"
+    },
+    {
+     "w": "engineers",
+     "t": 15.89,
+     "d": 0.638,
+     "show": "engineers."
+    },
+    {
+     "w": "One",
+     "t": 16.948,
+     "d": 0.14,
+     "show": "One"
+    },
+    {
+     "w": "studio",
+     "t": 17.089,
+     "d": 0.574,
+     "show": "studio."
+    },
+    {
+     "w": "In",
+     "t": 18.071,
+     "d": 0.064,
+     "show": "In"
+    },
+    {
+     "w": "Hyderabad",
+     "t": 18.135,
+     "d": 0.714,
+     "show": "Hyderabad."
+    }
+   ]
+  },
+  {
+   "id": "ruthwik",
+   "start": 19.413,
+   "end": 25.255,
+   "show": "Nagaruthwik designs and builds what you see: the identity, the interface, the motion.",
+   "words": [
+    {
+     "w": "Nagaruthwik",
+     "t": 19.413,
+     "d": 0.625,
+     "show": "Nagaruthwik"
+    },
+    {
+     "w": "designs",
+     "t": 20.016,
+     "d": 0.727,
+     "show": "designs"
+    },
+    {
+     "w": "and",
+     "t": 20.743,
+     "d": 0.23,
+     "show": "and"
+    },
+    {
+     "w": "builds",
+     "t": 20.986,
+     "d": 0.434,
+     "show": "builds"
+    },
+    {
+     "w": "what",
+     "t": 21.419,
+     "d": 0.115,
+     "show": "what"
+    },
+    {
+     "w": "you",
+     "t": 21.534,
+     "d": 0.128,
+     "show": "you"
+    },
+    {
+     "w": "see",
+     "t": 21.662,
+     "d": 0.472,
+     "show": "see:"
+    },
+    {
+     "w": "the",
+     "t": 22.708,
+     "d": 0.102,
+     "show": "the"
+    },
+    {
+     "w": "identity",
+     "t": 22.81,
+     "d": 0.6,
+     "show": "identity,"
+    },
+    {
+     "w": "the",
+     "t": 23.652,
+     "d": 0.102,
+     "show": "the"
+    },
+    {
+     "w": "interface",
+     "t": 23.817,
+     "d": 0.676,
+     "show": "interface,"
+    },
+    {
+     "w": "the",
+     "t": 24.519,
+     "d": 0.089,
+     "show": "the"
+    },
+    {
+     "w": "motion",
+     "t": 24.621,
+     "d": 0.574,
+     "show": "motion."
+    }
+   ]
+  },
+  {
+   "id": "vinith",
+   "start": 25.705,
+   "end": 31.535,
+   "show": "Vinith builds what runs underneath: the data, the APIs, the systems that can't go down.",
+   "words": [
+    {
+     "w": "Vinith",
+     "t": 25.705,
+     "d": 0.293,
+     "show": "Vinith"
+    },
+    {
+     "w": "builds",
+     "t": 25.978,
+     "d": 0.319,
+     "show": "builds"
+    },
+    {
+     "w": "what",
+     "t": 26.297,
+     "d": 0.179,
+     "show": "what"
+    },
+    {
+     "w": "runs",
+     "t": 26.476,
+     "d": 0.268,
+     "show": "runs"
+    },
+    {
+     "w": "underneath",
+     "t": 26.744,
+     "d": 0.6,
+     "show": "underneath:"
+    },
+    {
+     "w": "the",
+     "t": 27.751,
+     "d": 0.115,
+     "show": "the"
+    },
+    {
+     "w": "data",
+     "t": 27.866,
+     "d": 0.485,
+     "show": "data,"
+    },
+    {
+     "w": "the",
+     "t": 28.568,
+     "d": 0.102,
+     "show": "the"
+    },
+    {
+     "w": "APIs",
+     "t": 28.797,
+     "d": 0.931,
+     "show": "APIs,"
+    },
+    {
+     "w": "the",
+     "t": 29.971,
+     "d": 0.089,
+     "show": "the"
+    },
+    {
+     "w": "systems",
+     "t": 30.073,
+     "d": 0.485,
+     "show": "systems"
+    },
+    {
+     "w": "that",
+     "t": 30.558,
+     "d": 0.115,
+     "show": "that"
+    },
+    {
+     "w": "can't",
+     "t": 30.672,
+     "d": 0.23,
+     "show": "can't"
+    },
+    {
+     "w": "go",
+     "t": 30.902,
+     "d": 0.14,
+     "show": "go"
+    },
+    {
+     "w": "down",
+     "t": 31.042,
+     "d": 0.434,
+     "show": "down."
+    }
+   ]
+  },
+  {
+   "id": "same",
+   "start": 31.985,
+   "end": 35.013,
+   "show": "The same two people, from the first call to the launch.",
+   "words": [
+    {
+     "w": "The",
+     "t": 31.985,
+     "d": 0.064,
+     "show": "The"
+    },
+    {
+     "w": "same",
+     "t": 32.03,
+     "d": 0.344,
+     "show": "same"
+    },
+    {
+     "w": "two",
+     "t": 32.375,
+     "d": 0.242,
+     "show": "two"
+    },
+    {
+     "w": "people",
+     "t": 32.617,
+     "d": 0.536,
+     "show": "people,"
+    },
+    {
+     "w": "from",
+     "t": 33.408,
+     "d": 0.115,
+     "show": "from"
+    },
+    {
+     "w": "the",
+     "t": 33.523,
+     "d": 0.064,
+     "show": "the"
+    },
+    {
+     "w": "first",
+     "t": 33.587,
+     "d": 0.332,
+     "show": "first"
+    },
+    {
+     "w": "call",
+     "t": 33.918,
+     "d": 0.242,
+     "show": "call"
+    },
+    {
+     "w": "to",
+     "t": 34.173,
+     "d": 0.077,
+     "show": "to"
+    },
+    {
+     "w": "the",
+     "t": 34.263,
+     "d": 0.089,
+     "show": "the"
+    },
+    {
+     "w": "launch",
+     "t": 34.365,
+     "d": 0.574,
+     "show": "launch."
+    }
+   ]
+  },
+  {
+   "id": "jeeva",
+   "start": 35.613,
+   "end": 40.314,
+   "show": "Since then, we've built the software that runs a hospital in Hanamkonda,",
+   "words": [
+    {
+     "w": "Since",
+     "t": 35.613,
+     "d": 0.242,
+     "show": "Since"
+    },
+    {
+     "w": "then",
+     "t": 35.828,
+     "d": 0.319,
+     "show": "then,"
+    },
+    {
+     "w": "we've",
+     "t": 36.415,
+     "d": 0.242,
+     "show": "we've"
+    },
+    {
+     "w": "built",
+     "t": 36.67,
+     "d": 0.191,
+     "show": "built"
+    },
+    {
+     "w": "the",
+     "t": 36.874,
+     "d": 0.089,
+     "show": "the"
+    },
+    {
+     "w": "software",
+     "t": 36.963,
+     "d": 0.676,
+     "show": "software"
+    },
+    {
+     "w": "that",
+     "t": 37.652,
+     "d": 0.293,
+     "show": "that"
+    },
+    {
+     "w": "runs",
+     "t": 37.958,
+     "d": 0.332,
+     "show": "runs"
+    },
+    {
+     "w": "a",
+     "t": 38.303,
+     "d": 0.051,
+     "show": "a"
+    },
+    {
+     "w": "hospital",
+     "t": 38.366,
+     "d": 0.753,
+     "show": "hospital"
+    },
+    {
+     "w": "in",
+     "t": 39.247,
+     "d": 0.102,
+     "show": "in"
+    },
+    {
+     "w": "Hanamkonda",
+     "t": 39.349,
+     "d": 0.906,
+     "show": "Hanamkonda,"
+    }
+   ]
+  },
+  {
+   "id": "maera",
+   "start": 40.614,
+   "end": 45.732,
+   "show": "a website and CRM for a beauty studio and academy in Uppal,",
+   "words": [
+    {
+     "w": "a",
+     "t": 40.614,
+     "d": 0.077,
+     "show": "a"
+    },
+    {
+     "w": "website",
+     "t": 40.668,
+     "d": 0.689,
+     "show": "website"
+    },
+    {
+     "w": "and",
+     "t": 41.408,
+     "d": 0.128,
+     "show": "and"
+    },
+    {
+     "w": "CRM",
+     "t": 41.548,
+     "d": 0.918,
+     "show": "CRM"
+    },
+    {
+     "w": "for",
+     "t": 42.671,
+     "d": 0.191,
+     "show": "for"
+    },
+    {
+     "w": "a",
+     "t": 42.875,
+     "d": 0.064,
+     "show": "a"
+    },
+    {
+     "w": "beauty",
+     "t": 42.939,
+     "d": 0.446,
+     "show": "beauty"
+    },
+    {
+     "w": "studio",
+     "t": 43.385,
+     "d": 0.676,
+     "show": "studio"
+    },
+    {
+     "w": "and",
+     "t": 44.163,
+     "d": 0.166,
+     "show": "and"
+    },
+    {
+     "w": "academy",
+     "t": 44.329,
+     "d": 0.65,
+     "show": "academy"
+    },
+    {
+     "w": "in",
+     "t": 45.107,
+     "d": 0.128,
+     "show": "in"
+    },
+    {
+     "w": "Uppal",
+     "t": 45.235,
+     "d": 0.472,
+     "show": "Uppal,"
+    }
+   ]
+  },
+  {
+   "id": "netha",
+   "start": 46.032,
+   "end": 49.126,
+   "show": "and an online store for handloom weavers in Pochampally.",
+   "words": [
+    {
+     "w": "and",
+     "t": 46.032,
+     "d": 0.077,
+     "show": "and"
+    },
+    {
+     "w": "an",
+     "t": 46.072,
+     "d": 0.076,
+     "show": "an"
+    },
+    {
+     "w": "online",
+     "t": 46.149,
+     "d": 0.472,
+     "show": "online"
+    },
+    {
+     "w": "store",
+     "t": 46.634,
+     "d": 0.344,
+     "show": "store"
+    },
+    {
+     "w": "for",
+     "t": 46.991,
+     "d": 0.14,
+     "show": "for"
+    },
+    {
+     "w": "handloom",
+     "t": 47.131,
+     "d": 0.574,
+     "show": "handloom"
+    },
+    {
+     "w": "weavers",
+     "t": 47.705,
+     "d": 0.485,
+     "show": "weavers"
+    },
+    {
+     "w": "in",
+     "t": 48.203,
+     "d": 0.102,
+     "show": "in"
+    },
+    {
+     "w": "Pochampally",
+     "t": 48.305,
+     "d": 0.753,
+     "show": "Pochampally."
+    }
+   ]
+  },
+  {
+   "id": "together",
+   "start": 49.726,
+   "end": 53.416,
+   "show": "Identity, leads and solutions. Made together.",
+   "words": [
+    {
+     "w": "Identity",
+     "t": 49.726,
+     "d": 0.523,
+     "show": "Identity,"
+    },
+    {
+     "w": "leads",
+     "t": 50.628,
+     "d": 0.587,
+     "show": "leads"
+    },
+    {
+     "w": "and",
+     "t": 51.355,
+     "d": 0.14,
+     "show": "and"
+    },
+    {
+     "w": "solutions",
+     "t": 51.495,
+     "d": 0.804,
+     "show": "solutions."
+    },
+    {
+     "w": "Made",
+     "t": 52.707,
+     "d": 0.166,
+     "show": "Made"
+    },
+    {
+     "w": "together",
+     "t": 52.873,
+     "d": 0.485,
+     "show": "together."
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "start": 53.916,
+   "end": 56.27,
+   "show": "Nothing average. One Prime Studio.",
+   "words": [
+    {
+     "w": "Nothing",
+     "t": 53.916,
+     "d": 0.281,
+     "show": "Nothing"
+    },
+    {
+     "w": "average",
+     "t": 54.155,
+     "d": 0.574,
+     "show": "average."
+    },
+    {
+     "w": "One",
+     "t": 55.137,
+     "d": 0.217,
+     "show": "One"
+    },
+    {
+     "w": "Prime",
+     "t": 55.354,
+     "d": 0.281,
+     "show": "Prime"
+    },
+    {
+     "w": "Studio",
+     "t": 55.647,
+     "d": 0.548,
+     "show": "Studio."
+    }
+   ]
+  }
+ ]
+}

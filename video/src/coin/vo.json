@@ -1,0 +1,609 @@
+{
+ "fps": 60,
+ "total": 38.817,
+ "lines": [
+  {
+   "id": "hook",
+   "start": 0.15,
+   "end": 1.575,
+   "show": "A coin has three sides.",
+   "words": [
+    {
+     "w": "A",
+     "t": 0.15,
+     "d": 0.036,
+     "show": "A"
+    },
+    {
+     "w": "coin",
+     "t": 0.15,
+     "d": 0.288,
+     "show": "coin"
+    },
+    {
+     "w": "has",
+     "t": 0.434,
+     "d": 0.168,
+     "show": "has"
+    },
+    {
+     "w": "three",
+     "t": 0.614,
+     "d": 0.325,
+     "show": "three"
+    },
+    {
+     "w": "sides",
+     "t": 0.938,
+     "d": 0.577,
+     "show": "sides."
+    }
+   ]
+  },
+  {
+   "id": "heads",
+   "start": 1.925,
+   "end": 5.167,
+   "show": "Heads: a cheap template that looks like everyone else's.",
+   "words": [
+    {
+     "w": "Heads",
+     "t": 1.925,
+     "d": 0.409,
+     "show": "Heads:"
+    },
+    {
+     "w": "a",
+     "t": 2.68,
+     "d": 0.036,
+     "show": "a"
+    },
+    {
+     "w": "cheap",
+     "t": 2.716,
+     "d": 0.276,
+     "show": "cheap"
+    },
+    {
+     "w": "template",
+     "t": 2.993,
+     "d": 0.433,
+     "show": "template"
+    },
+    {
+     "w": "that",
+     "t": 3.582,
+     "d": 0.132,
+     "show": "that"
+    },
+    {
+     "w": "looks",
+     "t": 3.714,
+     "d": 0.228,
+     "show": "looks"
+    },
+    {
+     "w": "like",
+     "t": 3.942,
+     "d": 0.192,
+     "show": "like"
+    },
+    {
+     "w": "everyone",
+     "t": 4.267,
+     "d": 0.312,
+     "show": "everyone"
+    },
+    {
+     "w": "else's",
+     "t": 4.579,
+     "d": 0.541,
+     "show": "else's."
+    }
+   ]
+  },
+  {
+   "id": "tails",
+   "start": 5.467,
+   "end": 9.028,
+   "show": "Tails: months of waiting, and a bill you never planned for.",
+   "words": [
+    {
+     "w": "Tails",
+     "t": 5.467,
+     "d": 0.553,
+     "show": "Tails:"
+    },
+    {
+     "w": "months",
+     "t": 6.394,
+     "d": 0.457,
+     "show": "months"
+    },
+    {
+     "w": "of",
+     "t": 6.851,
+     "d": 0.144,
+     "show": "of"
+    },
+    {
+     "w": "waiting",
+     "t": 6.995,
+     "d": 0.445,
+     "show": "waiting,"
+    },
+    {
+     "w": "and",
+     "t": 7.704,
+     "d": 0.072,
+     "show": "and"
+    },
+    {
+     "w": "a",
+     "t": 7.788,
+     "d": 0.06,
+     "show": "a"
+    },
+    {
+     "w": "bill",
+     "t": 7.849,
+     "d": 0.168,
+     "show": "bill"
+    },
+    {
+     "w": "you",
+     "t": 8.017,
+     "d": 0.084,
+     "show": "you"
+    },
+    {
+     "w": "never",
+     "t": 8.101,
+     "d": 0.204,
+     "show": "never"
+    },
+    {
+     "w": "planned",
+     "t": 8.305,
+     "d": 0.288,
+     "show": "planned"
+    },
+    {
+     "w": "for",
+     "t": 8.594,
+     "d": 0.385,
+     "show": "for."
+    }
+   ]
+  },
+  {
+   "id": "edge",
+   "start": 9.378,
+   "end": 10.927,
+   "show": "And then, there's the edge.",
+   "words": [
+    {
+     "w": "And",
+     "t": 9.378,
+     "d": 0.096,
+     "show": "And"
+    },
+    {
+     "w": "then",
+     "t": 9.437,
+     "d": 0.325,
+     "show": "then,"
+    },
+    {
+     "w": "there's",
+     "t": 10.002,
+     "d": 0.192,
+     "show": "there's"
+    },
+    {
+     "w": "the",
+     "t": 10.207,
+     "d": 0.12,
+     "show": "the"
+    },
+    {
+     "w": "edge",
+     "t": 10.339,
+     "d": 0.517,
+     "show": "edge."
+    }
+   ]
+  },
+  {
+   "id": "land",
+   "start": 12.227,
+   "end": 13.685,
+   "show": "Almost impossible to land.",
+   "words": [
+    {
+     "w": "Almost",
+     "t": 12.227,
+     "d": 0.252,
+     "show": "Almost"
+    },
+    {
+     "w": "impossible",
+     "t": 12.439,
+     "d": 0.637,
+     "show": "impossible"
+    },
+    {
+     "w": "to",
+     "t": 13.088,
+     "d": 0.072,
+     "show": "to"
+    },
+    {
+     "w": "land",
+     "t": 13.172,
+     "d": 0.445,
+     "show": "land."
+    }
+   ]
+  },
+  {
+   "id": "build",
+   "start": 14.085,
+   "end": 14.751,
+   "show": "That's where we build.",
+   "words": [
+    {
+     "w": "That's",
+     "t": 14.085,
+     "d": 0.108,
+     "show": "That's"
+    },
+    {
+     "w": "where",
+     "t": 14.168,
+     "d": 0.072,
+     "show": "where"
+    },
+    {
+     "w": "we",
+     "t": 14.24,
+     "d": 0.096,
+     "show": "we"
+    },
+    {
+     "w": "build",
+     "t": 14.348,
+     "d": 0.337,
+     "show": "build."
+    }
+   ]
+  },
+  {
+   "id": "name",
+   "start": 16.451,
+   "end": 17.396,
+   "show": "One Prime Studio.",
+   "words": [
+    {
+     "w": "One",
+     "t": 16.451,
+     "d": 0.132,
+     "show": "One"
+    },
+    {
+     "w": "Prime",
+     "t": 16.548,
+     "d": 0.252,
+     "show": "Prime"
+    },
+    {
+     "w": "Studio",
+     "t": 16.8,
+     "d": 0.505,
+     "show": "Studio."
+    }
+   ]
+  },
+  {
+   "id": "what",
+   "start": 17.746,
+   "end": 20.669,
+   "show": "A web design and development studio in Hyderabad.",
+   "words": [
+    {
+     "w": "A",
+     "t": 17.746,
+     "d": 0.048,
+     "show": "A"
+    },
+    {
+     "w": "web",
+     "t": 17.747,
+     "d": 0.228,
+     "show": "web"
+    },
+    {
+     "w": "design",
+     "t": 17.987,
+     "d": 0.505,
+     "show": "design"
+    },
+    {
+     "w": "and",
+     "t": 18.504,
+     "d": 0.06,
+     "show": "and"
+    },
+    {
+     "w": "development",
+     "t": 18.576,
+     "d": 0.433,
+     "show": "development"
+    },
+    {
+     "w": "studio",
+     "t": 19.009,
+     "d": 0.589,
+     "show": "studio"
+    },
+    {
+     "w": "in",
+     "t": 19.754,
+     "d": 0.084,
+     "show": "in"
+    },
+    {
+     "w": "Hyderabad",
+     "t": 19.838,
+     "d": 0.757,
+     "show": "Hyderabad."
+    }
+   ]
+  },
+  {
+   "id": "jeeva",
+   "start": 21.119,
+   "end": 25.622,
+   "show": "Hospital software and a website for Jeeva Multispeciality Hospital.",
+   "words": [
+    {
+     "w": "Hospital",
+     "t": 21.119,
+     "d": 0.349,
+     "show": "Hospital"
+    },
+    {
+     "w": "software",
+     "t": 21.428,
+     "d": 0.769,
+     "show": "software"
+    },
+    {
+     "w": "and",
+     "t": 22.377,
+     "d": 0.06,
+     "show": "and"
+    },
+    {
+     "w": "a",
+     "t": 22.437,
+     "d": 0.072,
+     "show": "a"
+    },
+    {
+     "w": "website",
+     "t": 22.51,
+     "d": 0.649,
+     "show": "website"
+    },
+    {
+     "w": "for",
+     "t": 23.303,
+     "d": 0.216,
+     "show": "for"
+    },
+    {
+     "w": "Jeeva",
+     "t": 23.531,
+     "d": 0.433,
+     "show": "Jeeva"
+    },
+    {
+     "w": "Multispeciality",
+     "t": 23.976,
+     "d": 0.998,
+     "show": "Multispeciality"
+    },
+    {
+     "w": "Hospital",
+     "t": 24.974,
+     "d": 0.613,
+     "show": "Hospital."
+    }
+   ]
+  },
+  {
+   "id": "maera",
+   "start": 25.972,
+   "end": 29.371,
+   "show": "A website and CRM for Maéra Makeover and Academy.",
+   "words": [
+    {
+     "w": "A",
+     "t": 25.972,
+     "d": 0.06,
+     "show": "A"
+    },
+    {
+     "w": "website",
+     "t": 26.0,
+     "d": 0.601,
+     "show": "website"
+    },
+    {
+     "w": "and",
+     "t": 26.673,
+     "d": 0.084,
+     "show": "and"
+    },
+    {
+     "w": "CRM",
+     "t": 26.757,
+     "d": 0.637,
+     "show": "CRM"
+    },
+    {
+     "w": "for",
+     "t": 27.406,
+     "d": 0.156,
+     "show": "for"
+    },
+    {
+     "w": "Maera",
+     "t": 27.562,
+     "d": 0.373,
+     "show": "Maéra"
+    },
+    {
+     "w": "Makeover",
+     "t": 27.935,
+     "d": 0.673,
+     "show": "Makeover"
+    },
+    {
+     "w": "and",
+     "t": 28.704,
+     "d": 0.06,
+     "show": "and"
+    },
+    {
+     "w": "Academy",
+     "t": 28.764,
+     "d": 0.529,
+     "show": "Academy."
+    }
+   ]
+  },
+  {
+   "id": "netha",
+   "start": 29.721,
+   "end": 33.93,
+   "show": "An online store for Netha Silks, handloom weavers since 1987.",
+   "words": [
+    {
+     "w": "An",
+     "t": 29.721,
+     "d": 0.084
+    },
+    {
+     "w": "online",
+     "t": 29.758,
+     "d": 0.409
+    },
+    {
+     "w": "store",
+     "t": 30.179,
+     "d": 0.288
+    },
+    {
+     "w": "for",
+     "t": 30.467,
+     "d": 0.12
+    },
+    {
+     "w": "Netha",
+     "t": 30.588,
+     "d": 0.361
+    },
+    {
+     "w": "Silks",
+     "t": 30.948,
+     "d": 0.625
+    },
+    {
+     "w": "handloom",
+     "t": 31.802,
+     "d": 0.409
+    },
+    {
+     "w": "weavers",
+     "t": 32.21,
+     "d": 0.433
+    },
+    {
+     "w": "since 1987",
+     "t": 32.655,
+     "d": 1.214
+    }
+   ]
+  },
+  {
+   "id": "cta",
+   "start": 34.38,
+   "end": 37.417,
+   "show": "Don't leave your website to a coin toss. DM PRIME.",
+   "words": [
+    {
+     "w": "Don't",
+     "t": 34.38,
+     "d": 0.144,
+     "show": "Don't"
+    },
+    {
+     "w": "leave",
+     "t": 34.484,
+     "d": 0.144,
+     "show": "leave"
+    },
+    {
+     "w": "your",
+     "t": 34.628,
+     "d": 0.108,
+     "show": "your"
+    },
+    {
+     "w": "website",
+     "t": 34.737,
+     "d": 0.505,
+     "show": "website"
+    },
+    {
+     "w": "to",
+     "t": 35.241,
+     "d": 0.132,
+     "show": "to"
+    },
+    {
+     "w": "a",
+     "t": 35.374,
+     "d": 0.06,
+     "show": "a"
+    },
+    {
+     "w": "coin",
+     "t": 35.434,
+     "d": 0.288,
+     "show": "coin"
+    },
+    {
+     "w": "toss",
+     "t": 35.722,
+     "d": 0.565,
+     "show": "toss."
+    },
+    {
+     "w": "DM",
+     "t": 36.684,
+     "d": 0.276,
+     "show": "DM"
+    },
+    {
+     "w": "PRIME",
+     "t": 36.96,
+     "d": 0.385,
+     "show": "PRIME."
+    }
+   ]
+  }
+ ]
+}

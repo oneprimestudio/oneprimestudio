@@ -1,0 +1,52 @@
+{
+  "posters": [
+    {
+      "id": "cover", "bg": "#08064e", "glow": "#2b2ca8", "nav": "Selected work · 2026",
+      "left": "Open for new projects", "dot": "#7fe0a8", "right": "Hyderabad → Worldwide",
+      "line1": "Selected", "line2": "work, 2026.", "band": ["3 clients", "Software · Web · Commerce", "Telangana"],
+      "pills": ["Websites", "Shopify stores", "CRM & ERP", "SaaS products"],
+      "cards": ["card-jeeva.webp", "card-maera.webp", "card-netha.webp"],
+      "desc": "Software, websites and stores for businesses across Telangana. Each one designed and built end to end."
+    },
+    {
+      "id": "jeeva", "bg": "#0f2a25", "glow": "#2f6e5c", "nav": "Case 01 · Software",
+      "left": "Live · jeevamultispecialityhospital.com", "dot": "#7fe0a8", "right": "Hanamkonda, Warangal",
+      "line1": "One record", "line2": "per patient.", "band": ["2026©", "Hospital software · Website", "16 departments"],
+      "pills": ["Hospital management software", "Website", "Product design", "Engineering"],
+      "browser": "jeeva-1.webp", "url": "jeevamultispecialityhospital.com", "card": "card-jeeva.webp",
+      "desc": "One system for sixteen departments and nineteen-plus consultants, and the website patients book through."
+    },
+    {
+      "id": "maera", "bg": "#2a2227", "glow": "#74485c", "nav": "Case 02 · Web", "size": 122,
+      "left": "Live · maeraacademy.com", "dot": "#f2a7c3", "right": "Uppal, Hyderabad",
+      "line1": "Beauty, booked", "line2": "and billed.", "band": ["2026©", "Website · CRM", "Women-only studio"],
+      "pills": ["Website", "CRM", "Booking", "Billing"],
+      "browser": "maera-1.webp", "url": "maeraacademy.com", "card": "card-maera.webp",
+      "desc": "An editorial website for a bridal studio and academy, and the CRM that runs its day, from bookings to invoices."
+    },
+    {
+      "id": "netha", "bg": "#3a1714", "glow": "#8a4a2a", "nav": "Case 03 · Commerce",
+      "left": "Live · nethasilksandco.com", "dot": "#e8bf62", "right": "Bhoodan Pochampally",
+      "line1": "Loom to", "line2": "doorstep.", "band": ["Since 1987", "Online store", "8 silk series"],
+      "pills": ["E-commerce", "Website design", "Engineering", "Catalogue"],
+      "browser": "netha-1.webp", "url": "nethasilksandco.com", "card": "card-netha.webp",
+      "desc": "The online store for handloom weavers in Pochampally: every saree woven by hand, now browsed and bought online."
+    },
+    {
+      "id": "site", "theme": "light", "bg": "#f7f6f2", "glow": "#c3c8e6", "nav": "In-house · Web",
+      "left": "Live · 60 fps", "dot": "#2f6bff", "right": "Hyderabad",
+      "line1": "We switch", "line2": "the things.", "band": ["WebGL", "Design · Next.js · Motion", "In-house"],
+      "pills": ["Design", "Next.js", "WebGL", "Motion"],
+      "browser": "own-1.webp", "url": "oneprimestudio.vercel.app", "card": "card-site.webp",
+      "desc": "Our own site: a live WebGL bloom that leans toward your cursor, dithered seams between sections, held to sixty frames a second."
+    },
+    {
+      "id": "cta", "bg": "#08064e", "glow": "#2b2ca8", "nav": "Start a project", "size": 120,
+      "left": "Open for new projects", "dot": "#7fe0a8", "right": "Hyderabad → Worldwide",
+      "line1": "Your business,", "line2": "switched on.", "band": ["Websites", "Shopify · CRM · SaaS", "Brand identity"],
+      "pills": [], "mark": true, "cta": "DM “PRIME”",
+      "desc": "Tell us what you're building. The first conversation is where it gets good.", "descTop": 1170,
+      "foot": "Web design & development studio · Hyderabad"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "voice": "en-US-AndrewMultilingualNeural",
+  "rate": "-2%",
+  "pitch": "-4Hz",
+  "start": 0.3,
+  "lines": [
+    { "id": "hook", "say": "Most businesses get sold one of two things.", "show": "Most businesses get sold one of two things.", "after": 0.45 },
+    { "id": "template", "say": "A template that looks like everyone else's.", "show": "A template that looks like everyone else's.", "after": 0.4 },
+    { "id": "agency", "say": "Or an agency where the brand goes one way, the website another, and the software a third.", "show": "Or an agency where the brand goes one way, the website another, and the software a third.", "after": 0.5 },
+    { "id": "gap", "say": "We started One Prime Studio to close that gap.", "show": "We started One Prime Studio to close that gap.", "after": 0.7 },
+    { "id": "two", "say": "Two engineers. One studio. In Hyderabad.", "show": "Two engineers. One studio. In Hyderabad.", "after": 0.5 },
+    { "id": "ruthwik", "say": "Nagaruthwik designs and builds what you see: the identity, the interface, the motion.", "show": "Nagaruthwik designs and builds what you see: the identity, the interface, the motion.", "after": 0.45 },
+    { "id": "vinith", "say": "Vinith builds what runs underneath: the data, the APIs, the systems that can't go down.", "show": "Vinith builds what runs underneath: the data, the APIs, the systems that can't go down.", "after": 0.45 },
+    { "id": "same", "say": "The same two people, from the first call to the launch.", "show": "The same two people, from the first call to the launch.", "after": 0.6 },
+    { "id": "jeeva", "say": "Since then, we've built the software that runs a hospital in Hanamkonda,", "show": "Since then, we've built the software that runs a hospital in Hanamkonda,", "after": 0.3 },
+    { "id": "maera", "say": "a website and CRM for a beauty studio and academy in Uppal,", "show": "a website and CRM for a beauty studio and academy in Uppal,", "after": 0.3 },
+    { "id": "netha", "say": "and an online store for handloom weavers in Pochampally.", "show": "and an online store for handloom weavers in Pochampally.", "after": 0.6 },
+    { "id": "together", "say": "Identity, leads and solutions. Made together.", "show": "Identity, leads and solutions. Made together.", "after": 0.5 },
+    { "id": "end", "say": "Nothing average. One Prime Studio.", "show": "Nothing average. One Prime Studio.", "after": 1.6 }
+  ]
+}

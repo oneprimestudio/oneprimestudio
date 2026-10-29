@@ -1,0 +1,20 @@
+{
+  "voice": "en-US-AndrewMultilingualNeural",
+  "rate": "+4%",
+  "pitch": "-3Hz",
+  "start": 0.15,
+  "lines": [
+    { "id": "hook", "say": "A coin has three sides.", "show": "A coin has three sides.", "after": 0.35 },
+    { "id": "heads", "say": "Heads: a cheap template that looks like everyone else's.", "show": "Heads: a cheap template that looks like everyone else's.", "after": 0.3 },
+    { "id": "tails", "say": "Tails: months of waiting, and a bill you never planned for.", "show": "Tails: months of waiting, and a bill you never planned for.", "after": 0.35 },
+    { "id": "edge", "say": "And then, there's the edge.", "show": "And then, there's the edge.", "after": 1.3 },
+    { "id": "land", "say": "Almost impossible to land.", "show": "Almost impossible to land.", "after": 0.4 },
+    { "id": "build", "say": "That's where we build.", "show": "That's where we build.", "after": 1.7 },
+    { "id": "name", "say": "One Prime Studio.", "show": "One Prime Studio.", "after": 0.35 },
+    { "id": "what", "say": "A web design and development studio in Hyderabad.", "show": "A web design and development studio in Hyderabad.", "after": 0.45 },
+    { "id": "jeeva", "say": "Hospital software and a website for Jeeva Multispeciality Hospital.", "show": "Hospital software and a website for Jeeva Multispeciality Hospital.", "after": 0.35 },
+    { "id": "maera", "say": "A website and CRM for Maera Makeover and Academy.", "show": "A website and CRM for Maéra Makeover and Academy.", "after": 0.35 },
+    { "id": "netha", "say": "An online store for Netha Silks, handloom weavers since 1987.", "show": "An online store for Netha Silks, handloom weavers since 1987.", "after": 0.45 },
+    { "id": "cta", "say": "Don't leave your website to a coin toss. DM PRIME.", "show": "Don't leave your website to a coin toss. DM PRIME.", "after": 1.4 }
+  ]
+}

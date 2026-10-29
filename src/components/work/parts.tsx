@@ -45,7 +45,7 @@ export function CardMedia({ work, sizes = cardSizes }: { work: Work; sizes?: str
 }
 
 /** a project's cover: 16:9 from md, its 4:5 card on a phone */
-export function Cover({ work, sizes = "100vw", priority = false }: { work: Work; sizes?: string; priority?: boolean }) {
+export function Cover({ work, sizes = "80vw", priority = false }: { work: Work; sizes?: string; priority?: boolean }) {
   return (
     <>
       <Image src={coverSrc(work)} alt={`${work.title}: ${work.tag}`} fill priority={priority} sizes={sizes} className="hidden object-cover md:block" />

@@ -1,0 +1,17 @@
+{
+  "fps": 60,
+  "take": { "src": "flow-raw.mp4", "from": 0, "to": 55.4 },
+  "labels": [
+    { "t": -1, "hook": ["This is a website.", "Not a video."] },
+    { "t": 4.6, "hook": ["Hover a letter.", "It switches."] },
+    { "t": 12.2, "hook": ["Headlines that", "form like liquid."] },
+    { "t": 17.0, "hook": ["Sections hand over", "in dither."] },
+    { "t": 21.0, "hook": ["Websites, Shopify,", "CRM and SaaS."] },
+    { "t": 29.2, "hook": ["Real clients.", "Real software."] },
+    { "t": 36.0, "hook": ["Small details,", "big difference."] },
+    { "t": 38.6, "hook": ["Hyderabad →", "worldwide."] },
+    { "t": 45.0, "hook": ["Tell us what", "you're building."] },
+    { "t": 50.0, "hook": ["Let's make", "it prime."] }
+  ],
+  "end": { "sec": 3.5, "title": ["One Prime Studio"], "lines": ["Websites · Shopify · CRM & ERP", "Hyderabad → Worldwide"], "cta": "Comment SITE for the link" }
+}

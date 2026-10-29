@@ -315,7 +315,7 @@ export default function Services() {
             fill
             sizes="100vw"
             quality={90}
-            className="hidden object-cover md:block"
+            className="hidden object-cover brightness-75 md:block"
           />
           <Image
             src="/images/services-bloom-portrait-4k.webp"
@@ -323,7 +323,7 @@ export default function Services() {
             fill
             sizes="100vw"
             quality={90}
-            className="object-cover object-[50%_30%] md:hidden"
+            className="object-cover object-[50%_30%] brightness-75 md:hidden"
           />
         </div>
         {/* the photograph's top edge, settled to exactly the colour the seam above hands over */}
@@ -368,7 +368,7 @@ export default function Services() {
           data-scroller
           className="relative mt-12 snap-x  overflow-x-auto overscroll-x-contain [scrollbar-width:none] md:mt-auto [&::-webkit-scrollbar]:hidden"
         >
-          <ul data-track className="flex w-max gap-2 py-[2rem] mb-0 pb-0 px-[var(--gutter)] will-change-transform md:gap-4">
+          <ul data-track className="flex w-max gap-2 py-[2rem] mb-[1.1rem] md:mb-[5rem] pb-0 px-[var(--gutter)] will-change-transform md:gap-4">
             {SERVICES.map((s) => (
               <li key={s.title} data-item className="snap-start scroll-ml-[var(--gutter)] will-change-transform">
                 <article
@@ -376,15 +376,8 @@ export default function Services() {
                   className="group relative flex aspect-[4/5] w-[58vw] max-w-[350px] flex-col bg-[#ffffff] p-6 text-ink md:h-[min(43svh,350px)] md:w-auto md:max-w-none md:p-4"
                 >
                   {/* a soft resting shadow, and a deeper one that fades in as the card lifts */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 shadow-[0_28px_56px_-36px_rgba(0,0,0,0.45)]"
-                  />
-                  <span
-                    aria-hidden
-                    data-shadow
-                    className="pointer-events-none absolute inset-0 opacity-0 shadow-[0_50px_90px_-30px_rgba(0,0,0,0.5)]"
-                  />
+
+
 
                   <h3 className="relative text-[clamp(2.25rem,2.3vw,3.5rem)] font-medium leading-[0.9] tracking-[-0.055em]">
                     {s.title}
@@ -403,7 +396,7 @@ export default function Services() {
                         <li key={item} className="overflow-hidden mt-2 ">
                           <span
                             data-li
-                            data-h  
+                            data-h
                             className="flex items-baseline font-semibold "
                           >
                             {item}
@@ -421,6 +414,19 @@ export default function Services() {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="relative px-[var(--gutter)]">
+
+          <div className="mt-8 grid items-end gap-y-2 md:mt-0.5 md:grid-cols-12 md:gap-x-6">
+
+            <p
+              data-reveal
+              className="max-w-[34ch] text-[12px] leading-[1.2] text-chalk/75 md:col-span-3 md:col-start-10 md:text-[16px]"
+            >
+              Design and engineering under one roof the brand, the product and the code made by the same hands.
+            </p>
+          </div>
         </div>
       </div>
     </section>

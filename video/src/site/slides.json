@@ -1,0 +1,10 @@
+{
+  "slides": [
+    { "img": "hero.png", "pos": "50% 50%", "title": ["This is a website.", "Not a video."], "note": "oneprimestudio" },
+    { "img": "hover.png", "pos": "30% 40%", "title": ["Hover a letter.", "It switches."], "text": "A live WebGL flower leans toward your cursor, and each letter of the headline spins like a slot reel before it lands." },
+    { "img": "goo.png", "pos": "20% 40%", "title": ["Headlines that", "form like liquid."], "text": "Every display heading firms up from soft blobs into sharp letters as it scrolls into view." },
+    { "img": "seam.png", "pos": "50% 70%", "title": ["Sections hand over", "in dither."], "text": "Between sections the next colour arrives as Bayer-dithered pixels. The cursor leaves the same dots behind it." },
+    { "img": "jeeva.png", "pos": "78% 50%", "title": ["Real clients.", "Real software."], "text": "Jeeva Multispeciality Hospital: hospital management software and website, designed and built by One Prime Studio." },
+    { "dark": true, "switch": true, "title": ["Your business,", "switched on."], "size": 110, "text": "Websites · Shopify stores · CRM & ERP · SaaS products · Brand identity. Hyderabad → Worldwide.", "pill": "Comment SITE for the link" }
+  ]
+}
