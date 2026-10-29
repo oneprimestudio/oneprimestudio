@@ -10,7 +10,7 @@ export type Shot = {
   src: string;
   alt: string;
   /** the frame it is shown in */
-  ratio: "4/5" | "900/580";
+  ratio: "16/10" | "4/5" | "900/580";
   caption: string;
   /** a film rather than a still (src is then its poster) */
   video?: string;
